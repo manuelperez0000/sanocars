@@ -4,8 +4,6 @@ import { FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { Link } from 'react-router-dom'
 
-const rent = false
-
 export default function VehicleCard({ v, type }) {
   return (
     <Link to={`/vehiculo/${v.id}`} className="text-decoration-none text-reset">

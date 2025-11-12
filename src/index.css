@@ -76,8 +76,30 @@ h1 {
   gap: 5px;
 }
 
+.text-financiamiento{
+  font-size: 24px;
+  padding-left: 50px;
+  color: var(--gray3);
+
+}
+
+.list{
+  padding: 20px;
+  margin-bottom: 10px;
+  border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+
+}
+
+.momo{
+  font-family: "momo";
+}
+
 .home-header {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.753)), url('/bg2.png');
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.753)), url('/bgJapon.png');
   background-repeat: no-repeat;
   background-size: 120%;
   min-height: 100vh;
@@ -212,6 +234,15 @@ h1 {
   width: 100px;
   height: 4px;
   background: linear-gradient(100deg, var(--red1),var(--red2));
+}
+
+.bg-japon{
+  background: linear-gradient(rgba(0, 0, 0, 0.767),rgba(0, 0, 255, 0) ), url("./bgJapon.png");
+  color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 90px 50px;
 }
 
 /* Cards grid */
