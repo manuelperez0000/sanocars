@@ -1,42 +1,54 @@
 import { NavLink } from 'react-router-dom'
 import SearchBar from './SearchBar'
+import { FaPhone, FaRegUserCircle, FaSearch } from 'react-icons/fa';
 
 const Header = ({ onSearch }) => {
     return (
-        <header className="home-header text-white d-flex align-items-center">
+        <header className="home-header text-white">
             <div className="container">
                 <div className="row">
-
-                    <div className="d-flex justify-content-between align-items-center py-3">
+                    <div className="col-12 d-flex justify-content-between align-items-center pt-5 pb-2">
                         <div className="logo d-flex align-items-center gap-3">
-                            <img src="/logo192.png" alt="logo" style={{ width: 48, height: 48 }} />
-                            <strong className="fs-4">SanoCars</strong>
+                            <img src="/logo485.svg" alt="logo" style={{ height: 48 }} />
                         </div>
-                        <nav>
-                            <ul className="nav">
-                                <li className="nav-item"><NavLink className="nav-link text-white" to="/">Inicio</NavLink></li>
-                                <li className="nav-item"><NavLink className="nav-link text-white" to="/financiamiento">Financiamiento</NavLink></li>
-                                <li className="nav-item"><NavLink className="nav-link text-white" to="/contacto">Contacto</NavLink></li>
-                                <li className="nav-item ms-3"><button className="btn btn-outline-light btn-sm">Área de clientes</button></li>
-                            </ul>
+                        <nav className='nav'>
+                            <a href="tel:08091171993" className='phone y-center link-white'>
+                                <FaPhone /> 080-9117-1993
+                            </a>
+                            <NavLink to="/login" className="y-center link-white">
+                                <FaRegUserCircle />
+                                Ingresa
+                            </NavLink>
+                            <NavLink to="/login" className="y-center btn btn-primary">
+                                <FaRegUserCircle />
+                                Consigue un financiamiento
+                            </NavLink>
                         </nav>
                     </div>
+                    <div className="col-12 flex-center">
+                        <ul className="nav">
+                            <li className="nav-item"><NavLink className="nav-link text-white y-center" to="/"> Inicio</NavLink></li>
+                            <li className="nav-item"><NavLink className="nav-link text-white" to="/">Servicios</NavLink></li>
+                            <li className="nav-item"><NavLink className="nav-link text-white" to="/financiamiento">Financiamiento</NavLink></li>
+                            <li className="nav-item"><NavLink className="nav-link text-white" to="/contacto">Contacto</NavLink></li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="row my-5">
+                    <div className="col-12 text-center">
+                        <h1 className="text-header-h1">Encuentra el vehículo de tus sueños con calida Japonesa</h1>
+                        <div className="lead">Te acompañamos en mantenimiento reparación y pintura de tu vehiculo.
+                        </div>
 
-                    <div className="row align-items-center py-5">
-                        <div className="col-md-7 text-md-start text-center">
-                            <h1 className="display-5 fw-bold">Encuentra el vehículo de tus sueños</h1>
-                            <p className="lead">Compra y vende autos con confianza — ofertas, financiamiento y más.</p>
-                            <div className="mt-4">
-                                <SearchBar onSearch={onSearch} />
-                            </div>
-                        </div>
-                        <div className="col-md-5 d-none d-md-block">
-                            {/* espacio para ilustración si se desea */}
-                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <SearchBar onSearch={onSearch} />
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
 

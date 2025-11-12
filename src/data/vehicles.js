@@ -1,22 +1,5 @@
 const vehicles = [
-  {
-    id: 1,
-    brand: 'Toyota',
-    model: 'Corolla',
-    name: 'Toyota Corolla',
-    year: 2022,
-    engine: 1.8,
-    price: 18500,
-    km: 23000,
-    condition: 'Usado',
-    engineState: 'Excelente',
-    features: ['Aire acondicionado', 'Cámara trasera', 'Bluetooth', 'Control crucero'],
-    images: [
-      'https://images.unsplash.com/photo-1541534401786-78f1b5f4b5d8?auto=format&fit=crop&w=1400&q=60',
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=60',
-      'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=60'
-    ]
-  },
+  
   {
     id: 2,
     brand: 'Honda',

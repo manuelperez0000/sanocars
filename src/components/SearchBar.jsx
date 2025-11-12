@@ -21,22 +21,25 @@ export default function SearchBar({ onSearch }) {
   }
 
   return (
-    <form className="row gy-2 gx-2 align-items-center" onSubmit={handleSearch}>
-      <div className="col-sm-5">
-        <select className="form-select form-select-lg" value={marca} onChange={e => { setMarca(e.target.value); setModelo('') }}>
-          <option value="">Marca</option>
-          {marcas.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </div>
-      <div className="col-sm-5">
-        <select className="form-select form-select-lg" value={modelo} onChange={e => setModelo(e.target.value)}>
-          <option value="">Modelo</option>
-          {modelos.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </div>
-      <div className="col-sm-2 d-grid">
-        <button className="btn btn-warning btn-lg">Buscar</button>
-      </div>
-    </form>
+    <div className='bg-search card p-4'>
+      <h4 className='gray'>Buscar un vehiculo</h4>
+      <form className="row gy-2 gx-2 align-items-center" onSubmit={handleSearch}>
+        <div className="col-sm-5">
+          <select className="form-select form-select-lg" value={marca} onChange={e => { setMarca(e.target.value); setModelo('') }}>
+            <option value="">Marca</option>
+            {marcas.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="col-sm-5">
+          <select className="form-select form-select-lg" value={modelo} onChange={e => setModelo(e.target.value)}>
+            <option value="">Modelo</option>
+            {modelos.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="col-sm-2 d-grid">
+          <button className="btn btn-primary btn-lg">Buscar</button>
+        </div>
+      </form>
+    </div>
   )
 }

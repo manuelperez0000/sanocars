@@ -35,13 +35,24 @@ const Home = () => {
             <main className="container my-5">
                 <div className="mb-4">
                     <div className="d-flex align-items-center">
-                        <div className="flex-grow-1">
-                            <FilterBar sortOption={sortOption} onChange={setSortOption} />
+                        <div className="flex-grow-1 mb-3">
+                            <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en venta"} />
                         </div>
                     </div>
                 </div>
+                <VehicleList vehicles={filtered} type={"sold"}  />
+                
+                <hr  className='mb-5'/>
 
-                <VehicleList vehicles={filtered} />
+                <div className="mb-4">
+                    <div className="d-flex align-items-center">
+                        <div className="flex-grow-1 mb-3">
+                            <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} />
+                        </div>
+                    </div>
+                </div>
+                <VehicleList vehicles={filtered} type={"rent"} />
+
             </main>
         </div>
     )
