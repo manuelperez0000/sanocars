@@ -345,3 +345,69 @@ h1 {
 .dashboard-main {
   background: transparent;
 }
+
+/* Footer Styles */
+.footer-dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  margin-top: 50px;
+}
+
+.footer-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.bg-dark{
+  background-color: #050505 !important;
+}
+
+.footer-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-nav li {
+  margin-bottom: 8px;
+}
+
+.footer-link {
+  color: #cccccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 14px;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+}
+
+.social-link {
+  color: #cccccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.social-link:hover {
+  color: #ffffff;
+}
+
+.footer-divider {
+  border-color: #333333;
+  margin: 20px 0;
+}
+
+.copyright {
+  color: #888888;
+  font-size: 12px;
+  margin: 0;
+  padding: 10px 0;
+}

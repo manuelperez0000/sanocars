@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import SearchBar from './SearchBar'
 import { FaPhone, FaRegUserCircle, FaSearch } from 'react-icons/fa';
-
+import navLinks from '../utils/navLinks.json';
 const Header = ({ onSearch }) => {
     return (
         <header className="home-header text-white">
@@ -27,16 +27,17 @@ const Header = ({ onSearch }) => {
                     </div>
                     <div className="col-12 flex-center">
                         <ul className="nav">
-                            <li className="nav-item"><NavLink className="nav-link text-white y-center" to="/"> Inicio</NavLink></li>
-                            <li className="nav-item"><NavLink className="nav-link text-white" to="/">Servicios</NavLink></li>
-                            <li className="nav-item"><NavLink className="nav-link text-white" to="/financiamiento">Financiamiento</NavLink></li>
-                            <li className="nav-item"><NavLink className="nav-link text-white" to="/contacto">Contacto</NavLink></li>
+                            {navLinks.map((link, index) => (
+                                <li key={index} className="nav-item">
+                                    <NavLink className="nav-link text-white y-center" to={link.to}>{link.text}</NavLink>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
                 <div className="row my-5">
                     <div className="col-12 text-center">
-                        <h1 className="text-header-h1">Encuentra el vehículo de tus sueños con calida Japonesa</h1>
+                        <h1 className="text-header-h1">Encuentra el vehículo de tus sueños</h1>
                         <div className="lead">Te acompañamos en mantenimiento reparación y pintura de tu vehiculo.
                         </div>
 

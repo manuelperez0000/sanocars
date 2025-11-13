@@ -1,0 +1,18 @@
+[
+    {
+        "text": "Inicio",
+        "to": "/"
+    },
+    {
+        "text": "Servicios",
+        "to": "/services"
+    },
+    {
+        "text": "Financiamiento",
+        "to": "/financiamiento"
+    },
+    {
+        "text": "Contacto",
+        "to": "/contacto"
+    }
+]
