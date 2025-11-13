@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Home from "./pages/home"
 import VehicleDetail from './pages/VehicleDetail'
+import Vehicles from './pages/Vehicles'
 import Login from './pages/Login'
 import Dashboard from './pages/dashboard'
 import AdminLayout from "./components/adminLayout"
@@ -14,6 +15,7 @@ const Router = () => {
     return <>
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/vehiculos" element={<PageLayout><Vehicles /></PageLayout>} />
             <Route path="/financiamiento" element={<PageLayout><Financiamiento /></PageLayout>} />
             <Route path="/contacto" element={<PageLayout><Contact /></PageLayout>} />
             <Route path="/vehiculo/:id" element={<VehicleDetail />} />

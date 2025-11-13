@@ -31,9 +31,13 @@ const PageLayout = ({ children }) => {
                         <div className="col-12 mt-3">
                             <ul className="nav justify-content-center">
                                 {navLinks.map((link, index) => (
-                                    <li key={index} className="nav-item">
-                                        <NavLink className="nav-link text-white" to={link.to}>{link.text}</NavLink>
-                                    </li>
+                                    <NavLink
+                                        key={index}
+                                        className={({ isActive }) => `nav-item nav-link text-white ${isActive ? 'active' : ''}`}
+                                        to={link.to}
+                                    >
+                                        {link.text}
+                                    </NavLink>
                                 ))}
                             </ul>
                         </div>

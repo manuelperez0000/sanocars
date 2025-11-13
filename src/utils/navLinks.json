@@ -4,6 +4,10 @@
         "to": "/"
     },
     {
+        "text": "Vehículos",
+        "to": "/vehiculos"
+    },
+    {
         "text": "Servicios",
         "to": "/services"
     },

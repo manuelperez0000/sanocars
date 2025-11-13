@@ -28,19 +28,22 @@ const Header = ({ onSearch }) => {
                     <div className="col-12 flex-center">
                         <ul className="nav">
                             {navLinks.map((link, index) => (
-                                <li key={index} className="nav-item">
-                                    <NavLink className="nav-link text-white y-center" to={link.to}>{link.text}</NavLink>
-                                </li>
+                                <NavLink
+                                    key={index}
+                                    className={({ isActive }) => `nav-item nav-link text-white y-center ${isActive ? 'active' : ''}`}
+                                    to={link.to}
+                                >
+                                    {link.text}
+                                </NavLink>
                             ))}
                         </ul>
                     </div>
                 </div>
                 <div className="row my-5">
                     <div className="col-12 text-center">
-                        <h1 className="text-header-h1">Encuentra el vehículo de tus sueños</h1>
+                        <h1 className="text-header-h1 momo">Encuentra el vehículo de tus sueños</h1>
                         <div className="lead">Te acompañamos en mantenimiento reparación y pintura de tu vehiculo.
                         </div>
-
                     </div>
                 </div>
                 <div className="row">
