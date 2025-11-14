@@ -2,7 +2,7 @@ import React from 'react'
 import { FaWhatsapp } from 'react-icons/fa'
 
 const WhatsAppButton = () => {
-    const phoneNumber = "08091171993" // Using the same number from the footer
+    const phoneNumber = "+08091171993" // Using the same number from the footer
     const message = "Hola, me gustaría obtener más información sobre sus servicios."
 
     const handleClick = () => {

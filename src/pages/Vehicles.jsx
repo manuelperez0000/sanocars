@@ -16,12 +16,12 @@ const Vehicles = () => {
             <div className="row justify-content-center">
                 <div className="col-12 col-xl-10">
                     {/* Header Section */}
-                    <div className="flex-between align-items-center mb-5">
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
                         <h2 className="momo">Nuestros Vehículos</h2>
 
                         {/* Filter Section */}
                         <div className="d-flex justify-content-center">
-                            <div className="btn-group btn-group-lg" role="group">
+                            <div className="btn-group btn-group" role="group">
                                 <input
                                     type="radio"
                                     className="btn-check"

@@ -13,16 +13,16 @@ const Footer = () => {
                             <img src="/logo485.svg" alt="logo" style={{ height: 48 }} />
                         </div>
                         <div className="social-iconsr">
-                            <a href="#" className="social-link me-3">
+                            <a href="https://www.instagram.com/sanocars/" className="social-link me-3" target="_blank">
                                 <FaInstagram size={30} />
                             </a>
-                            <a href="#" className="social-link me-3">
+                            <a href="https://www.facebook.com/sanocars" className="social-link me-3" target="_blank">
                                 <FaFacebook size={30} />
                             </a>
-                            <a href="#" className="social-link me-3">
+                            <a href="https://wa.me/08091171993" className="social-link me-3" target="_blank">
                                 <FaWhatsapp size={30} />
                             </a>
-                            <a href="#" className="social-link">
+                            <a href="https://www.tiktok.com/@sanocars" className="social-link" target="_blank">
                                 <FaTiktok size={30} />
                             </a>
                         </div>
@@ -38,7 +38,7 @@ const Footer = () => {
                             </li>
                             <li className="mb-2">
                                 <FaPhone className="me-2" />
-                                <a href="tel:08091171993" className="footer-link">080 9117 1993</a>
+                                <a href="tel:+08091171993" className="footer-link">080 9117 1993</a>
                             </li>
                             <li className="mb-2">
                                 <FaMapMarkerAlt className="me-2" />

@@ -20,7 +20,7 @@ const Service = () => {
     const service = servicesData.find(s => s.id === id)
 
     const handleClick = () => {
-        const phoneNumber = "08091171993"
+        const phoneNumber = "+08091171993"
         const message = `quiero contratar el servicio de "${service.title}"`
         const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
         window.open(url, '_blank')

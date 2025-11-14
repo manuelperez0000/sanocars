@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaInstagram, FaFacebook, FaWhatsapp } from 'react-icons/fa'
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaInstagram, FaFacebook, FaWhatsapp, FaTiktok } from 'react-icons/fa'
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -53,7 +53,7 @@ const Contact = () => {
                             <FaPhone className="me-3 text-primary" size={24} />
                             <div>
                                 <h6 className="mb-1">Teléfono</h6>
-                                <a href="tel:08091171993" className="text-decoration-none">080 9117 1993</a>
+                                <a href="tel:+08091171993" className="text-decoration-none">080 9117 1993</a>
                             </div>
                         </div>
 
@@ -70,14 +70,17 @@ const Contact = () => {
                     <div className="social-media">
                         <h6 className="mb-3">Síguenos en redes sociales</h6>
                         <div className="d-flex">
-                            <a href="#" className="me-3 text-primary">
+                            <a href="https://www.instagram.com/sanocars/" className="me-3 text-primary" target="_blank">
                                 <FaInstagram size={30} />
                             </a>
-                            <a href="#" className="me-3 text-primary">
+                            <a href="https://www.facebook.com/sanocars" className="me-3 text-primary" target="_blank">
                                 <FaFacebook size={30} />
                             </a>
-                            <a href="#" className="text-primary">
+                            <a href="https://wa.me/08091171993" className="me-3 text-primary" target="_blank">
                                 <FaWhatsapp size={30} />
+                            </a>
+                            <a href="https://www.tiktok.com/@sanocars" className="text-primary" target="_blank">
+                                <FaTiktok size={30} />
                             </a>
                         </div>
                     </div>

@@ -1,22 +1,27 @@
 [
     {
         "text": "Inicio",
-        "to": "/"
+        "to": "/",
+        "icon": "FaHome"
     },
     {
         "text": "Vehículos",
-        "to": "/vehiculos"
+        "to": "/vehiculos",
+        "icon": "FaCar"
     },
     {
         "text": "Servicios",
-        "to": "/services"
+        "to": "/services",
+        "icon": "FaTools"
     },
     {
         "text": "Financiamiento",
-        "to": "/financiamiento"
+        "to": "/financiamiento",
+        "icon": "FaMoneyBill"
     },
     {
         "text": "Contacto",
-        "to": "/contacto"
+        "to": "/contacto",
+        "icon": "FaPhone"
     }
 ]
