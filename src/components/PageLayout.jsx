@@ -1,5 +1,6 @@
 import Footer from './Footer';
 import Nav from './nav'
+import WhatsAppButton from './WhatsAppButton'
 const PageLayout = ({ children }) => {
     return (
         <>
@@ -18,6 +19,7 @@ const PageLayout = ({ children }) => {
             </main>
 
             <Footer />
+            <WhatsAppButton />
         </>
     )
 }

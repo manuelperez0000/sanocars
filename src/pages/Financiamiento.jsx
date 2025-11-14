@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { FaFileUpload, FaInfoCircle } from 'react-icons/fa'
 
 const Financiamiento = () => {
     const [formData, setFormData] = useState({
@@ -86,7 +85,7 @@ const Financiamiento = () => {
                                 {/* Katakana Section */}
                                 <div className="mb-4">
                                     <h5 className="text-primary mb-3">
-                                        ✍️ ESCRIBIR EN KATAKANA
+                                        ESCRIBIR EN KATAKANA
                                     </h5>
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
@@ -125,7 +124,7 @@ const Financiamiento = () => {
                                 {/* Kanji Section */}
                                 <div className="mb-4">
                                     <h5 className="text-primary mb-3">
-                                        ✍️ ESCRIBIR EN KANJI
+                                        ESCRIBIR EN KANJI
                                     </h5>
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
@@ -328,7 +327,7 @@ const Financiamiento = () => {
                                 <div className="row">
                                     <div className="col-md-6 mb-3">
                                         <label htmlFor="telefonoCasa" className="form-label">
-                                            TELÉFONO CASA 🏠:
+                                            TELÉFONO CASA:
                                         </label>
                                         <input
                                             type="tel"
@@ -341,7 +340,7 @@ const Financiamiento = () => {
                                     </div>
                                     <div className="col-md-6 mb-3">
                                         <label htmlFor="telefonoMovil" className="form-label">
-                                            TELÉFONO MÓVIL 📱: *
+                                            TELÉFONO MÓVIL: *
                                         </label>
                                         <input
                                             type="tel"
@@ -366,7 +365,7 @@ const Financiamiento = () => {
                                 {/* Empresa Katakana */}
                                 <div className="mb-4">
                                     <h5 className="text-success mb-3">
-                                        ✍️ ESCRIBIR EN KATAKANA
+                                        ESCRIBIR EN KATAKANA
                                     </h5>
                                     <div className="mb-3">
                                         <label htmlFor="nombreEmpresaKatakana" className="form-label">
@@ -388,7 +387,7 @@ const Financiamiento = () => {
                                 {/* Empresa Kanji */}
                                 <div className="mb-4">
                                     <h5 className="text-success mb-3">
-                                        ✍️ ESCRIBIR EN KANJI
+                                        ESCRIBIR EN KANJI
                                     </h5>
                                     <div className="mb-3">
                                         <label htmlFor="nombreEmpresaKanji" className="form-label">
@@ -573,13 +572,11 @@ const Financiamiento = () => {
                         <div className="card mb-4">
                             <div className="card-header bg-dark text-white">
                                 <h3 className="card-title mb-0">
-                                    <FaFileUpload className="me-2" />
                                     ADJUNTAR LOS SIGUIENTES DOCUMENTOS
                                 </h3>
                             </div>
                             <div className="card-body">
                                 <div className="alert alert-info">
-                                    <FaInfoCircle className="me-2" />
                                     Por favor adjunte fotos claras de ambos lados de cada documento.
                                 </div>
 
@@ -670,11 +667,10 @@ const Financiamiento = () => {
                         {/* Submit Button */}
                         <div className="text-center">
                             <button type="submit" className="btn btn-primary btn-lg px-5 py-3">
-                                <FaFileUpload className="me-2" />
                                 Enviar Solicitud de Financiamiento
                             </button>
                             <p className="mt-3 text-muted">
-                                POR FAVOR ✍️ ESCRIBIR BIEN SUS DATOS
+                                POR FAVOR ESCRIBIR BIEN SUS DATOS
                             </p>
                         </div>
                     </form>

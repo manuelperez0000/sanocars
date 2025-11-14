@@ -16,9 +16,9 @@ const Nav = () => {
                     <FaRegUserCircle />
                     Ingresa
                 </NavLink>
-                <NavLink to="/login" className="y-center btn btn-primary">
+                <NavLink to="/empresa" className="y-center btn btn-primary">
                     <FaRegUserCircle />
-                    Consigue un financiamiento
+                    Sobre Nosotros
                 </NavLink>
             </nav>
         </div >

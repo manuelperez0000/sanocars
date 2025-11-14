@@ -81,16 +81,17 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 5px;
+  z-index: 10;
 }
 
-.text-financiamiento{
+.text-financiamiento {
   font-size: 24px;
   padding-left: 50px;
   color: var(--gray3);
 
 }
 
-.list{
+.list {
   padding: 20px;
   margin-bottom: 10px;
   border: 1px solid red;
@@ -102,16 +103,11 @@ h1 {
 }
 
 .home-header {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.753)), url('/bgJapon.png');
+  /* background: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.753)), url('/bgJapon.png'); */
   background-repeat: no-repeat;
-  background-size: 120%;
+  background-size: 100%;
   min-height: 100vh;
   background-attachment: fixed;
-
-  /* animación sutil horizontal del background */
-  background-position: 50% 50%;
-  animation: bg-pan 30s ease-in-out infinite;
-  will-change: background-position;
 }
 
 .flex-between {
@@ -121,7 +117,7 @@ h1 {
 }
 
 /* animación que mueve el background ligeramente de lado a lado */
-@keyframes bg-pan {
+/* @keyframes bg-pan {
   0% {
     background-position: 40% 50%;
   }
@@ -133,7 +129,7 @@ h1 {
   100% {
     background-position: 40% 50%;
   }
-}
+} */
 
 /* en móviles reducimos intensidad y evitamos background-attachment:fixed por rendimiento */
 @media (max-width: 768px) {
@@ -143,7 +139,23 @@ h1 {
   }
 }
 
+.bg-wrapper {
+  position: 'absolute';
+  top: 0;
+  left: 0;
+  width: '100%';
+  height: '100%';
+}
 
+.slidex {
+  position: 'absolute';
+  top: 0;
+  left: 0;
+  width: '100%';
+  height: '100%';
+  background-size: 'cover';
+  background-position: 'center';
+}
 
 .text-header-h1 {
   font-size: 60px;
@@ -236,11 +248,11 @@ h1 {
   left: 0;
   width: 100px;
   height: 4px;
-  background: linear-gradient(100deg, var(--red1),var(--red2));
+  background: linear-gradient(100deg, var(--red1), var(--red2));
 }
 
-.bg-japon{
-  background: linear-gradient(rgba(0, 0, 0, 0.767),rgba(0, 0, 255, 0) ), url("./bgJapon.png");
+.bg-japon {
+  background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 255, 0)), url("./bgJapon.png");
   color: white;
   background-position: center;
   background-repeat: no-repeat;
@@ -362,7 +374,7 @@ h1 {
   font-size: 18px;
 }
 
-.bg-dark{
+.bg-dark {
   background-color: #050505 !important;
 }
 
@@ -413,4 +425,22 @@ h1 {
   font-size: 12px;
   margin: 0;
   padding: 10px 0;
+}
+
+/* Service images hover effect */
+.service-image {
+  transition: filter 0.3s ease;
+}
+
+.service-image:hover {
+  filter: brightness(1.1);
+}
+
+/* Vehicle images hover effect */
+.vehicle-image {
+  transition: filter 0.3s ease;
+}
+
+.vehicle-image:hover {
+  filter: brightness(1.1);
 }

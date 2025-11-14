@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { FaShoppingCart, FaCalendarAlt } from 'react-icons/fa'
 import VehicleList from '../components/VehicleList'
 import vehicles from '../data/vehicles'
+import PageLayout from '../components/PageLayout'
 
 const Vehicles = () => {
     const [filterType, setFilterType] = useState('venta') // 'venta' or 'alquiler'
@@ -10,44 +12,46 @@ const Vehicles = () => {
     }
 
     return (
-        <div className="container py-5">
-            <div className="row">
-                <div className="col-12">
-                    <h1 className="text-center mb-4">Vehículos</h1>
+        <div className="container-fluid py-5">
+            <div className="row justify-content-center">
+                <div className="col-12 col-xl-10">
+                    {/* Header Section */}
+                    <div className="flex-between align-items-center mb-5">
+                        <h2 className="momo">Nuestros Vehículos</h2>
 
-                    {/* Radio buttons for filtering */}
-                    <div className="d-flex justify-content-center mb-4">
-                        <div className="form-check form-check-inline">
-                            <input
-                                className="form-check-input"
-                                type="radio"
-                                name="vehicleType"
-                                id="venta"
-                                value="venta"
-                                checked={filterType === 'venta'}
-                                onChange={handleFilterChange}
-                            />
-                            <label className="form-check-label" htmlFor="venta">
-                                Vehículos en Venta
-                            </label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input
-                                className="form-check-input"
-                                type="radio"
-                                name="vehicleType"
-                                id="alquiler"
-                                value="alquiler"
-                                checked={filterType === 'alquiler'}
-                                onChange={handleFilterChange}
-                            />
-                            <label className="form-check-label" htmlFor="alquiler">
-                                Vehículos en Alquiler
-                            </label>
+                        {/* Filter Section */}
+                        <div className="d-flex justify-content-center">
+                            <div className="btn-group btn-group-lg" role="group">
+                                <input
+                                    type="radio"
+                                    className="btn-check"
+                                    name="vehicleType"
+                                    id="venta"
+                                    value="venta"
+                                    checked={filterType === 'venta'}
+                                    onChange={handleFilterChange}
+                                />
+                                <label className="btn btn-outline-dark flex-center gap-2" htmlFor="venta">
+                                    <FaShoppingCart /> Vehículos en Venta
+                                </label>
+
+                                <input
+                                    type="radio"
+                                    className="btn-check"
+                                    name="vehicleType"
+                                    id="alquiler"
+                                    value="alquiler"
+                                    checked={filterType === 'alquiler'}
+                                    onChange={handleFilterChange}
+                                />
+                                <label className="btn btn-outline-dark flex-center gap-2" htmlFor="alquiler">
+                                    <FaCalendarAlt /> Vehículos en Alquiler
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Vehicle list */}
+                    {/* Vehicle List */}
                     <VehicleList
                         vehicles={vehicles}
                         type={filterType === 'alquiler' ? 'rent' : 'sale'}

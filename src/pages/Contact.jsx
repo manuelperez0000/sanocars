@@ -45,7 +45,7 @@ const Contact = () => {
                             <FaEnvelope className="me-3 text-primary" size={24} />
                             <div>
                                 <h6 className="mb-1">Email</h6>
-                                <a href="mailto:info@sanocars.com" className="text-decoration-none">info@sanocars.com</a>
+                                <a href="mailto:sanocars@hotmail.com" className="text-decoration-none">sanocars@hotmail.com</a>
                             </div>
                         </div>
 
@@ -53,7 +53,7 @@ const Contact = () => {
                             <FaPhone className="me-3 text-primary" size={24} />
                             <div>
                                 <h6 className="mb-1">Teléfono</h6>
-                                <a href="tel:+811234567890" className="text-decoration-none">+81 123 456 7890</a>
+                                <a href="tel:08091171993" className="text-decoration-none">080 9117 1993</a>
                             </div>
                         </div>
 
@@ -87,7 +87,7 @@ const Contact = () => {
                         <h6 className="mb-3">Nuestra Ubicación</h6>
                         <div className="google-map">
                             <iframe
-                                src="https://maps.google.com/maps?q=4170001+Fuji+Shizuoka+Japan&output=embed"
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d203.9048324347042!2d138.7919401!3d35.1447149!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601bd53078fbc43b%3A0x32db989d7ae88ecd!2z5qCq5byP5Lya56S-U2Fub2NhcnM!5e0!3m2!1ses-419!2sve!4v1763062893744!5m2!1ses-419!2sve"
                                 width="100%"
                                 height="300"
                                 style={{ border: 0 }}
