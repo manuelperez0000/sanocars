@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import vehicles from '../data/vehicles'
 import PageLayout from '../components/PageLayout'
-import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa'
+import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
 
 function formatCurrency(n) { return `$${n.toLocaleString()}` }
 
@@ -179,14 +179,20 @@ export default function VehicleDetail() {
 
                     {/* Action Buttons */}
                     <div className="d-grid gap-2">
-                      <button className="btn btn-outline-dark btn-lg">
-                        <i className="fas fa-phone me-2"></i>
+                      <a
+                        className="btn btn-outline-dark btn-lg d-flex align-items-center justify-content-center"
+                        href={`https://wa.me/8108091171993?text=${encodeURIComponent(`Hola, estoy interesado en el vehículo ${vehicle.name} (ID: ${vehicle.id}). ¿Podrían darme más información?`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaPhone className="me-2" />
                         Contactar vendedor
-                      </button>
-                      <button className="btn btn-primary btn-lg">
-                        <i className="fas fa-calculator me-2"></i>
+                      </a>
+
+                      <Link to="/financiamiento" className="btn btn-primary btn-lg d-flex align-items-center justify-content-center">
+                        <FaCalculator className="me-2" />
                         Solicitar financiamiento
-                      </button>
+                      </Link>
 
                     </div>
                   </div>

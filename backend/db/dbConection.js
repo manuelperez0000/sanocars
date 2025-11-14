@@ -16,3 +16,14 @@ var pool = mysql.createPool({
 var promisePool = pool.promise();
 
 module.exports = promisePool;
+
+/* const dbSaoanocars = {
+  host:"173.208.213.194",
+  dbName:"sanocars_taller",
+  user:"sanocars_asdasd",
+  password:"UXcwOeOD&U*op=42",
+  port:3306,
+} */
+//192.68.0%
+
+//host2 : sanocarstaller.com
