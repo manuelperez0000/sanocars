@@ -245,6 +245,7 @@ h1 {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: cover;
   padding: 90px 50px;
 }
 
