@@ -23,5 +23,10 @@
         "text": "Contacto",
         "to": "/contacto",
         "icon": "FaPhone"
+    },
+    {
+        "text": "Nosotros",
+        "to": "/empresa",
+        "icon": "FaSearch"
     }
 ]

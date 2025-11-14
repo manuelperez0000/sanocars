@@ -11,7 +11,8 @@ const Nav = () => {
         FaCar,
         FaTools,
         FaMoneyBill,
-        FaPhone
+        FaPhone,
+        FaSearch
     };
 
     return <>
@@ -28,14 +29,11 @@ const Nav = () => {
                 <a href="tel:+8108091171993" className='phone y-center link-white'>
                     <FaPhone /> 080-9117-1993
                 </a>
-                <NavLink to="/login" className="y-center link-white">
+                <NavLink to="/login" className="y-center btn btn-primary">
                     <FaRegUserCircle />
                     Ingresa
                 </NavLink>
-                <NavLink to="/empresa" className="y-center btn btn-primary">
-                    <FaRegUserCircle />
-                    Sobre Nosotros
-                </NavLink>
+                
             </nav>
         </div >
         <ul className="nav flex-center pb-3 d-none d-md-flex">
@@ -70,10 +68,10 @@ const Nav = () => {
                     <NavLink
                         key={index}
                         className="d-block mb-2 text-white text-decoration-none fs-4"
-                        to={link.to}
+                        to={link?.to}
                         onClick={() => setMenuOpen(false)}
                     >
-                        <Icon /> {link.text}
+                        <Icon /> {link?.text || ""}
                     </NavLink>
                 );
             })}
