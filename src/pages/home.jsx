@@ -157,7 +157,7 @@ const Home = () => {
             <section className='container mt-3 mb-5 rounded bg-japon'>
                 <div className='row align-items-center'>
                     <div className='col-lg-8'>
-                        <h1 className='mb-4 momo'>Financiamiento</h1>
+                        <h2 className='mb-4 momo'>Financiamiento</h2>
                         <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Contamos Con Financiamiento Propio Y Con Las Cuotas Mas Bajas Del Mercado.</p>
                         <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Financiamiento japonés o propio</p>
                         <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Págalo hasta en 48 meses</p>

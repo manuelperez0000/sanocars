@@ -81,7 +81,7 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  z-index: 10;
+  z-index: 1;
 }
 
 .text-financiamiento {
@@ -130,14 +130,6 @@ h1 {
     background-position: 40% 50%;
   }
 } */
-
-/* en móviles reducimos intensidad y evitamos background-attachment:fixed por rendimiento */
-@media (max-width: 768px) {
-  .home-header {
-    animation-duration: 45s;
-    background-attachment: scroll;
-  }
-}
 
 .bg-wrapper {
   position: 'absolute';
@@ -194,10 +186,6 @@ h1 {
 .nav-item:hover::after,
 .nav-item.active::after {
   width: 100%;
-}
-
-.bg-search {
-  height: 140px;
 }
 
 /* Vibrant accents */
@@ -322,16 +310,7 @@ h1 {
 }
 
 
-/* Responsive spacing */
-@media (max-width: 768px) {
-  .home-header {
-    padding: 3rem 0
-  }
 
-  h1 {
-    font-size: 2rem
-  }
-}
 
 /* Login page specifics */
 .bg-login-side {

@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function FilterBar({ sortOption, onChange, tittle }) {
   return (
-    <div className="d-flex align-items-center gap-3">
+    <div className="d-none d-md-flex align-items-center gap-3">
       <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>{tittle}</h2>
       <div className="ms-auto d-flex align-items-center gap-2">
         <label className="text-muted">Ordenar:</label>
