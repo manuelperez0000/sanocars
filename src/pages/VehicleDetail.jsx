@@ -1,35 +1,63 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import vehicles from '../data/vehicles'
 import PageLayout from '../components/PageLayout'
+import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa'
 
-function formatCurrency(n){ return `$${n.toLocaleString()}` }
+function formatCurrency(n) { return `$${n.toLocaleString()}` }
 
-export default function VehicleDetail(){
+export default function VehicleDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const vehicle = useMemo(()=> vehicles.find(v=> String(v.id) === String(id)), [id])
+  const vehicle = useMemo(() => vehicles.find(v => String(v.id) === String(id)), [id])
   const [activeIndex, setActiveIndex] = useState(0)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalIndex, setModalIndex] = useState(0)
 
-  if(!vehicle) return (
+  useEffect(() => {
+    if (!modalOpen) return
+    function onKey(e) {
+      if (e.key === 'Escape') setModalOpen(false)
+      if (e.key === 'ArrowLeft') setModalIndex(i => (i - 1 + vehicle.images.length) % vehicle.images.length)
+      if (e.key === 'ArrowRight') setModalIndex(i => (i + 1) % vehicle.images.length)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [modalOpen, modalIndex, vehicle.images.length])
+
+  function openModal(index) {
+    setModalIndex(index)
+    setActiveIndex(index)
+    setModalOpen(true)
+  }
+
+  function closeModal() {
+    setModalOpen(false)
+  }
+
+  function prevImage() {
+    setModalIndex((i) => (i - 1 + vehicle.images.length) % vehicle.images.length)
+  }
+
+  function nextImage() {
+    setModalIndex((i) => (i + 1) % vehicle.images.length)
+  }
+
+  if (!vehicle) return (
     <PageLayout>
       <div className="container py-5">
         <div className="text-center">
           <h3 className="momo mb-3">Vehículo no encontrado</h3>
           <p className="text-muted mb-4">El vehículo que buscas no existe o fue removido.</p>
-          <button className="btn btn-primary btn-lg" onClick={()=>navigate(-1)}>Volver al catálogo</button>
+          <button className="btn btn-primary btn-lg" onClick={() => navigate(-1)}>Volver al catálogo</button>
         </div>
       </div>
     </PageLayout>
   )
 
   // Installment calculation: show per-month for 24 months, both without interest and with sample interest (6% anual)
-  const months = 24
+
   const price = vehicle.price
-  const monthlyNoInterest = (price / months)
-  const annualRate = 0.06
-  const r = annualRate / 12
-  const monthlyWithInterest = (price * r) / (1 - Math.pow(1 + r, -months))
 
   return (
     <PageLayout>
@@ -55,8 +83,9 @@ export default function VehicleDetail(){
                       <img
                         src={vehicle.images[activeIndex]}
                         alt={vehicle.name}
-                        className="img-fluid w-100 rounded-top"
-                        style={{ maxHeight: '500px', objectFit: 'cover' }}
+                        className="img-fluid w-100 rounded-top detail-main-img"
+                        style={{ maxHeight: '500px', objectFit: 'cover', cursor: 'pointer' }}
+                        onClick={() => openModal(activeIndex)}
                       />
                       <div className="position-absolute top-0 end-0 m-3">
                         <span className="badge fs-6 px-3 py-2 bg-dark text-light">
@@ -68,18 +97,18 @@ export default function VehicleDetail(){
                     {/* Thumbnails */}
                     <div className="p-3">
                       <div className="d-flex gap-3 overflow-auto">
-                        {vehicle.images.map((src, i)=> (
+                        {vehicle.images.map((src, i) => (
                           <button
                             key={i}
-                            className={`btn p-0 border-0 rounded thumb-btn ${i===activeIndex? 'active':''}`}
-                            onClick={()=>setActiveIndex(i)}
+                            className={`btn p-0 border-0 rounded thumb-btn ${i === activeIndex ? 'active' : ''}`}
+                            onClick={() => openModal(i)}
                             style={{ flexShrink: 0 }}
                           >
                             <img
                               src={src}
                               alt={`thumb-${i}`}
                               className="rounded shadow-sm"
-                              style={{width: '120px', height: '80px', objectFit: 'cover'}}
+                              style={{ width: '120px', height: '80px', objectFit: 'cover', cursor: 'pointer' }}
                             />
                           </button>
                         ))}
@@ -101,37 +130,11 @@ export default function VehicleDetail(){
 
                     {/* Price Section */}
                     <div className="mb-3">
-                        <span className='text-muted'>  Precio </span>
-                        <h2 className="momo mb-0 price">{formatCurrency(price)}</h2>
+                      <span className='text-muted'>  Precio </span>
+                      <h2 className="momo mb-0 price">{formatCurrency(price)}</h2>
                     </div>
 
                     <hr />
-
-                    {/* Financing Options */}
-                    <div className="mb-4">
-                      <h5 className="mb-3">Opciones de pago</h5>
-
-                      <div className="border rounded p-3 mb-3">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div>
-                            <small className="text-muted d-block">Sin interés</small>
-                            <strong className="fs-5">{formatCurrency(Math.round(monthlyNoInterest))}</strong>
-                            <small className="text-muted"> /mes x {months} meses</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border rounded p-3">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div>
-                            <small className="text-muted d-block">Con interés (6% anual)</small>
-                            <strong className="fs-5">{formatCurrency(Math.round(monthlyWithInterest))}</strong>
-                            <small className="text-muted"> /mes x {months} meses</small>
-                          </div>
-                        </div>
-                        <small className="text-muted d-block mt-2">*Tasa de ejemplo. Puede variar según condiciones.</small>
-                      </div>
-                    </div>
 
                     {/* Specifications */}
                     <div className="mb-4">
@@ -176,15 +179,109 @@ export default function VehicleDetail(){
 
                     {/* Action Buttons */}
                     <div className="d-grid gap-2">
-                      <button className="btn btn-warning btn-lg">
-                        <i className="fas fa-calculator me-2"></i>
-                        Solicitar financiamiento
-                      </button>
-                      <button className="btn btn-outline-primary btn-lg">
+                      <button className="btn btn-outline-dark btn-lg">
                         <i className="fas fa-phone me-2"></i>
                         Contactar vendedor
                       </button>
-                     
+                      <button className="btn btn-primary btn-lg">
+                        <i className="fas fa-calculator me-2"></i>
+                        Solicitar financiamiento
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal for full-screen gallery */}
+        {modalOpen && (
+          <div className="gallery-modal d-flex align-items-center justify-content-center" onClick={closeModal}>
+            <button className="gallery-close btn btn-link text-light" onClick={(e) => { e.stopPropagation(); closeModal(); }} aria-label="Cerrar">
+              <FaTimes size={28} />
+            </button>
+
+            <button className="gallery-nav left btn btn-link text-light" onClick={(e) => { e.stopPropagation(); prevImage(); }} aria-label="Anterior">
+              <FaChevronLeft size={36} />
+            </button>
+
+            <img
+              src={vehicle.images[modalIndex]}
+              alt={`full-${modalIndex}`}
+              className="img-fluid"
+              onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }}
+            />
+
+            <button className="gallery-nav right btn btn-link text-light" onClick={(e) => { e.stopPropagation(); nextImage(); }} aria-label="Siguiente">
+              <FaChevronRight size={36} />
+            </button>
+          </div>
+        )}
+
+        {/* Vehicle History Section */}
+        <div className="row justify-content-center mt-5">
+          <div className="col-12 col-xl-10">
+            <div className="card border-0 shadow-lg">
+              <div className="card-body p-4">
+                <h3 className="momo mb-4 text-center">Información Adicional del Vehículo</h3>
+
+                <div className="row g-4">
+                  <div className="col-lg-4">
+                    <h5 className="mb-3 text-center">HISTORIAL DE REPARACIONES</h5>
+                    <div className="mb-3 p-3 border rounded">
+                      <div className="d-flex align-items-center mb-2">
+                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
+                        <strong className="text-primary">15/03/2024</strong>
+                      </div>
+                      <div className="d-flex align-items-start">
+                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
+                        <span>Cambio de aceite y filtros, revisión de frenos</span>
+                      </div>
+                    </div>
+                    <div className="mb-3 p-3 border rounded">
+                      <div className="d-flex align-items-center mb-2">
+                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
+                        <strong className="text-primary">22/08/2023</strong>
+                      </div>
+                      <div className="d-flex align-items-start">
+                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
+                        <span>Reemplazo de pastillas de freno delanteras</span>
+                      </div>
+                    </div>
+                    <div className="mb-3 p-3 border rounded">
+                      <div className="d-flex align-items-center mb-2">
+                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
+                        <strong className="text-primary">10/01/2023</strong>
+                      </div>
+                      <div className="d-flex align-items-start">
+                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
+                        <span>Alineación y balanceo de ruedas</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-lg-4">
+                    <h5 className="mb-3 text-center">ESTADO DE INSPECCIÓN DEL VEHÍCULO</h5>
+                    <div className="text-center">
+                      <div className="mb-3">
+                        <i className="fas fa-check-circle text-success fa-2x mb-3"></i>
+                        <p className="mb-2">Vehículo en excelente estado mecánico</p>
+                        <small className="text-muted">Inspección realizada el 20/10/2024 por técnico certificado</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-lg-4">
+                    <h5 className="mb-3 text-center">GARANTÍA</h5>
+                    <div className="text-center">
+                      <div className="mb-3">
+                        <i className="fas fa-shield-alt text-primary fa-2x mb-3"></i>
+                        <h6 className="text-primary mb-2">2 años de garantía</h6>
+                        <small className="text-muted">Cobertura completa de motor y transmisión</small>
+                      </div>
                     </div>
                   </div>
                 </div>

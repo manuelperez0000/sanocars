@@ -25,7 +25,7 @@ const Nav = () => {
                 <FaBars />
             </button>
             <nav className='nav d-none d-md-flex'>
-                <a href="tel:+08091171993" className='phone y-center link-white'>
+                <a href="tel:+8108091171993" className='phone y-center link-white'>
                     <FaPhone /> 080-9117-1993
                 </a>
                 <NavLink to="/login" className="y-center link-white">
@@ -52,7 +52,7 @@ const Nav = () => {
 
         <div className={menuOpen ? "d-block bg-dark p-3" : "d-none bg-dark p-3"} style={{ position: "fixed", top: "0px", height:"100vh", width: "100vw", right: 0, zIndex: 1000, overflowY: 'scroll', transition: '0.3s ease-in-out' }}>
             <div className='flex-between'>
-            {/* <a href="tel:+08091171993" className='d-block mb-2 text-white' onClick={() => setMenuOpen(false)}>
+            {/* <a href="tel:+8108091171993" className='d-block mb-2 text-white' onClick={() => setMenuOpen(false)}>
                 <FaPhone /> 080-9117-1993
             </a> */}
             <NavLink to="/login" className="d-block mb-2 btn btn-primary text-decoration-none fs-4" onClick={() => setMenuOpen(false)}>

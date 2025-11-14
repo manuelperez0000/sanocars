@@ -4,7 +4,7 @@ import servicesData from '../data/services.js'
 import mecanica from "../../public/services/mecanica.webp"
 import pintura from "../../public/services/pintura.webp"
 import grua from "../../public/services/grua.webp"
-import document from "../../public/services/document.webp"
+import document from "../../public/services/document.jpeg"
 import rent from "../../public/services/rent.jpg"
 
 const imagesOBJ = {
@@ -20,7 +20,7 @@ const Service = () => {
     const service = servicesData.find(s => s.id === id)
 
     const handleClick = () => {
-        const phoneNumber = "+08091171993"
+        const phoneNumber = "+8108091171993"
         const message = `quiero contratar el servicio de "${service.title}"`
         const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
         window.open(url, '_blank')

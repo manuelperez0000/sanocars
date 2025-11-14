@@ -3,7 +3,7 @@ import SearchBar from './SearchBar'
 import Nav from './nav'
 
 const Header = ({ onSearch }) => {
-    const images = ['/carousel/2.png','/carousel/1.jpg','/carousel/3.webp',]
+    const images = ['/carousel/venta.jpg','/carousel/1.jpg','/carousel/3.webp',]
     const [currentIndex, setCurrentIndex] = useState(0)
     const [opacity1, setOpacity1] = useState(1)
 

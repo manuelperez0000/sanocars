@@ -69,7 +69,7 @@ const Financiamiento = () => {
         <div className="container py-5">
             <div className="row">
                 <div className="col-12">
-                    <h1 className="momo mb-4 text-center">Solicitud de Financiamiento</h1>
+                    <h2 className="momo mb-4 text-center">Solicitud de Financiamiento</h2>
                     <p className="text-center mb-5">
                         Completa este formulario para solicitar financiamiento para tu vehículo.
                         Asegúrate de escribir correctamente en katakana y kanji según se indique.

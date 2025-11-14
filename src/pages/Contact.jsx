@@ -53,7 +53,7 @@ const Contact = () => {
                             <FaPhone className="me-3 text-primary" size={24} />
                             <div>
                                 <h6 className="mb-1">Teléfono</h6>
-                                <a href="tel:+08091171993" className="text-decoration-none">080 9117 1993</a>
+                                <a href="tel:+8108091171993" className="text-decoration-none">080 9117 1993</a>
                             </div>
                         </div>
 

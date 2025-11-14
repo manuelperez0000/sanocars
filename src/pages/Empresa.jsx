@@ -123,7 +123,7 @@ const Empresa = () => {
                                 </p>
                                 <p className="mb-2">
                                     <FaPhone className="me-2" />
-                                    <a href="tel:+08091171993" className="text-decoration-none">080 9117 1993</a>
+                                    <a href="tel:+8108091171993" className="text-decoration-none">080 9117 1993</a>
                                 </p>
                                 <p className="mb-0">
                                     <FaEnvelope className="me-2" />

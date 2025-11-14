@@ -424,3 +424,51 @@ h1 {
 .vehicle-image:hover {
   filter: brightness(1.1);
 }
+
+/* Thumbnail pointer and modal gallery styles */
+.thumb-btn img {
+  cursor: pointer;
+}
+
+.gallery-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.86);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gallery-modal img {
+  border-radius: 6px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+.gallery-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2010;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffffcc;
+  background: transparent;
+  border: none;
+  padding: 8px;
+}
+
+.gallery-nav.left { left: 18px; }
+.gallery-nav.right { right: 18px; }
+
+.gallery-nav:hover { color: #fff; }
+
+/* ensure large-screen image doesn't overflow under nav */
+@media (max-width: 576px) {
+  .gallery-nav.left, .gallery-nav.right { display: none; }
+}

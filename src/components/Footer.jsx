@@ -38,7 +38,7 @@ const Footer = () => {
                             </li>
                             <li className="mb-2">
                                 <FaPhone className="me-2" />
-                                <a href="tel:+08091171993" className="footer-link">080 9117 1993</a>
+                                <a href="tel:+8108091171993" className="footer-link">080 9117 1993</a>
                             </li>
                             <li className="mb-2">
                                 <FaMapMarkerAlt className="me-2" />

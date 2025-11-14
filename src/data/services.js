@@ -37,7 +37,7 @@ const servicesData = [
     },
     {
         id: "documentacion",
-        image: "./services/document.webp",
+        image: "./services/document.jpeg",
         title: "Documentación",
         services: [
             "Cambio de nombre y transferencia",

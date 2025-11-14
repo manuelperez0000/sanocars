@@ -158,9 +158,10 @@ const Home = () => {
                 <div className='row align-items-center'>
                     <div className='col-lg-8'>
                         <h2 className='mb-4 momo'>Financiamiento</h2>
-                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Contamos Con Financiamiento Propio Y Con Las Cuotas Mas Bajas Del Mercado.</p>
-                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Financiamiento japonés o propio</p>
-                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Págalo hasta en 48 meses</p>
+                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Financiamiento Japonés</p>
+                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Financiamiento Propio </p>
+                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Pago de mensualidad flexible</p>
+                        <p className='text-financiamiento mb-3 text-l'><CiPaperplane /> Financiamiento fácil de aprobación</p>
                     </div>
                     <div className='col-lg-4 text-center'>
                         <a href="/financiamiento" className="btn btn-primary btn-lg px-4 py-3"> <FaNewspaper /> Obtener mi financiamiento</a>
