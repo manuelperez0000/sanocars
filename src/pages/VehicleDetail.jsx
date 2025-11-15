@@ -195,10 +195,16 @@ export default function VehicleDetail() {
                             <strong>{vehicle.passengers}</strong>
                           </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-6">
                           <div className="p-2 border rounded">
-                            <small className="text-muted d-block">Aire acondicionado</small>
+                            <small className="text-muted d-block">AIRE ACONDICIONADO</small>
                             <strong>{vehicle.ac ? 'Si' : 'No'}</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">GARANTIA</small>
+                            <strong>12 Meses</strong>
                           </div>
                         </div>
                       </div>
