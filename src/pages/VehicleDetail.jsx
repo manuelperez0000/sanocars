@@ -76,7 +76,7 @@ export default function VehicleDetail() {
 
             <div className="row g-3">
               {/* Image Gallery */}
-              <div className="col-lg-8">
+              <div className="col-lg-7">
                 <div className="card border-0 shadow-lg">
                   <div className="card-body p-0">
                     <div className="position-relative">
@@ -115,23 +115,42 @@ export default function VehicleDetail() {
                       </div>
                     </div>
                   </div>
+
+                </div>
+                {/* Vehicle History Section */}
+                <div className="row justify-content-center mt-3">
+                  <div className="col-12">
+                    <div className="card border-0 shadow-lg">
+                      <div className="card-body p-4">
+                        <h3 className="momo">Información Adicional del Vehículo</h3>
+
+                        <div className="mb-3">
+                          <label htmlFor="additionalDetails" className="form-label">
+                            <small className='text-muted'>INFORMACIÓN ADICIONAL</small>
+                          </label>
+                          <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, nulla sunt, eum voluptates numquam delectus, dolorem impedit rem porro temporibus placeat neque? Consectetur autem voluptatum ipsum laboriosam veniam deleniti nostrum.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Vehicle Details */}
-              <div className="col-lg-4">
+              <div className="col-lg-5">
                 <div className="card border-0 shadow-lg h-100">
                   <div className="card-body p-4">
                     {/* Header */}
-                    <div className="mb-4">
-                      <h1 className="momo h2 mb-2">{vehicle.name}</h1>
-                      <p className="text-muted mb-2">{vehicle.brand} • {vehicle.model} • {vehicle.year}</p>
-                    </div>
 
+                    <h1 className="momo h2">{vehicle.name}</h1>
+                    <p className="text-muted mb-2">{vehicle.brand} • {vehicle.model} • {vehicle.year}</p>
+                    
                     {/* Price Section */}
-                    <div className="mb-3">
-                      <span className='text-muted'>  Precio </span>
-                      <h2 className="momo mb-0 price">{formatCurrency(price)}</h2>
+                    <div className=''>
+                    <span className='text-muted'>  Precio </span>
+                    <h1 className="momo h1 price">{formatCurrency(price)}</h1>
                     </div>
 
                     <hr />
@@ -188,14 +207,17 @@ export default function VehicleDetail() {
                     {/* HISTORIAL DE REPARACIONES */}
                     <div className="mb-4">
                       <h5 className="mb-3">HISTORIAL DE REPARACIONES</h5>
-                      <div className="mb-3">
-                        <strong>CAMBIO DE ACEITE Y FILTRO:</strong> (fecha)
+                      <div className="mb-3 flex-between p-2 border rounded">
+                        <small className='text-muted d-block'>CAMBIO DE ACEITE Y FILTRO:</small>
+                        <strong>26/12/2025</strong>
                       </div>
-                      <div className="mb-3">
-                        <strong>MANTENIMIENTO GENERAL:</strong> (texto)
+                      <div className="mb-3 p-2 border rounded">
+                        <small className='text-muted d-block'>MANTENIMIENTO GENERAL:</small>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       </div>
-                      <div className="mb-3">
-                        <strong>INSPECCIÓN VEHICULAR:</strong> (texto)
+                      <div className="mb-3 p-2 border rounded">
+                        <small className='text-muted d-block'>INSPECCIÓN VEHICULAR:</small>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       </div>
                     </div>
 
@@ -259,28 +281,7 @@ export default function VehicleDetail() {
           </div>
         )}
 
-        {/* Vehicle History Section */}
-        <div className="row justify-content-center mt-5">
-          <div className="col-12 col-xl-10">
-            <div className="card border-0 shadow-lg">
-              <div className="card-body p-4">
-                <h3 className="momo mb-4 text-center">Información Adicional del Vehículo</h3>
 
-                <div className="mb-3">
-                  <label htmlFor="additionalDetails" className="form-label">
-                    <strong>INFORMACIÓN ADICIONAL:</strong>
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="additionalDetails"
-                    rows="5"
-                    placeholder="Deja aquí algunos detalles adicionales sobre el vehículo..."
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </PageLayout>
   )

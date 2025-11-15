@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
-import { FaWhatsapp } from 'react-icons/fa'
+import { useState } from 'react'
+import { FaWhatsapp, FaCalendarAlt } from 'react-icons/fa'
 import servicesData from '../data/services.js'
 import mecanica from "../../public/services/mecanica.webp"
 import pintura from "../../public/services/pintura.webp"
@@ -18,12 +19,50 @@ const imagesOBJ = {
 const Service = () => {
     const { id } = useParams()
     const service = servicesData.find(s => s.id === id)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [selectedDate, setSelectedDate] = useState('')
+    const [showForm, setShowForm] = useState(false)
+    const [formData, setFormData] = useState({
+        nombre: '',
+        email: '',
+        telefono: ''
+    })
 
     const handleClick = () => {
         const phoneNumber = "+8108091171993"
         const message = `quiero contratar el servicio de "${service.title}"`
         const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
         window.open(url, '_blank')
+    }
+
+    const openModal = () => {
+        setModalOpen(true)
+        setSelectedDate('')
+        setShowForm(false)
+        setFormData({ nombre: '', email: '', telefono: '' })
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+    }
+
+    const handleDateChange = (e) => {
+        setSelectedDate(e.target.value)
+        if (e.target.value) {
+            setShowForm(true)
+        }
+    }
+
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleScheduleAppointment = () => {
+        // Here you could add logic to save the appointment
+        closeModal()
     }
 
     if (!service) {
@@ -51,9 +90,85 @@ const Service = () => {
                             <li key={idx} className='mb-2'>• {item}</li>
                         ))}
                     </ul>
-                    <button className='btn btn-primary' onClick={handleClick}> <FaWhatsapp /> Contratar este servicio </button>
+                    <div className='d-flex gap-2'>
+                        <button className='btn btn-primary' onClick={handleClick}> <FaWhatsapp /> Contratar este servicio </button>
+                        <button className='btn btn-outline-primary' onClick={openModal}> <FaCalendarAlt /> Reserve una cita </button>
+                    </div>
                 </div>
             </div>
+
+            {/* Modal for appointment scheduling */}
+            {modalOpen && (
+                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Reservar Cita - {service.title}</h5>
+                                <button type="button" className="btn-close" onClick={closeModal}></button>
+                            </div>
+                            <div className="modal-body">
+                                {!showForm ? (
+                                    <div>
+                                        <h6>Selecciona una fecha:</h6>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            min={new Date().toISOString().split('T')[0]}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h6>Fecha seleccionada: {selectedDate}</h6>
+                                        <div className="mb-3">
+                                            <label className="form-label">Nombre:</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="nombre"
+                                                value={formData.nombre}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Email:</label>
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Teléfono:</label>
+                                            <input
+                                                type="tel"
+                                                className="form-control"
+                                                name="telefono"
+                                                value={formData.telefono}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
+                                {showForm && (
+                                    <button type="button" className="btn btn-primary" onClick={handleScheduleAppointment}>
+                                        Agendar mi cita
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
