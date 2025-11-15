@@ -136,34 +136,66 @@ export default function VehicleDetail() {
 
                     <hr />
 
-                    {/* Specifications */}
+                    {/* INFORMACIÓN DEL VEHÍCULO */}
                     <div className="mb-4">
-                      <h5 className="mb-3">Especificaciones</h5>
+                      <h5 className="mb-3">INFORMACIÓN DEL VEHÍCULO</h5>
                       <div className="row g-3">
                         <div className="col-6">
-                          <div className="p-2 border rounded text-center">
-                            <small className="text-muted d-block">Motor</small>
-                            <strong>{vehicle.engine}L</strong>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="p-2 border rounded text-center">
-                            <small className="text-muted d-block">Kilometraje</small>
-                            <strong>{vehicle.km.toLocaleString()} km</strong>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="p-2 border rounded text-center">
-                            <small className="text-muted d-block">Año</small>
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">AÑO</small>
                             <strong>{vehicle.year}</strong>
                           </div>
                         </div>
                         <div className="col-6">
-                          <div className="p-2 border rounded text-center">
-                            <small className="text-muted d-block">Estado</small>
-                            <strong>{vehicle.engineState}</strong>
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">MODELO</small>
+                            <strong>{vehicle.model}</strong>
                           </div>
                         </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">COLOR</small>
+                            <strong>{vehicle.color}</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">TIPO DE TRANSMISIÓN</small>
+                            <strong>{vehicle.transmission}</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">TAMAÑO DE MOTOR</small>
+                            <strong>{vehicle.engine}L</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">CANTIDAD DE PASAJEROS</small>
+                            <strong>{vehicle.passengers}</strong>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">Aire acondicionado</small>
+                            <strong>{vehicle.ac ? 'Si' : 'No'}</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* HISTORIAL DE REPARACIONES */}
+                    <div className="mb-4">
+                      <h5 className="mb-3">HISTORIAL DE REPARACIONES</h5>
+                      <div className="mb-3">
+                        <strong>CAMBIO DE ACEITE Y FILTRO:</strong> (fecha)
+                      </div>
+                      <div className="mb-3">
+                        <strong>MANTENIMIENTO GENERAL:</strong> (texto)
+                      </div>
+                      <div className="mb-3">
+                        <strong>INSPECCIÓN VEHICULAR:</strong> (texto)
                       </div>
                     </div>
 
@@ -234,62 +266,16 @@ export default function VehicleDetail() {
               <div className="card-body p-4">
                 <h3 className="momo mb-4 text-center">Información Adicional del Vehículo</h3>
 
-                <div className="row g-4">
-                  <div className="col-lg-4">
-                    <h5 className="mb-3 text-center">HISTORIAL DE REPARACIONES</h5>
-                    <div className="mb-3 p-3 border rounded">
-                      <div className="d-flex align-items-center mb-2">
-                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
-                        <strong className="text-primary">15/03/2024</strong>
-                      </div>
-                      <div className="d-flex align-items-start">
-                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
-                        <span>Cambio de aceite y filtros, revisión de frenos</span>
-                      </div>
-                    </div>
-                    <div className="mb-3 p-3 border rounded">
-                      <div className="d-flex align-items-center mb-2">
-                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
-                        <strong className="text-primary">22/08/2023</strong>
-                      </div>
-                      <div className="d-flex align-items-start">
-                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
-                        <span>Reemplazo de pastillas de freno delanteras</span>
-                      </div>
-                    </div>
-                    <div className="mb-3 p-3 border rounded">
-                      <div className="d-flex align-items-center mb-2">
-                        <FaClock className="me-2 text-primary" style={{fontSize: '1.2rem'}} />
-                        <strong className="text-primary">10/01/2023</strong>
-                      </div>
-                      <div className="d-flex align-items-start">
-                        <FaAlignLeft className="me-2 text-success" style={{fontSize: '1.1rem', marginTop:6}} />
-                        <span>Alineación y balanceo de ruedas</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-4">
-                    <h5 className="mb-3 text-center">ESTADO DE INSPECCIÓN DEL VEHÍCULO</h5>
-                    <div className="text-center">
-                      <div className="mb-3">
-                        <i className="fas fa-check-circle text-success fa-2x mb-3"></i>
-                        <p className="mb-2">Vehículo en excelente estado mecánico</p>
-                        <small className="text-muted">Inspección realizada el 20/10/2024 por técnico certificado</small>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-4">
-                    <h5 className="mb-3 text-center">GARANTÍA</h5>
-                    <div className="text-center">
-                      <div className="mb-3">
-                        <i className="fas fa-shield-alt text-primary fa-2x mb-3"></i>
-                        <h6 className="text-primary mb-2">2 años de garantía</h6>
-                        <small className="text-muted">Cobertura completa de motor y transmisión</small>
-                      </div>
-                    </div>
-                  </div>
+                <div className="mb-3">
+                  <label htmlFor="additionalDetails" className="form-label">
+                    <strong>INFORMACIÓN ADICIONAL:</strong>
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="additionalDetails"
+                    rows="5"
+                    placeholder="Deja aquí algunos detalles adicionales sobre el vehículo..."
+                  ></textarea>
                 </div>
               </div>
             </div>

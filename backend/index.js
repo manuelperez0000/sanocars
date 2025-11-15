@@ -58,7 +58,7 @@ async function initDb() {
       queueLimit: 0,
       charset: 'utf8mb4'
     })
-utf8mb4_general_ci
+/* utf8mb4_general_ci */
     // quick check: get a connection and ping
     const conn = await dbPool.getConnection()
     await conn.ping()

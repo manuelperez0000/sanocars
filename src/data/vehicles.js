@@ -11,6 +11,10 @@ const vehicles = [
     km: 18000,
     condition: 'Usado',
     engineState: 'Muy bueno',
+    color: 'Blanco',
+    transmission: 'Automática',
+    passengers: 5,
+    ac: true,
     features: ['Asientos de cuero', 'Sensor de estacionamiento', 'Android Auto'],
     images: [
       'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1400&q=60',
@@ -28,6 +32,10 @@ const vehicles = [
     km: 45000,
     condition: 'Usado',
     engineState: 'Buen estado',
+    color: 'Rojo',
+    transmission: 'Manual',
+    passengers: 4,
+    ac: true,
     features: ['Motor V8', 'Asientos deportivos', 'Sistema de escape dual'],
     images: [
       'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=60',
@@ -45,6 +53,10 @@ const vehicles = [
     km: 8000,
     condition: 'Nuevo',
     engineState: 'Nuevo',
+    color: 'Negro',
+    transmission: 'Automática',
+    passengers: 5,
+    ac: true,
     features: ['Navegación', 'Techo solar', 'Asistente de mantenimiento de carril'],
     images: [
       'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1400&q=60',
@@ -62,6 +74,10 @@ const vehicles = [
     km: 32000,
     condition: 'Usado',
     engineState: 'Bueno',
+    color: 'Azul',
+    transmission: 'Automática',
+    passengers: 5,
+    ac: true,
     features: ['Bluetooth', 'Cruise control', 'ISOFIX'],
     images: [
       'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=60'
