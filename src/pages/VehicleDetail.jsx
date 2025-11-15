@@ -119,7 +119,7 @@ export default function VehicleDetail() {
                 </div>
                 {/* Vehicle History Section */}
                 <div className="row justify-content-center mt-3">
-                  <div className="col-12">
+                  <div className="col-12 d-none d-lg-block">
                     <div className="card border-0 shadow-lg">
                       <div className="card-body p-4">
                         <h3 className="momo">Información Adicional del Vehículo</h3>
@@ -146,17 +146,17 @@ export default function VehicleDetail() {
 
                     <h1 className="momo h2">{vehicle.name}</h1>
                     <p className="text-muted mb-2">{vehicle.brand} • {vehicle.model} • {vehicle.year}</p>
-                    
+
                     {/* Price Section */}
                     <div className=''>
-                    <span className='text-muted'>  Precio </span>
-                    <h1 className="momo h1 price">{formatCurrency(price)}</h1>
+                      <span className='text-muted'>  Precio </span>
+                      <h1 className="momo h1 price">{formatCurrency(price)}</h1>
                     </div>
 
                     <hr />
 
                     {/* INFORMACIÓN DEL VEHÍCULO */}
-                    <div className="mb-4">
+                    <div className="mb-4  ">
                       <h5 className="mb-3">INFORMACIÓN DEL VEHÍCULO</h5>
                       <div className="row g-3">
                         <div className="col-6">
@@ -254,6 +254,26 @@ export default function VehicleDetail() {
                         Solicitar financiamiento
                       </Link>
 
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vehicle History Section */}
+              <div className="row justify-content-center mt-3">
+                <div className="col-12 d-block d-lg-none">
+                  <div className="card border-0 shadow-lg">
+                    <div className="card-body p-4">
+                      <h3 className="momo">Información Adicional del Vehículo</h3>
+
+                      <div className="mb-3">
+                        <label htmlFor="additionalDetails" className="form-label">
+                          <small className='text-muted'>INFORMACIÓN ADICIONAL</small>
+                        </label>
+                        <p>
+                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, nulla sunt, eum voluptates numquam delectus, dolorem impedit rem porro temporibus placeat neque? Consectetur autem voluptatum ipsum laboriosam veniam deleniti nostrum.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

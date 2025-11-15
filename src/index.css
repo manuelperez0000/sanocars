@@ -325,16 +325,27 @@ h1 {
   min-height: 100vh;
 }
 
+.sidebar-item span{
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+}
+
+.sidebar-item span:hover{
+  background-color: #0f0f0f !important;
+  color: rgb(12, 243, 4);
+}
+
 .dashboard-sidebar .list-group-item {
   background: transparent;
   color: #fff;
   border: none;
-  margin-bottom: 6px
 }
 
 .dashboard-sidebar .list-group-item.active {
-  background: rgba(255, 20, 60, 0.12);
-  border: 1px solid rgba(255, 20, 60, 0.6);
+  background: rgba(207, 207, 207, 0.12);
+  border: 1px solid rgba(201, 201, 201, 0.6);
 }
 
 .dashboard-main {

@@ -11,6 +11,10 @@ import Financiamiento from "./pages/Financiamiento"
 import Empresa from "./pages/Empresa"
 import PageLayout from "./components/PageLayout"
 import Service from "./pages/service"
+import Usuarios from "./pages/admin/usuarios"
+import AdminFinanciamiento from "./pages/admin/financiamiento"
+import AdminVehiculos from "./pages/admin/vehiculos"
+import AdminServicios from "./pages/admin/servicios"
 
 const Router = () => {
     return <>
@@ -24,7 +28,14 @@ const Router = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/services" element={<PageLayout><Services /></PageLayout>} />
             <Route path="/service/:id" element={<PageLayout><Service /></PageLayout>} />
-            <Route path="/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
+            
+            {/* Admin */}
+            
+            <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
+            <Route path="/admin/usuarios" element={<AdminLayout><Usuarios /></AdminLayout>} />
+            <Route path="/admin/financiamiento" element={<AdminLayout><AdminFinanciamiento /></AdminLayout>} />
+            <Route path="/admin/vehiculos" element={<AdminLayout><AdminVehiculos /></AdminLayout>} />
+            <Route path="/admin/servicios" element={<AdminLayout><AdminServicios /></AdminLayout>} />
         </Routes>
     </>
 }
