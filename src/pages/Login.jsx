@@ -1,18 +1,12 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import useLogin from '../hooks/useLogin'
 
 export default function Login(){
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
-  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Mock login: in real app call API and handle errors
-    // For now just navigate to home
-    navigate('/dashboard')
-  }
+  const { email, setEmail, password, setPassword, loading, error, handleSubmit } = useLogin()
+
+  
 
   return (
     <div className="container py-5">
@@ -32,12 +26,13 @@ export default function Login(){
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label className="form-label">Correo electrónico</label>
-                    <input value={"manuelperez.0000@gmail.com"} type="email" className="form-control form-control-lg" /* value={email} */ onChange={e=>setEmail(e.target.value)} placeholder="tucorreo@ejemplo.com" required />
+                    <input value={email} type="email" className="form-control form-control-lg" onChange={e=>setEmail(e.target.value)} placeholder="tucorreo@ejemplo.com" required />
                   </div>
 
                   <div className="mb-3">
                     <label className="form-label">Contraseña</label>
-                    <input value={"123456"} type="password" className="form-control form-control-lg" /* value={password} */ onChange={e=>setPassword(e.target.value)} placeholder="Ingresa tu contraseña" required />
+                    <input value={password} type="password" className="form-control form-control-lg" onChange={e=>setPassword(e.target.value)} placeholder="Ingresa tu contraseña" required />
+                    {error && <div className="alert alert-danger">{error}</div>}
                   </div>
 
                   <div className="d-flex justify-content-between align-items-center mb-3">
@@ -49,7 +44,9 @@ export default function Login(){
                   </div>
 
                   <div className="d-grid">
-                    <button className="btn btn-warning btn-lg">Iniciar sesión</button>
+                    <button className="btn btn-warning btn-lg" disabled={loading}>
+                      {loading ? 'Ingresando...' : 'Entrar'}
+                    </button>
                   </div>
                 </form>
 

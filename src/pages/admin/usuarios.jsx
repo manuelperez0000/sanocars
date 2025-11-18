@@ -1,118 +1,22 @@
-import { useState } from 'react'
 import useUsers from '../../hooks/useUsers'
-import request from '../../utils/request'
-import { apiurl } from '../../utils/globals'
 
 const Usuarios = () => {
-    const { users, loading, error, restoreUser, deleteUser, updateUser } = useUsers()
-
-        const [modalOpen, setModalOpen] = useState(false)
-        const [editingUser, setEditingUser] = useState(null)
-        const [formData, setFormData] = useState({
-            name: '',
-            lastname: '',
-            gender: '',
-            email: '',
-            mobile_no: '',
-            role: ''
-        })
-        const [saving, setSaving] = useState(false)
-
-    const handleRestoreUser = async (userId) => {
-        if (window.confirm('¿Está seguro de que desea reestablecer este usuario?')) {
-            try {
-                await restoreUser(userId)
-                // The hook should handle refreshing the users list
-            } catch (error) {
-                alert('Error al reestablecer el usuario: ' + error.message)
-            }
-        }
-    }
-
-    const handleDeleteUser = async (userId) => {
-        if (window.confirm('¿Está seguro de que desea eliminar este usuario?')) {
-            try {
-                await deleteUser(userId)
-                // The hook should handle refreshing the users list
-            } catch (error) {
-                alert('Error al eliminar el usuario: ' + error.message)
-            }
-        }
-    }
-
-    const [loadingUser, setLoadingUser] = useState(false)
-
-    const openEditModal = async (user) => {
-        // fetch latest user data from backend to ensure fields are up-to-date
-        setLoadingUser(true)
-        setModalOpen(true)
-        try {
-            const resp = await request.get(`${apiurl}/users/${user.id}`)
-            const fetched = resp?.data?.data || resp?.data || user
-            setFormData({
-                name: fetched.name || '',
-                lastname: fetched.lastname || '',
-                gender: fetched.gender !== undefined && fetched.gender !== null ? String(fetched.gender) : '',
-                email: fetched.email || '',
-                mobile_no: fetched.mobile_no || '',
-                role: fetched.role || ''
-            })
-            setEditingUser(fetched)
-        } catch (err) {
-            // fallback to provided user object if request fails
-            setFormData({
-                name: user.name || '',
-                lastname: user.lastname || '',
-                gender: user.gender !== undefined && user.gender !== null ? String(user.gender) : '',
-                email: user.email || '',
-                mobile_no: user.mobile_no || '',
-                role: user.role || ''
-            })
-            setEditingUser(user)
-            console.error('Error fetching user detail:', err)
-            alert('No se pudo cargar la información más reciente del usuario. Mostrando datos locales.')
-        } finally {
-            setLoadingUser(false)
-        }
-    }
-
-    const closeModal = () => {
-        setModalOpen(false)
-        setEditingUser(null)
-    }
-
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
-
-    const handleSave = async () => {
-        if (!editingUser) return
-        setSaving(true)
-        try {
-            // prepare payload: convert gender to number if present
-            const payload = {
-                name: formData.name,
-                lastname: formData.lastname,
-                gender: formData.gender === '' ? null : Number(formData.gender),
-                email: formData.email,
-                mobile_no: formData.mobile_no,
-                role: formData.role
-            }
-            await updateUser(editingUser.id, payload)
-            closeModal()
-        } catch (err) {
-            alert('Error actualizando usuario: ' + (err.message || err))
-        } finally {
-            setSaving(false)
-        }
-    }
+    const {
+        users, loading, error, modalOpen, openEditModal, openNewModal,
+        closeModal, editingUser, formData, handleChange, handleSave, handleCreate,
+        loadingUser, saving, handleRestoreUser, handleDeleteUser
+    } = useUsers()
 
     return (
         <div className="container-fluid py-4">
             <div className="row">
                 <div className="col-12">
-                    <h2 className="mb-4">Gestión de Usuarios</h2>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                        <h2 className="mb-0">Gestión de Usuarios</h2>
+                        <button className="btn btn-primary" onClick={() => openNewModal()}>
+                            <span className="me-2">+</span> Nuevo usuario
+                        </button>
+                    </div>
                     <div className="card">
                         <div className="card-body">
                             {loading ? (
@@ -141,7 +45,6 @@ const Usuarios = () => {
                                                         <th>Email</th>
                                                         <th>Teléfono</th>
                                                         <th>Rol</th>
-                                                        <th>Estado</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -155,7 +58,7 @@ const Usuarios = () => {
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.email || '-'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.mobile_no || '-'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.role || '-'}</td>
-                                                            <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.soft_delete === 0 ? 'Eliminado' : 'Activo'}</td>
+                                                            
                                                             <td>
                                                                 <div className="d-flex gap-1">
                                                                     <button className="btn btn-sm btn-primary" onClick={() => openEditModal(user)}>Editar</button>
@@ -196,7 +99,7 @@ const Usuarios = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Editar usuario #{editingUser?.id}</h5>
+                                <h5 className="modal-title">{editingUser ? `Editar usuario #${editingUser.id}` : 'Nuevo usuario'}</h5>
                                 <button type="button" className="btn-close" onClick={closeModal}></button>
                             </div>
                             <div className="modal-body">
@@ -229,6 +132,12 @@ const Usuarios = () => {
                                             <label className="form-label">Email</label>
                                             <input name="email" value={formData.email} onChange={handleChange} className="form-control" />
                                         </div>
+                                        {!editingUser && (
+                                            <div className="mb-2">
+                                                <label className="form-label">Password</label>
+                                                <input name="password" type="password" value={formData.password} onChange={handleChange} className="form-control" />
+                                            </div>
+                                        )}
                                         <div className="mb-2">
                                             <label className="form-label">Teléfono</label>
                                             <input name="mobile_no" value={formData.mobile_no} onChange={handleChange} className="form-control" />
@@ -246,7 +155,11 @@ const Usuarios = () => {
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-secondary" onClick={closeModal}>Cancelar</button>
-                                <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar cambios'}</button>
+                                {editingUser ? (
+                                    <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar cambios'}</button>
+                                ) : (
+                                    <button className="btn btn-primary" onClick={async () => { try { await handleCreate(); } catch (err) { alert('Error creando usuario: ' + (err.message || err)) } }} disabled={saving}>{saving ? 'Guardando...' : 'Crear usuario'}</button>
+                                )}
                             </div>
                         </div>
                     </div>
