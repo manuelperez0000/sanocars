@@ -15,6 +15,7 @@ import Usuarios from "./pages/admin/usuarios"
 import AdminFinanciamiento from "./pages/admin/financiamiento"
 import AdminVehiculos from "./pages/admin/vehiculos"
 import AdminServicios from "./pages/admin/servicios"
+import Imagenes from "./pages/admin/imagenes"
 
 const Router = () => {
     return <>
@@ -36,6 +37,7 @@ const Router = () => {
             <Route path="/admin/financiamiento" element={<AdminLayout><AdminFinanciamiento /></AdminLayout>} />
             <Route path="/admin/vehiculos" element={<AdminLayout><AdminVehiculos /></AdminLayout>} />
             <Route path="/admin/servicios" element={<AdminLayout><AdminServicios /></AdminLayout>} />
+            <Route path="/admin/imagenes" element={<AdminLayout><Imagenes /></AdminLayout>} />
         </Routes>
     </>
 }

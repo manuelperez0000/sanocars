@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { FaTachometerAlt, FaUsers, FaMoneyBillWave, FaCar, FaTools } from 'react-icons/fa'
+import { FaTachometerAlt, FaUsers, FaMoneyBillWave, FaCar, FaTools, FaImages } from 'react-icons/fa'
 
 const Sidebar = () => {
     const location = useLocation()
@@ -9,7 +9,8 @@ const Sidebar = () => {
         { title: 'Usuarios', path: '/admin/usuarios', icon: FaUsers },
         { title: 'Financiamiento', path: '/admin/financiamiento', icon: FaMoneyBillWave },
         { title: 'Vehículos', path: '/admin/vehiculos', icon: FaCar },
-        { title: 'Servicios', path: '/admin/servicios', icon: FaTools }
+        { title: 'Servicios', path: '/admin/servicios', icon: FaTools },
+        { title: 'Imagenes', path: '/admin/imagenes', icon : FaImages }
     ]
 
     return <aside className="dashboard-sidebar">
