@@ -3,7 +3,7 @@ import Home from "./pages/home"
 import VehicleDetail from './pages/VehicleDetail'
 import Vehicles from './pages/Vehicles'
 import Login from './pages/Login'
-import Dashboard from './pages/dashboard'
+import Dashboard from './pages/admin/dashboard'
 import AdminLayout from "./components/adminLayout"
 import Services from "./pages/services"
 import Contact from "./pages/Contact"

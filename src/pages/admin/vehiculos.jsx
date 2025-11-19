@@ -1,4 +1,5 @@
 import useVehicles from '../../hooks/useVehicles'
+import { hostUrl } from '../../utils/globals'
 
 const Vehiculos = () => {
     const {
@@ -11,6 +12,7 @@ const Vehiculos = () => {
         editing,
         form,
         uploadingImages,
+        imageUploadErrors,
         visibleVehicles,
         openNew,
         openEdit,
@@ -20,7 +22,8 @@ const Vehiculos = () => {
         removeImageInput,
         handleSave,
         handleMarkAsSold,
-        handleMarkAsDeleted
+        handleMarkAsDeleted,
+        getImages
     } = useVehicles()
 
     return (
@@ -38,62 +41,62 @@ const Vehiculos = () => {
 
                     <div className="card">
                         <div className="card-body p-0">
-                                {loading ? (
+                            {loading ? (
                                 <div className="p-4">Cargando vehículos...</div>
                             ) : (
                                 <>
-                                <div className="d-flex align-items-center p-3 gap-2">
-                                    <div>Filtrar:</div>
-                                    <div className="btn-group" role="group">
-                                        <button type="button" className={`btn btn-sm ${filter==='all' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={()=>setFilter('all')}>Todos</button>
-                                        <button type="button" className={`btn btn-sm ${filter==='En Venta' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={()=>setFilter('En Venta')}>En venta</button>
-                                        <button type="button" className={`btn btn-sm ${filter==='vendido' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={()=>setFilter('vendido')}>Vendidos</button>
-                                        <button type="button" className={`btn btn-sm ${filter==='eliminado' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={()=>setFilter('eliminado')}>Eliminados</button>
+                                    <div className="d-flex align-items-center p-3 gap-2">
+                                        <div>Filtrar:</div>
+                                        <div className="btn-group" role="group">
+                                            <button type="button" className={`btn btn-sm ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('all')}>Todos</button>
+                                            <button type="button" className={`btn btn-sm ${filter === 'En Venta' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('En Venta')}>En venta</button>
+                                            <button type="button" className={`btn btn-sm ${filter === 'vendido' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('vendido')}>Vendidos</button>
+                                            <button type="button" className={`btn btn-sm ${filter === 'eliminado' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('eliminado')}>Eliminados</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="table-responsive">
-                                    <table className="table table-hover mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Ingreso</th>
-                                                <th>Marca</th>
-                                                <th>Modelo</th>
-                                                <th>Año</th>
-                                                <th>Kms</th>
-                                                <th>Color</th>
-                                                <th>Status</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {visibleVehicles && visibleVehicles.length > 0 ? (
-                                                visibleVehicles.map(v => (
-                                                    <tr key={v.id}>
-                                                        <td>{v.id}</td>
-                                                        <td>{v.fecha_ingreso}</td>
-                                                        <td>{v.marca}</td>
-                                                        <td>{v.modelo}</td>
-                                                        <td>{v.anio}</td>
-                                                        <td>{v.kilometraje}</td>
-                                                        <td>{v.color}</td>
-                                                        <td>{v.status}</td>
-                                                        <td>
-                                                            <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
-                                                            <button className="btn btn-sm btn-success me-2" onClick={() => handleMarkAsSold(v)}>Vendido</button>
-                                                            <button className="btn btn-sm btn-danger" onClick={() => handleMarkAsDeleted(v)}>Eliminar</button>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                            ) : (
+                                    <div className="table-responsive">
+                                        <table className="table table-hover mb-0">
+                                            <thead>
                                                 <tr>
-                                                    <td colSpan={9} className="text-center p-4">No hay vehículos</td>
+                                                    <th>ID</th>
+                                                    <th>Imagenes</th>
+                                                    <th>Marca</th>
+                                                    <th>Modelo</th>
+                                                    <th>Año</th>
+                                                    <th>Kms</th>
+                                                    <th>Color</th>
+                                                    <th>Status</th>
+                                                    <th>Acciones</th>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </>)}
+                                            </thead>
+                                            <tbody>
+                                                {visibleVehicles && visibleVehicles.length > 0 ? (
+                                                    visibleVehicles.map(v => (
+                                                        <tr key={v.id}>
+                                                            <td>{v.id}</td>
+                                                            <td>{getImages(v.imagen1)}</td>
+                                                            <td>{v.marca}</td>
+                                                            <td>{v.modelo}</td>
+                                                            <td>{v.anio}</td>
+                                                            <td>{v.kilometraje}</td>
+                                                            <td>{v.color}</td>
+                                                            <td>{v.status}</td>
+                                                            <td>
+                                                                <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
+                                                                <button className="btn btn-sm btn-success me-2" onClick={() => handleMarkAsSold(v)}>Vendido</button>
+                                                                <button className="btn btn-sm btn-danger" onClick={() => handleMarkAsDeleted(v)}>Eliminar</button>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan={9} className="text-center p-4">No hay vehículos</td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </>)}
                         </div>
                     </div>
                 </div>
@@ -181,32 +184,52 @@ const Vehiculos = () => {
                                         <div className="col-12 mb-3">
                                             <label className="form-label">Imágenes</label>
                                             {form.imagenes && form.imagenes.map((imagen, index) => (
-                                                <div key={index} className="d-flex align-items-center mb-2">
-                                                    <input
-                                                        type="file"
-                                                        name="image"
-                                                        id='image'
-                                                        className="form-control me-2"
-                                                        onChange={(e) => handleImageChange(index, e.target.files[0])}
-                                                        accept="image/*"
-                                                        disabled={uploadingImages[index]}
-                                                    />
-                                                    {uploadingImages[index] && (
-                                                        <div className="spinner-border spinner-border-sm me-2" role="status">
-                                                            <span className="visually-hidden">Subiendo...</span>
+                                                <div key={index} className="mb-3 p-3 border rounded">
+                                                    <div className="d-flex align-items-center mb-2">
+                                                        <input
+                                                            type="file"
+                                                            name="image"
+                                                            id={`image-${index}`}
+                                                            className="form-control me-2"
+                                                            onChange={(e) => handleImageChange(index, e.target.files[0])}
+                                                            accept="image/*"
+                                                            disabled={uploadingImages[index]}
+                                                        />
+                                                        {uploadingImages[index] && (
+                                                            <div className="spinner-border spinner-border-sm me-2" role="status">
+                                                                <span className="visually-hidden">Subiendo...</span>
+                                                            </div>
+                                                        )}
+                                                        {imagen && !uploadingImages[index] && (
+                                                            <>
+                                                                <i className="bi bi-check-circle-fill text-success me-2" style={{ fontSize: '1.2rem' }}></i>
+                                                                <small className="text-muted me-2">{imagen}</small>
+                                                            </>
+                                                        )}
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-danger btn-sm"
+                                                            onClick={() => removeImageInput(index)}
+                                                            disabled={uploadingImages[index]}
+                                                        >
+                                                            Eliminar
+                                                        </button>
+                                                    </div>
+                                                    {imagen && !uploadingImages[index] && (
+                                                        <div className="mt-2">
+                                                            <img
+                                                                src={`${hostUrl}/uploads/${imagen}`}
+                                                                alt={`Preview ${imagen}`}
+                                                                className="img-thumbnail"
+                                                                style={{ maxWidth: '200px', maxHeight: '150px' }}
+                                                            />
                                                         </div>
                                                     )}
-                                                    {imagen && !uploadingImages[index] && (
-                                                        <small className="text-muted me-2">{imagen}</small>
+                                                    {imageUploadErrors[index] && (
+                                                        <div className="mt-2">
+                                                            <small className="text-danger">{imageUploadErrors[index]}</small>
+                                                        </div>
                                                     )}
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-danger btn-sm"
-                                                        onClick={() => removeImageInput(index)}
-                                                        disabled={uploadingImages[index]}
-                                                    >
-                                                        Eliminar
-                                                    </button>
                                                 </div>
                                             ))}
                                             <button
@@ -221,7 +244,13 @@ const Vehiculos = () => {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setModalOpen(false)}>Cancelar</button>
-                                    <button type="submit" className="btn btn-primary">Guardar</button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={Object.values(uploadingImages).some(uploading => uploading)}
+                                    >
+                                        Guardar
+                                    </button>
                                 </div>
                             </form>
                         </div>

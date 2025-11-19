@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl } from '../utils/globals'
+import { apiurl, hostUrl } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
+import imageCompression from 'browser-image-compression';
+import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 
 const useVehicles = () => {
     const [vehicles, setVehicles] = useState([])
@@ -13,10 +15,13 @@ const useVehicles = () => {
     const [editing, setEditing] = useState(null)
     const [form, setForm] = useState(getEmptyForm())
     const [uploadingImages, setUploadingImages] = useState({})
+    const [imageUploadErrors, setImageUploadErrors] = useState({})
 
     useEffect(() => {
         fetchVehicles()
     }, [])
+
+
 
     async function fetchVehicles() {
         setLoading(true)
@@ -72,39 +77,64 @@ const useVehicles = () => {
         setForm(prev => ({ ...prev, [name]: value }))
     }
 
+    async function compressImage(file) {
+        const options = {
+            maxSizeMB: 1,            // máximo 1 MB
+            maxWidthOrHeight: 1024,   // redimensionar a 1024px máximo
+            useWebWorker: true
+        }
+        const compressedFile = await imageCompression(file, options)
+        return compressedFile
+    }
+
     async function handleImageChange(index, file) {
         if (!file) return
+
+        // Clear any previous error for this image
+        setImageUploadErrors(prev => ({ ...prev, [index]: null }))
 
         // Set uploading state
         setUploadingImages(prev => ({ ...prev, [index]: true }))
 
         try {
-            // Create FormData for file upload
+            // 👉 Comprimir la imagen antes de enviarla
+            const compressedFile = await compressImage(file)
+
+            const newFile = new File([compressedFile], file.name, { type: compressedFile.type })
+
+            // Crear FormData con la imagen comprimida
             const formData = new FormData()
-            formData.append('image', file)
+            formData.append('image', newFile)
 
-            // Upload to external server
-            const response = await
-                request.post('http://mitaller.sanocarstaller.com/upload', formData)
+            // Subir al servidor externo
+            const response = await request.post(hostUrl + '/upload', formData)
 
-            console.log("response fetch image: ", response)
+            console.log("response post image: ", response)
 
-            const fileName = request.data.body
+            const fileName = response.data.filename
 
-            // Store the uploaded filename in the array
+            // Guardar el nombre en el array
             setForm(prev => {
                 const newImagenes = [...prev.imagenes]
                 newImagenes[index] = fileName
                 return { ...prev, imagenes: newImagenes }
             })
+
+            // Clear any error for this image on success
+            setImageUploadErrors(prev => ({ ...prev, [index]: null }))
         } catch (error) {
             console.error('Error uploading image:', error)
-            setError('Error subiendo la imagen')
+            // Set specific error for this image
+            setImageUploadErrors(prev => ({
+                ...prev,
+                [index]: 'No se pudo cargar la imagen. Inténtalo de nuevo.'
+            }))
         } finally {
             // Clear uploading state
             setUploadingImages(prev => ({ ...prev, [index]: false }))
         }
     }
+
 
     function addImageInput() {
         setForm(prev => ({
@@ -179,6 +209,155 @@ const useVehicles = () => {
         return true
     })
 
+    const getImages = (imageList) => {
+        const imagesArray = imageList
+            .split(',')
+            .map(img => img.trim().replace(/^'|'$/g, ''));
+
+        // Component for image gallery with modal
+        const ImageGallery = () => {
+            const [modalOpen, setModalOpen] = useState(false);
+            const [modalIndex, setModalIndex] = useState(0);
+
+            useEffect(() => {
+                if (!modalOpen) return;
+                function onKey(e) {
+                    if (e.key === 'Escape') setModalOpen(false);
+                    if (e.key === 'ArrowLeft') setModalIndex(i => (i - 1 + imagesArray.length) % imagesArray.length);
+                    if (e.key === 'ArrowRight') setModalIndex(i => (i + 1) % imagesArray.length);
+                }
+                window.addEventListener('keydown', onKey);
+                return () => window.removeEventListener('keydown', onKey);
+            }, [modalOpen, modalIndex, imagesArray.length]);
+
+            function openModal(index) {
+                setModalIndex(index);
+                setModalOpen(true);
+            }
+
+            function closeModal() {
+                setModalOpen(false);
+            }
+
+            function prevImage() {
+                setModalIndex((i) => (i - 1 + imagesArray.length) % imagesArray.length);
+            }
+
+            function nextImage() {
+                setModalIndex((i) => (i + 1) % imagesArray.length);
+            }
+
+            return (
+                <>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+                        gap: '8px',
+                        maxWidth: '260px' // 3 images * 80px + 2 gaps * 8px
+                    }}>
+                        {imagesArray.map((imageName, index) => (
+                            <img
+                                key={index}
+                                src={`${hostUrl}/uploads/${imageName}`}
+                                alt={imageName}
+                                onClick={() => openModal(index)}
+                                style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    objectFit: 'cover',
+                                    borderRadius: '4px',
+                                    border: '1px solid #e0e0e0',
+                                    cursor: 'pointer'
+                                }}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Modal for full-screen gallery */}
+                    {modalOpen && (
+                        <div className="gallery-modal d-flex align-items-center justify-content-center" onClick={closeModal} style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            zIndex: 1050
+                        }}>
+                            <button
+                                className="gallery-close btn btn-link text-light position-absolute"
+                                onClick={(e) => { e.stopPropagation(); closeModal(); }}
+                                aria-label="Cerrar"
+                                style={{
+                                    top: '20px',
+                                    right: '20px',
+                                    zIndex: 1051,
+                                    border: 'none',
+                                    background: 'none',
+                                    color: 'white',
+                                    fontSize: '28px'
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+
+                            <button
+                                className="gallery-nav left btn btn-link text-light position-absolute"
+                                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                                aria-label="Anterior"
+                                style={{
+                                    left: '20px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    zIndex: 1051,
+                                    border: 'none',
+                                    background: 'none',
+                                    color: 'white',
+                                    fontSize: '36px'
+                                }}
+                            >
+                                <FaChevronLeft />
+                            </button>
+
+                            <img
+                                src={`${hostUrl}/uploads/${imagesArray[modalIndex]}`}
+                                alt={`full-${modalIndex}`}
+                                className="img-fluid"
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    maxWidth: '90%',
+                                    maxHeight: '90%',
+                                    objectFit: 'contain'
+                                }}
+                            />
+
+                            <button
+                                className="gallery-nav right btn btn-link text-light position-absolute"
+                                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                                aria-label="Siguiente"
+                                style={{
+                                    right: '20px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    zIndex: 1051,
+                                    border: 'none',
+                                    background: 'none',
+                                    color: 'white',
+                                    fontSize: '36px'
+                                }}
+                            >
+                                <FaChevronRight />
+                            </button>
+                        </div>
+                    )}
+                </>
+            );
+        };
+
+        return <ImageGallery />;
+    };
+
+
     return {
         vehicles,
         loading,
@@ -190,6 +369,7 @@ const useVehicles = () => {
         editing,
         form,
         uploadingImages,
+        imageUploadErrors,
         visibleVehicles,
         fetchVehicles,
         openNew,
@@ -200,7 +380,8 @@ const useVehicles = () => {
         removeImageInput,
         handleSave,
         handleMarkAsSold,
-        handleMarkAsDeleted
+        handleMarkAsDeleted,
+        getImages
     }
 }
 
