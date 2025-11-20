@@ -2,11 +2,13 @@ import { useParams, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { FaWhatsapp, FaCalendarAlt } from 'react-icons/fa'
 import servicesData from '../data/services.js'
+import request from '../utils/request.js'
 import mecanica from "../../public/services/mecanica.webp"
 import pintura from "../../public/services/pintura.webp"
 import grua from "../../public/services/grua.webp"
 import document from "../../public/services/document.jpeg"
 import rent from "../../public/services/rent.jpg"
+import { apiurl } from '../utils/globals.js'
 
 const imagesOBJ = {
     "mecanica-general": mecanica,
@@ -60,9 +62,28 @@ const Service = () => {
         })
     }
 
-    const handleScheduleAppointment = () => {
-        // Here you could add logic to save the appointment
-        closeModal()
+    const handleScheduleAppointment = async () => {
+        try {
+            const reservationData = {
+                nombre: formData.nombre,
+                email: formData.email,
+                telefono: formData.telefono,
+                servicio: service.title,
+                fecha_reserva: selectedDate
+            }
+
+            const response = await request.post(apiurl + '/services/reserve', reservationData)
+
+            if (response.data.status === 200) {
+                alert('Reserva guardada exitosamente')
+                closeModal()
+            } else {
+                alert('Error al guardar la reserva: ' + response.data.message)
+            }
+        } catch (error) {
+            console.error('Error saving reservation:', error)
+            alert('Error al guardar la reserva. Por favor, inténtelo de nuevo.')
+        }
     }
 
     if (!service) {

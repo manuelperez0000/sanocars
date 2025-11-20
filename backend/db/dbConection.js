@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 // db.js
 var mysql = require('mysql2/promise');
+var automatics = require('./automatics.js');
 require('dotenv').config();
 
 async function initDb() {
@@ -20,6 +21,10 @@ async function initDb() {
     // Comprobación inmediata
     var conn = await pool.getConnection();
     await conn.ping();
+
+    // Crear tablas automaticamente si no existen
+    await automatics(conn)
+
     conn.release();
 
     console.log(`✅ Conectado a la base de datos ${process.env.DB_NAME}`);
@@ -31,6 +36,7 @@ async function initDb() {
 }
 
 module.exports = initDb;
+
 
 
 

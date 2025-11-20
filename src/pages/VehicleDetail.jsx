@@ -1,21 +1,67 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import vehicles from '../data/vehicles'
 import PageLayout from '../components/PageLayout'
 import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
+import request from '../utils/request'
+import { apiurl, hostUrl } from '../utils/globals'
 
 function formatCurrency(n) { return `$${n.toLocaleString()}` }
 
 export default function VehicleDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const vehicle = useMemo(() => vehicles.find(v => String(v.id) === String(id)), [id])
+  const [vehicle, setVehicle] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalIndex, setModalIndex] = useState(0)
 
   useEffect(() => {
-    if (!modalOpen) return
+    fetchVehicle()
+  }, [id])
+
+  const fetchVehicle = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const resp = await request.get(`${apiurl}/vehicles/${id}`)
+      if (resp?.data?.body) {
+        // Map database fields to component fields
+        const dbVehicle = resp.data.body
+        const mappedVehicle = {
+          observaciones: dbVehicle.observaciones,
+          trabajos_realizar: dbVehicle.trabajos_realizar,
+          id: dbVehicle.id,
+          name: `${dbVehicle.marca} ${dbVehicle.modelo}`,
+          brand: dbVehicle.marca,
+          model: dbVehicle.modelo,
+          year: dbVehicle.anio,
+          engine: dbVehicle.tamano_motor,
+          precio: dbVehicle.precio,
+          km: dbVehicle.kilometraje,
+          condition: dbVehicle.status === 'En Venta' ? 'Disponible' : dbVehicle.status,
+          color: dbVehicle.color,
+          transmission: dbVehicle.transmission,
+          passengers: dbVehicle.passengers,
+          ac: dbVehicle.ac,
+          numero_placa: dbVehicle.numero_placa,
+          images: dbVehicle.imagen1 ? dbVehicle.imagen1.split(',').map(img => img.trim().replace(/^'|'$/g, '')).map(img => `${hostUrl}/uploads/${img}`) : []
+        }
+        setVehicle(mappedVehicle)
+      } else {
+        setError('Vehículo no encontrado')
+      }
+    } catch (err) {
+      console.error('fetchVehicle error', err)
+      setError(err.message || 'Error cargando vehículo')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!modalOpen || !vehicle) return
     function onKey(e) {
       if (e.key === 'Escape') setModalOpen(false)
       if (e.key === 'ArrowLeft') setModalIndex(i => (i - 1 + vehicle.images.length) % vehicle.images.length)
@@ -23,7 +69,7 @@ export default function VehicleDetail() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [modalOpen, modalIndex, vehicle.images.length])
+  }, [modalOpen, modalIndex, vehicle?.images?.length])
 
   function openModal(index) {
     setModalIndex(index)
@@ -43,6 +89,31 @@ export default function VehicleDetail() {
     setModalIndex((i) => (i + 1) % vehicle.images.length)
   }
 
+  if (loading) return (
+    <PageLayout>
+      <div className="container py-5">
+        <div className="text-center">
+          <h3 className="momo mb-3">Cargando vehículo...</h3>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  )
+
+  if (error) return (
+    <PageLayout>
+      <div className="container py-5">
+        <div className="text-center">
+          <h3 className="momo mb-3">Error al cargar vehículo</h3>
+          <p className="text-muted mb-4">{error}</p>
+          <button className="btn btn-primary btn-lg" onClick={() => navigate(-1)}>Volver al catálogo</button>
+        </div>
+      </div>
+    </PageLayout>
+  )
+
   if (!vehicle) return (
     <PageLayout>
       <div className="container py-5">
@@ -57,7 +128,7 @@ export default function VehicleDetail() {
 
   // Installment calculation: show per-month for 24 months, both without interest and with sample interest (6% anual)
 
-  const price = vehicle.price
+  const price = vehicle.precio
 
   return (
     <PageLayout>
@@ -129,7 +200,7 @@ export default function VehicleDetail() {
                             <small className='text-muted'>INFORMACIÓN ADICIONAL</small>
                           </label>
                           <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, nulla sunt, eum voluptates numquam delectus, dolorem impedit rem porro temporibus placeat neque? Consectetur autem voluptatum ipsum laboriosam veniam deleniti nostrum.
+                            {vehicle.observaciones || 'No hay información adicional asignada.'}
                           </p>
                         </div>
                       </div>
@@ -197,6 +268,12 @@ export default function VehicleDetail() {
                         </div>
                         <div className="col-6">
                           <div className="p-2 border rounded">
+                            <small className="text-muted d-block">KILOMETRAJE</small>
+                            <strong>{vehicle.km?.toLocaleString() || 'N/A'} km</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
                             <small className="text-muted d-block">AIRE ACONDICIONADO</small>
                             <strong>{vehicle.ac ? 'Si' : 'No'}</strong>
                           </div>
@@ -205,6 +282,12 @@ export default function VehicleDetail() {
                           <div className="p-2 border rounded">
                             <small className="text-muted d-block">GARANTIA</small>
                             <strong>12 Meses</strong>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="p-2 border rounded">
+                            <small className="text-muted d-block">PLACA</small>
+                            <strong>{vehicle.numero_placa || 'N/A'}</strong>
                           </div>
                         </div>
                       </div>

@@ -9,7 +9,7 @@ const useVehicles = () => {
     const [vehicles, setVehicles] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const [filter, setFilter] = useState('all')
+    const [filter, setFilter] = useState('En Venta')
 
     const [modalOpen, setModalOpen] = useState(false)
     const [editing, setEditing] = useState(null)
@@ -20,8 +20,6 @@ const useVehicles = () => {
     useEffect(() => {
         fetchVehicles()
     }, [])
-
-
 
     async function fetchVehicles() {
         setLoading(true)
@@ -135,7 +133,6 @@ const useVehicles = () => {
         }
     }
 
-
     function addImageInput() {
         setForm(prev => ({
             ...prev,
@@ -204,16 +201,21 @@ const useVehicles = () => {
     const visibleVehicles = (vehicles || []).filter(x => {
         if (filter === 'all') return true
         if (filter === 'En Venta') return x.status === 'En Venta'
+        if (filter === 'En alquiler') return x.status === 'En alquiler'
         if (filter === 'vendido') return x.status === 'vendido'
         if (filter === 'eliminado') return x.status === 'eliminado'
         return true
     })
 
-    const getImages = (imageList) => {
+    const getArrayImages = (imageList) => {
         const imagesArray = imageList
             .split(',')
             .map(img => img.trim().replace(/^'|'$/g, ''));
+        return imagesArray;
+    }
 
+    const getImages = (imageList) => {
+        const imagesArray = getArrayImages(imageList);
         // Component for image gallery with modal
         const ImageGallery = () => {
             const [modalOpen, setModalOpen] = useState(false);
@@ -381,7 +383,8 @@ const useVehicles = () => {
         handleSave,
         handleMarkAsSold,
         handleMarkAsDeleted,
-        getImages
+        getImages,
+        getArrayImages
     }
 }
 

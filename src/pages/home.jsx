@@ -4,14 +4,16 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import FilterBar from '../components/FilterBar'
 import VehicleList from '../components/VehicleList'
-import vehiclesData from '../data/vehicles'
+import useHome from '../hooks/useHome'
+import useVisits from '../hooks/useVisits'
 import { FaNewspaper } from "react-icons/fa6";
 import { CiPaperplane } from "react-icons/ci";
 import { FaWrench, FaPaintBrush, FaTruck, FaFileAlt, FaCar } from "react-icons/fa";
 import WhatsAppButton from '../components/WhatsAppButton'
             
 const Home = () => {
-    const [vehicles] = useState(vehiclesData)
+    const { vehiclesForSale, vehiclesForRent } = useHome()
+    const { visitCount } = useVisits()
     const [filters, setFilters] = useState({ marca: '', modelo: '' })
     const [sortOption, setSortOption] = useState('')
 
@@ -19,8 +21,8 @@ const Home = () => {
         setFilters({ marca, modelo })
     }
 
-    const filtered = useMemo(() => {
-        let list = vehicles.slice()
+    const filteredSale = useMemo(() => {
+        let list = vehiclesForSale.slice()
         if (filters.marca) list = list.filter(v => v.brand === filters.marca)
         if (filters.modelo) list = list.filter(v => v.model === filters.modelo)
 
@@ -33,12 +35,29 @@ const Home = () => {
         }
 
         return list
-    }, [vehicles, filters, sortOption])
+    }, [vehiclesForSale, filters, sortOption])
+
+    const filteredRent = useMemo(() => {
+        let list = vehiclesForRent.slice()
+        if (filters.marca) list = list.filter(v => v.brand === filters.marca)
+        if (filters.modelo) list = list.filter(v => v.model === filters.modelo)
+
+        switch (sortOption) {
+            case 'price-asc': list.sort((a, b) => a.price - b.price); break
+            case 'price-desc': list.sort((a, b) => b.price - a.price); break
+            case 'year-asc': list.sort((a, b) => a.year - b.year); break
+            case 'year-desc': list.sort((a, b) => b.year - a.year); break
+            default: break
+        }
+
+        return list
+    }, [vehiclesForRent, filters, sortOption])
 
     return (
         <div>
             <Header onSearch={handleSearch} />
             <main className="container my-5">
+                
                 <div className="mb-4">
                     <div className="d-flex align-items-center">
                         <div className="flex-grow-1 mb-3">
@@ -46,7 +65,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <VehicleList vehicles={filtered} type={"sold"} />
+                <VehicleList vehicles={filteredSale} type={"sold"} />
 
                 <hr className='mb-5' />
 
@@ -57,7 +76,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <VehicleList vehicles={filtered} type={"rent"} />
+                <VehicleList vehicles={filteredRent} type={"rent"} />
 
             </main>
 
@@ -185,7 +204,7 @@ const Home = () => {
                 </div>
             </section>
             <WhatsAppButton />
-            <Footer />
+            <Footer visitCount={visitCount} />
         </div>
     )
 }

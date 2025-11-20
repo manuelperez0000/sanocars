@@ -48,9 +48,10 @@ const Vehiculos = () => {
                                     <div className="d-flex align-items-center p-3 gap-2">
                                         <div>Filtrar:</div>
                                         <div className="btn-group" role="group">
-                                            <button type="button" className={`btn btn-sm ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('all')}>Todos</button>
                                             <button type="button" className={`btn btn-sm ${filter === 'En Venta' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('En Venta')}>En venta</button>
+                                            <button type="button" className={`btn btn-sm ${filter === 'En alquiler' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('En alquiler')}>En alquiler</button>
                                             <button type="button" className={`btn btn-sm ${filter === 'vendido' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('vendido')}>Vendidos</button>
+                                            <button type="button" className={`btn btn-sm ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('all')}>Todos</button>
                                             <button type="button" className={`btn btn-sm ${filter === 'eliminado' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('eliminado')}>Eliminados</button>
                                         </div>
                                     </div>
@@ -157,6 +158,7 @@ const Vehiculos = () => {
                                             <label className="form-label">Status</label>
                                             <select name="status" value={form.status || 'En Venta'} onChange={handleChange} className="form-control" required>
                                                 <option value="En Venta">En Venta</option>
+                                                <option value="En alquiler">En alquiler</option>
                                                 <option value="vendido">Vendido</option>
                                                 <option value="eliminado">Eliminado</option>
                                             </select>

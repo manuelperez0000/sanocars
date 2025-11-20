@@ -57,6 +57,15 @@ export default function useLogin() {
         }
     }
 
+    function logout() {
+        try {
+            localStorage.removeItem('user')
+        } catch (e) {
+            console.warn('Error removing user from localStorage', e)
+        }
+        navigate('/')
+    }
+
     return {
         email,
         setEmail,
@@ -65,6 +74,7 @@ export default function useLogin() {
         loading,
         error,
         login,
-        handleSubmit
+        handleSubmit,
+        logout
     }
 }

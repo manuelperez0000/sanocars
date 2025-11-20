@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { FaInstagram, FaFacebook, FaWhatsapp, FaTiktok, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'
 
-const Footer = () => {
+const Footer = ({ visitCount }) => {
     return (
         <footer className="footer-dark">
             <div className="container">
@@ -71,10 +71,13 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Copyright */}
+                {/* Visit Counter */}
                 <div className="row">
                     <div className="col-12">
                         <hr className="footer-divider" />
+                        <p className="text-center mb-2">
+                            <span className="copyright">Eres nuestro visitante Nº {Math.floor(visitCount/2) || 0}</span>
+                        </p>
                         <p className="copyright text-center">
                             © {new Date().getFullYear()} SanoCars. Todos los derechos reservados.
                         </p>

@@ -331,6 +331,19 @@ h1 {
   padding: 10px 15px;
   margin-bottom: 10px;
 }
+.relative{
+  position: relative;
+}
+.badge-2{
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #fff;
+  background-color: #dc3545;
+}
 
 .sidebar-item span:hover{
   background-color: #0f0f0f !important;
