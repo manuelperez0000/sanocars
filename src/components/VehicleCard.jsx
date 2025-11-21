@@ -19,7 +19,7 @@ export default function VehicleCard({ v, type }) {
   return (
     <Link to={`/vehiculo/${v.id}`} className="text-decoration-none text-reset">
       <div className="card mb-4 vehicle-card h-100">
-        <div className='badge'> {type === "rent" ? <><FaClock /> Renta </> : <><FaCreditCard /> Venta</>} </div>
+        <div className='badge27'> {type === "rent" ? <><FaClock /> Renta </> : <><FaCreditCard /> Venta</>} </div>
         <img src={v.imagen1 && getFirstImage(v.imagen1)} alt={v.modelo} className="card-img-top vehicle-card-img vehicle-image" />
         <div className="card-body pb-0 d-flex flex-column">
           <small className="texr-muted text-sm">{v.marca}</small>

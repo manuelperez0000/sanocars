@@ -33,7 +33,7 @@ const AdminLayout = ({ children }) => {
                     <Sidebar />
                 </div>
             </div>
-            <main className="col-12 col-md-9 col-lg-10">
+            <main className="col-12 col-md-9 col-lg-10 p-0">
                 {children}
             </main>
         </div>

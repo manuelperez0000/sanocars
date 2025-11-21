@@ -1,0 +1,282 @@
+import React, { useState } from "react";
+import { FaClock, FaPhone, FaWhatsapp, FaEnvelope, FaEdit, FaTrash } from "react-icons/fa";
+import "bootstrap/dist/css/bootstrap.min.css";
+import useConfiguracion from "../../hooks/useConfiguracion";
+
+const Configuracion = () => {
+  const {
+    loading,
+    error,
+    getSchedules,
+    getPhones,
+    getEmails,
+    createConfiguracion,
+    updateConfiguracion,
+    deleteConfiguracion
+  } = useConfiguracion();
+
+  const [editingItem, setEditingItem] = useState(null);
+  const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
+
+  // --- Agregar nuevo item ---
+  const agregarHorario = async () => {
+    try {
+      await createConfiguracion({ tipo: 'schedule', texto: '' });
+    } catch (error) {
+      alert('Error al agregar horario: ' + error.message);
+    }
+  };
+
+  const agregarTelefono = async () => {
+    try {
+      await createConfiguracion({ tipo: 'phone', texto: '', whatsapp: false });
+    } catch (error) {
+      alert('Error al agregar teléfono: ' + error.message);
+    }
+  };
+
+  const agregarCorreo = async () => {
+    try {
+      await createConfiguracion({ tipo: 'email', texto: '' });
+    } catch (error) {
+      alert('Error al agregar correo: ' + error.message);
+    }
+  };
+
+  // --- Editar item ---
+  const startEditing = (item) => {
+    setEditingItem(item);
+    setEditForm({ texto: item.texto, whatsapp: item.whatsapp || false });
+  };
+
+  const cancelEditing = () => {
+    setEditingItem(null);
+    setEditForm({ texto: '', whatsapp: false });
+  };
+
+  const saveEditing = async () => {
+    try {
+      await updateConfiguracion(editingItem.id, {
+        tipo: editingItem.tipo,
+        texto: editForm.texto,
+        whatsapp: editForm.whatsapp
+      });
+      setEditingItem(null);
+      setEditForm({ texto: '', whatsapp: false });
+    } catch (error) {
+      alert('Error al guardar cambios: ' + error.message);
+    }
+  };
+
+  // --- Eliminar item ---
+  const eliminarItem = async (id) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este elemento?')) return;
+
+    try {
+      await deleteConfiguracion(id);
+    } catch (error) {
+      alert('Error al eliminar elemento: ' + error.message);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="container mt-4">
+        <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-4">
+        <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
+        <div className="alert alert-danger">
+          Error: {error}
+        </div>
+      </div>
+    );
+  }
+
+  const schedules = getSchedules();
+  const phones = getPhones();
+  const emails = getEmails();
+
+  return (
+    <div className="container mt-4">
+      <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
+
+      {/* Horarios */}
+      <div className="card mb-4 shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title">
+            <FaClock /> Horarios de Trabajo
+          </h5>
+          {schedules.map((schedule) => (
+            <div key={schedule.id} className="row mb-2">
+              <div className="col">
+                {editingItem && editingItem.id === schedule.id ? (
+                  <div className="d-flex gap-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Ejemplo: Lunes a Viernes 9:00 - 18:00"
+                      value={editForm.texto}
+                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                    />
+                    <button className="btn btn-success btn-sm" onClick={saveEditing}>
+                      Guardar
+                    </button>
+                    <button className="btn btn-secondary btn-sm" onClick={cancelEditing}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span>{schedule.texto || "Sin texto"}</span>
+                    <div>
+                      <button className="btn btn-outline-primary btn-sm me-2" onClick={() => startEditing(schedule)}>
+                        <FaEdit />
+                      </button>
+                      <button className="btn btn-outline-danger btn-sm" onClick={() => eliminarItem(schedule.id)}>
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={agregarHorario}
+          >
+            + Agregar Horario
+          </button>
+        </div>
+      </div>
+
+      {/* Teléfonos */}
+      <div className="card mb-4 shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title">
+            <FaPhone /> Teléfonos
+          </h5>
+          {phones.map((phone) => (
+            <div key={phone.id} className="row mb-2">
+              <div className="col-md-8">
+                {editingItem && editingItem.id === phone.id ? (
+                  <div className="d-flex gap-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Número de teléfono"
+                      value={editForm.texto}
+                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                    />
+                    <div className="form-check d-flex align-items-center ms-2">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id={`whatsapp-edit-${phone.id}`}
+                        checked={editForm.whatsapp}
+                        onChange={(e) => setEditForm({...editForm, whatsapp: e.target.checked})}
+                      />
+                      <label className="form-check-label ms-2" htmlFor={`whatsapp-edit-${phone.id}`}>
+                        <FaWhatsapp color="green" /> WhatsApp
+                      </label>
+                    </div>
+                    <button className="btn btn-success btn-sm" onClick={saveEditing}>
+                      Guardar
+                    </button>
+                    <button className="btn btn-secondary btn-sm" onClick={cancelEditing}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex align-items-center">
+                      <span className="me-3">{phone.texto || "Sin número"}</span>
+                      {phone.whatsapp && <FaWhatsapp color="green" title="WhatsApp" />}
+                    </div>
+                    <div>
+                      <button className="btn btn-outline-primary btn-sm me-2" onClick={() => startEditing(phone)}>
+                        <FaEdit />
+                      </button>
+                      <button className="btn btn-outline-danger btn-sm" onClick={() => eliminarItem(phone.id)}>
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={agregarTelefono}
+          >
+            + Agregar Teléfono
+          </button>
+        </div>
+      </div>
+
+      {/* Correos */}
+      <div className="card mb-4 shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title">
+            <FaEnvelope /> Correos Electrónicos
+          </h5>
+          {emails.map((email) => (
+            <div key={email.id} className="row mb-2">
+              <div className="col">
+                {editingItem && editingItem.id === email.id ? (
+                  <div className="d-flex gap-2">
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="correo@ejemplo.com"
+                      value={editForm.texto}
+                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                    />
+                    <button className="btn btn-success btn-sm" onClick={saveEditing}>
+                      Guardar
+                    </button>
+                    <button className="btn btn-secondary btn-sm" onClick={cancelEditing}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span>{email.texto || "Sin correo"}</span>
+                    <div>
+                      <button className="btn btn-outline-primary btn-sm me-2" onClick={() => startEditing(email)}>
+                        <FaEdit />
+                      </button>
+                      <button className="btn btn-outline-danger btn-sm" onClick={() => eliminarItem(email.id)}>
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={agregarCorreo}
+          >
+            + Agregar Correo
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Configuracion;

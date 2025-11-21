@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-
+import { useState } from 'react'
+import request from '../utils/request.js'
+import { apiurl } from '../utils/globals.js'
 const Financiamiento = () => {
     const [formData, setFormData] = useState({
         // Información Cliente - Katakana
@@ -37,8 +38,10 @@ const Financiamiento = () => {
     })
 
     const [documents, setDocuments] = useState({
-        seiruCado: null,
-        licenciaConducir: null,
+        seiruCadoFrontal: null,
+        seiruCadoTrasera: null,
+        licenciaConducirFrontal: null,
+        licenciaConducirTrasera: null,
         kokuminShakaiHoken: null,
         libretaBanco: null
     })
@@ -58,11 +61,91 @@ const Financiamiento = () => {
         })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('Form submitted:', formData)
-        console.log('Documents:', documents)
-        alert('¡Formulario enviado exitosamente! Nos pondremos en contacto contigo pronto.')
+
+        try {
+            // Create FormData for file uploads
+            const formDataToSend = new FormData()
+
+            // Add form data
+            Object.keys(formData).forEach(key => {
+                if (formData[key] !== '') {
+                    formDataToSend.append(key, formData[key])
+                }
+            })
+
+            // Add files
+            if (documents.seiruCadoFrontal) {
+                formDataToSend.append('seiruCadoFrontal', documents.seiruCadoFrontal)
+            }
+            if (documents.seiruCadoTrasera) {
+                formDataToSend.append('seiruCadoTrasera', documents.seiruCadoTrasera)
+            }
+            if (documents.licenciaConducirFrontal) {
+                formDataToSend.append('licenciaConducirFrontal', documents.licenciaConducirFrontal)
+            }
+            if (documents.licenciaConducirTrasera) {
+                formDataToSend.append('licenciaConducirTrasera', documents.licenciaConducirTrasera)
+            }
+            if (documents.kokuminShakaiHoken) {
+                formDataToSend.append('kokuminShakaiHoken', documents.kokuminShakaiHoken)
+            }
+            if (documents.libretaBanco) {
+                formDataToSend.append('libretaBanco', documents.libretaBanco)
+            }
+
+            // Send to backend
+            const response = await request.post( apiurl + '/financing', formDataToSend)
+
+            if (response?.data) {
+                alert('¡Formulario enviado exitosamente! Nos pondremos en contacto contigo pronto.')
+                // Reset form
+                setFormData({
+                    apellidosKatakana: '',
+                    nombresKatakana: '',
+                    apellidosKanji: '',
+                    nombresKanji: '',
+                    fechaNacimiento: '',
+                    genero: '',
+                    tipoConyuge: '',
+                    direccionActual: '',
+                    personasViviendo: '',
+                    tiempoDireccion: '',
+                    cantidadHijos: '',
+                    relacionJefeHogar: '',
+                    cabezaFamilia: '',
+                    pagoHipotecaAlquiler: '',
+                    telefonoCasa: '',
+                    telefonoMovil: '',
+                    nombreEmpresaKatakana: '',
+                    nombreEmpresaKanji: '',
+                    direccionTrabajo: '',
+                    telefonoTrabajo: '',
+                    tipoIndustria: '',
+                    tiempoTrabajando: '',
+                    ingresoMensual: '',
+                    ingresoAnual: '',
+                    diaPago: '',
+                    nombreEmpresaContratista: '',
+                    direccionEmpresaContratista: '',
+                    telefonoEmpresaContratista: ''
+                })
+                setDocuments({
+                    seiruCadoFrontal: null,
+                    seiruCadoTrasera: null,
+                    licenciaConducirFrontal: null,
+                    licenciaConducirTrasera: null,
+                    kokuminShakaiHoken: null,
+                    libretaBanco: null
+                })
+            } else {
+                alert('Error al enviar el formulario: ' + response.data.message)
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error)
+            alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.')
+        }
     }
 
     return (
@@ -580,42 +663,91 @@ const Financiamiento = () => {
                                     Por favor adjunte fotos claras de ambos lados de cada documento.
                                 </div>
 
-                                <div className="row">
+                                {/* Seiru Card - Front and Back */}
+                                <div className="row mb-4">
+                                    <div className="col-12">
+                                        <h6 className="text-primary mb-3">FOTO SEIRU CADO (AMBOS LADOS): *</h6>
+                                    </div>
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="seiruCado" className="form-label">
-                                            FOTO SEIRU CADO AMBOS LADOS: *
+                                        <label htmlFor="seiruCadoFrontal" className="form-label">
+                                            Parte Delantera: *
                                         </label>
                                         <input
                                             type="file"
                                             className="form-control"
-                                            id="seiruCado"
-                                            name="seiruCado"
+                                            id="seiruCadoFrontal"
+                                            name="seiruCadoFrontal"
                                             onChange={handleFileChange}
                                             accept="image/*"
                                             required
                                         />
-                                        {documents.seiruCado && (
+                                        {documents.seiruCadoFrontal && (
                                             <small className="text-success">
-                                                Archivo seleccionado: {documents.seiruCado.name}
+                                                Archivo seleccionado: {documents.seiruCadoFrontal.name}
                                             </small>
                                         )}
                                     </div>
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="licenciaConducir" className="form-label">
-                                            FOTO LICENCIA CONDUCIR AMBOS LADOS: *
+                                        <label htmlFor="seiruCadoTrasera" className="form-label">
+                                            Parte Trasera: *
                                         </label>
                                         <input
                                             type="file"
                                             className="form-control"
-                                            id="licenciaConducir"
-                                            name="licenciaConducir"
+                                            id="seiruCadoTrasera"
+                                            name="seiruCadoTrasera"
                                             onChange={handleFileChange}
                                             accept="image/*"
                                             required
                                         />
-                                        {documents.licenciaConducir && (
+                                        {documents.seiruCadoTrasera && (
                                             <small className="text-success">
-                                                Archivo seleccionado: {documents.licenciaConducir.name}
+                                                Archivo seleccionado: {documents.seiruCadoTrasera.name}
+                                            </small>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Driver's License - Front and Back */}
+                                <div className="row mb-4">
+                                    <div className="col-12">
+                                        <h6 className="text-primary mb-3">FOTO LICENCIA CONDUCIR (AMBOS LADOS): *</h6>
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="licenciaConducirFrontal" className="form-label">
+                                            Parte Delantera: *
+                                        </label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="licenciaConducirFrontal"
+                                            name="licenciaConducirFrontal"
+                                            onChange={handleFileChange}
+                                            accept="image/*"
+                                            required
+                                        />
+                                        {documents.licenciaConducirFrontal && (
+                                            <small className="text-success">
+                                                Archivo seleccionado: {documents.licenciaConducirFrontal.name}
+                                            </small>
+                                        )}
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="licenciaConducirTrasera" className="form-label">
+                                            Parte Trasera: *
+                                        </label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="licenciaConducirTrasera"
+                                            name="licenciaConducirTrasera"
+                                            onChange={handleFileChange}
+                                            accept="image/*"
+                                            required
+                                        />
+                                        {documents.licenciaConducirTrasera && (
+                                            <small className="text-success">
+                                                Archivo seleccionado: {documents.licenciaConducirTrasera.name}
                                             </small>
                                         )}
                                     </div>

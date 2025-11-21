@@ -1,26 +1,16 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaWhatsapp, FaCalendarAlt } from 'react-icons/fa'
-import servicesData from '../data/services.js'
 import request from '../utils/request.js'
-import mecanica from "../../public/services/mecanica.webp"
-import pintura from "../../public/services/pintura.webp"
-import grua from "../../public/services/grua.webp"
-import document from "../../public/services/document.jpeg"
-import rent from "../../public/services/rent.jpg"
-import { apiurl } from '../utils/globals.js'
-
-const imagesOBJ = {
-    "mecanica-general": mecanica,
-    "planchado-y-pintura": pintura,
-    "grua-24-horas": grua,
-    "documentacion": document,
-    "renta-car": rent
-}
+import { apiurl, hostUrl } from '../utils/globals.js'
+import useItemsServicio from '../hooks/useItemsServicio'
 
 const Service = () => {
     const { id } = useParams()
-    const service = servicesData.find(s => s.id === id)
+    const [categoria, setCategoria] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const { items, loading: itemsLoading } = useItemsServicio(id)
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedDate, setSelectedDate] = useState('')
     const [showForm, setShowForm] = useState(false)
@@ -30,9 +20,30 @@ const Service = () => {
         telefono: ''
     })
 
+    useEffect(() => {
+        const fetchCategoria = async () => {
+            try {
+                setLoading(true)
+                const response = await request.get(apiurl + '/categorias-servicio/' + id)
+                if (response.data.body) {
+                    setCategoria(response.data.body)
+                }
+            } catch (err) {
+                console.error('Error fetching categoria:', err)
+                setError('Error al cargar la categoría')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (id) {
+            fetchCategoria()
+        }
+    }, [id])
+
     const handleClick = () => {
         const phoneNumber = "+8108091171993"
-        const message = `quiero contratar el servicio de "${service.title}"`
+        const message = `quiero contratar el servicio de "${categoria?.titulo}"`
         const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
         window.open(url, '_blank')
     }
@@ -68,7 +79,7 @@ const Service = () => {
                 nombre: formData.nombre,
                 email: formData.email,
                 telefono: formData.telefono,
-                servicio: service.title,
+                servicio: categoria?.titulo,
                 fecha_reserva: selectedDate
             }
 
@@ -86,7 +97,19 @@ const Service = () => {
         }
     }
 
-    if (!service) {
+    if (loading) {
+        return (
+            <div className='container my-5'>
+                <div className="text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    if (error || !categoria) {
         return <div className='container my-5'>Servicio no encontrado</div>
     }
 
@@ -96,21 +119,31 @@ const Service = () => {
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                     <li className="breadcrumb-item"><Link to="/services">Services</Link></li>
-                    <li className="breadcrumb-item active" aria-current="page">{service.title}</li>
+                    <li className="breadcrumb-item active" aria-current="page">{categoria.titulo}</li>
                 </ol>
             </nav>
-            <h1 className='momo mb-4'>{service.title}</h1>
+            <h1 className='momo mb-4'>{categoria.titulo}</h1>
             <div className='row'>
                 <div className='col-md-6'>
-                    <img src={imagesOBJ[service.id]} alt={service.title} className='img-fluid rounded service-image' />
+                    <img src={`${hostUrl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image' />
                 </div>
                 <div className='col-md-6'>
                     <h3>Servicios incluidos:</h3>
-                    <ul className='list-unstyled'>
-                        {service.services.map((item, idx) => (
-                            <li key={idx} className='mb-2'>• {item}</li>
-                        ))}
-                    </ul>
+                    {itemsLoading ? (
+                        <div className="text-center">
+                            <div className="spinner-border spinner-border-sm" role="status">
+                                <span className="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    ) : items.length === 0 ? (
+                        <p>No hay servicios disponibles en este momento.</p>
+                    ) : (
+                        <ul className='list-unstyled'>
+                            {items.map((item) => (
+                                <li key={item.id} className='mb-2'>• {item.titulo}</li>
+                            ))}
+                        </ul>
+                    )}
                     <div className='d-flex gap-2'>
                         <button className='btn btn-primary' onClick={handleClick}> <FaWhatsapp /> Contratar este servicio </button>
                         <button className='btn btn-outline-primary' onClick={openModal}> <FaCalendarAlt /> Reserve una cita </button>
@@ -124,7 +157,7 @@ const Service = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Reservar Cita - {service.title}</h5>
+                                <h5 className="modal-title">Reservar Cita - {categoria.titulo}</h5>
                                 <button type="button" className="btn-close" onClick={closeModal}></button>
                             </div>
                             <div className="modal-body">

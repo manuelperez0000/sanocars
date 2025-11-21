@@ -9,7 +9,7 @@ export default function VehicleList({ vehicles, type }) {
       {vehicles.map(v => (
 
         <div key={v.id} className="col-12 col-sm-6 col-md-4 mb-4">
-          {console.log("v", v)}  <VehicleCard type={type} v={v} />
+          <VehicleCard type={type} v={v} />
         </div>
       ))}
     </div>

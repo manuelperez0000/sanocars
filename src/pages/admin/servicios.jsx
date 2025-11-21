@@ -1,9 +1,11 @@
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import useServices from '../../hooks/useServices'
 
 const Servicios = () => {
-    const { services, loading, error, saving, updateServiceStatus, getStatusText, getStatusColor } = useServices()
+    const navigate = useNavigate()
+    const { services, loading, error, saving, updateServiceStatus } = useServices()
     const [statusFilter, setStatusFilter] = useState('')
 
     const filteredServices = statusFilter === ''
@@ -23,7 +25,15 @@ const Servicios = () => {
             <div className="container-fluid py-4">
                 <div className="row">
                     <div className="col-12">
-                        <h2 className="mb-4">Gestión de Servicios</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Servicios</h2>
+                            <button
+                                className="btn btn-outline-primary"
+                                onClick={() => navigate('/admin/categorias-servicio')}
+                            >
+                                Categorías
+                            </button>
+                        </div>
                         <div className="text-center">
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">Cargando...</span>
@@ -40,7 +50,15 @@ const Servicios = () => {
             <div className="container-fluid py-4">
                 <div className="row">
                     <div className="col-12">
-                        <h2 className="mb-4">Gestión de Servicios</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Servicios</h2>
+                            <button
+                                className="btn btn-outline-primary"
+                                onClick={() => navigate('/admin/categorias-servicio')}
+                            >
+                                Categorías
+                            </button>
+                        </div>
                         <div className="alert alert-danger">
                             {error}
                         </div>
@@ -54,32 +72,37 @@ const Servicios = () => {
         <div className="container-fluid py-4">
             <div className="row">
                 <div className="col-12">
-                    <h2 className="mb-4">Gestión de Servicios</h2>
-
-                    {/* Filter Section */}
-                    <div className="card mb-4">
-                        <div className="card-body flex-between">
-                            <h5 className="card-title">Filtrar por Estado</h5>
-
-                            <select
-                                className="form-select w-50"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                            >
-                                <option value="">Todos los estados</option>
-                                <option value="0">Pendiente</option>
-                                <option value="1">Aprobado</option>
-                                <option value="2">Cancelado</option>
-                                <option value="3">Ejecutado</option>
-                            </select>
-
-                        </div>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Gestión de Servicios</h2>
+                        <button
+                            className="btn btn-outline-primary"
+                            onClick={() => navigate('/admin/categorias-servicio')}
+                        >
+                            Categorías
+                        </button>
                     </div>
+
+
 
                     {/* Services Table */}
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Lista de Servicios ({filteredServices.length})</h5>
+                            <div className='flex-between'>
+                                <h5 className="card-title">Reservas de clientes ({filteredServices.length})</h5>
+                                <select
+                                    className="form-select w-50"
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                >
+                                    <option value="">Todos los estados</option>
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Aprobado</option>
+                                    <option value="2">Cancelado</option>
+                                    <option value="3">Ejecutado</option>
+                                </select>
+                            </div>
+
+
                             {filteredServices.length === 0 ? (
                                 <p>No hay servicios para mostrar.</p>
                             ) : (
@@ -92,7 +115,7 @@ const Servicios = () => {
                                                 <th>Teléfono</th>
                                                 <th>Servicio</th>
                                                 <th>Fecha Reserva</th>
-                                                
+
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -104,7 +127,7 @@ const Servicios = () => {
                                                     <td>{service.telefono}</td>
                                                     <td>{service.servicio}</td>
                                                     <td>{new Date(service.fecha_reserva).toLocaleDateString()}</td>
-                                                    
+
                                                     <td>
                                                         <div className="btn-group" role="group">
                                                             <input

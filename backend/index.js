@@ -8,12 +8,13 @@ var morgan = require("morgan")
 var app = express()
 dotenv.config()
 
-morgan("dev")
 
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+
+app.use(morgan("dev"))
 
 // Health
 app.get('/', (req, res) => {
