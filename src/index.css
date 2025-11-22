@@ -351,6 +351,11 @@ h1 {
   background-color: #dc3545;
 }
 
+.badge-2:hover{
+  cursor: pointer;
+  background-color: #eb6774 !important;
+}
+
 .sidebar-item span:hover{
   background-color: #0f0f0f !important;
   color: rgb(12, 243, 4);

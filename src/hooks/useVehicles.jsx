@@ -17,6 +17,11 @@ const useVehicles = () => {
     const [uploadingImages, setUploadingImages] = useState({})
     const [imageUploadErrors, setImageUploadErrors] = useState({})
 
+    // Sales modal
+    const [salesModalOpen, setSalesModalOpen] = useState(false)
+    const [selectedVehicle, setSelectedVehicle] = useState(null)
+    const [salesForm, setSalesForm] = useState(getEmptySalesForm())
+
     useEffect(() => {
         fetchVehicles()
     }, [])
@@ -197,6 +202,376 @@ const useVehicles = () => {
         }
     }
 
+    // Sales functions
+    function getEmptySalesForm() {
+        return {
+            // Client data
+            cliente_nombre: '',
+            cliente_apellido: '',
+            cliente_email: '',
+            cliente_telefono: '',
+            cliente_cedula: '',
+
+            // Payment data
+            precio_venta: 0,
+            tipo_pago: 'contado',
+            numero_cuotas: 1,
+            frecuencia_cuotas: 'mensual',
+            monto_inicial: 0,
+            tasa_interes: 0,
+            total_con_intereses: 0,
+            fecha_inicial: new Date().toISOString().split('T')[0], // Today's date
+            siguientes_pagos: []
+        }
+    }
+
+    function openSalesModal(vehicle) {
+        setSelectedVehicle(vehicle)
+        const salesFormData = getEmptySalesForm()
+        salesFormData.precio_venta = vehicle.precio || 0
+        salesFormData.total_con_intereses = vehicle.precio || 0
+        setSalesForm(salesFormData)
+        setSalesModalOpen(true)
+    }
+
+    function closeSalesModal() {
+        setSalesModalOpen(false)
+        setSelectedVehicle(null)
+        setSalesForm(getEmptySalesForm())
+    }
+
+    function handleSalesChange(e) {
+        const { name, value } = e.target
+        setSalesForm(prev => ({ ...prev, [name]: value }))
+
+        // Recalculate totals when relevant fields change
+        if (['precio_venta', 'tipo_pago', 'numero_cuotas', 'monto_inicial', 'tasa_interes', 'fecha_inicial', 'frecuencia_cuotas'].includes(name)) {
+            setTimeout(calculateSalesTotal, 100) // Small delay to ensure state is updated
+        }
+    }
+
+    function calculateSalesTotal() {
+        setSalesForm(prev => {
+            const precio_venta = parseFloat(prev.precio_venta) || 0
+            const monto_inicial = parseFloat(prev.monto_inicial) || 0
+            const tasa_interes = parseFloat(prev.tasa_interes) || 0
+            const numero_cuotas = parseInt(prev.numero_cuotas) || 1
+            const frecuencia_cuotas = prev.frecuencia_cuotas || 'mensual'
+            const fecha_inicial = prev.fecha_inicial || new Date().toISOString().split('T')[0]
+
+            let total_con_intereses = precio_venta
+            let siguientes_pagos = []
+
+            if (prev.tipo_pago === 'cuotas') {
+                // Calculate financed amount, then add interest on financed amount to sale price
+                const monto_financiado = precio_venta - monto_inicial
+                const interes_total = monto_financiado * (tasa_interes / 100)
+                total_con_intereses = precio_venta + interes_total
+
+                // Calculate payment schedule
+                const monto_cuota = total_con_intereses / numero_cuotas
+                let currentDate = new Date(fecha_inicial)
+
+                for (let i = 1; i <= numero_cuotas; i++) {
+                    // Calculate next payment date based on frequency
+                    if (frecuencia_cuotas === 'semanal') {
+                        currentDate.setDate(currentDate.getDate() + 7)
+                    } else if (frecuencia_cuotas === 'quincenal') {
+                        currentDate.setDate(currentDate.getDate() + 15)
+                    } else if (frecuencia_cuotas === 'mensual') {
+                        currentDate.setMonth(currentDate.getMonth() + 1)
+                    }
+
+                    siguientes_pagos.push({
+                        numero_cuota: i,
+                        fecha_pago: currentDate.toISOString().split('T')[0],
+                        monto: monto_cuota.toFixed(2)
+                    })
+                }
+            }
+
+            return {
+                ...prev,
+                total_con_intereses: total_con_intereses.toFixed(2),
+                siguientes_pagos: siguientes_pagos
+            }
+        })
+    }
+
+    async function handleSaveSale(e) {
+        e.preventDefault()
+       
+        try {
+            const saleData = {
+                tipo: 'vehiculo',
+                vehiculo_id: selectedVehicle.id,
+                ...salesForm,
+                siguientes_pagos: JSON.stringify(salesForm.siguientes_pagos),
+                datos_pago: JSON.stringify({
+                    tipo_pago: salesForm.tipo_pago,
+                    numero_cuotas: salesForm.numero_cuotas,
+                    frecuencia_cuotas: salesForm.frecuencia_cuotas,
+                    monto_inicial: salesForm.monto_inicial,
+                    tasa_interes: salesForm.tasa_interes
+                })
+            }
+
+            // Save the sale
+            await request.post(apiurl + '/venta', saleData)
+
+            // Mark vehicle as sold
+            await request.put(apiurl + '/vehicles/' + selectedVehicle.id, { status: 'vendido' })
+
+            closeSalesModal()
+            fetchVehicles()
+
+            // Print invoice
+            printSaleInvoice(saleData)
+
+        } catch (err) {
+            console.error('save sale error', err)
+            setError(err.message || 'Error guardando venta')
+        }
+    }
+
+    function printSaleInvoice(saleData) {
+        const vehicle = selectedVehicle
+        const printWindow = window.open('', '_blank')
+        const invoiceHTML = `
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Factura de Venta - ${vehicle.marca} ${vehicle.modelo}</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        margin: 0;
+                        padding: 20px;
+                        color: #333;
+                        line-height: 1.4;
+                    }
+                    .invoice-header {
+                        text-align: center;
+                        border-bottom: 2px solid #333;
+                        padding-bottom: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .invoice-title {
+                        font-size: 28px;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        color: #2c3e50;
+                    }
+                    .invoice-subtitle {
+                        font-size: 16px;
+                        color: #7f8c8d;
+                    }
+                    .invoice-info {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 30px;
+                    }
+                    .info-section {
+                        flex: 1;
+                    }
+                    .info-section h4 {
+                        margin: 0 0 10px 0;
+                        color: #2c3e50;
+                        font-size: 14px;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                    }
+                    .info-section p {
+                        margin: 5px 0;
+                        font-size: 14px;
+                    }
+                    .vehicle-details {
+                        margin-bottom: 30px;
+                    }
+                    .vehicle-details h4 {
+                        margin: 0 0 15px 0;
+                        color: #2c3e50;
+                        font-size: 16px;
+                    }
+                    .payment-details {
+                        margin-bottom: 30px;
+                    }
+                    .payment-details h4 {
+                        margin: 0 0 15px 0;
+                        color: #2c3e50;
+                        font-size: 16px;
+                    }
+                    .totals-section {
+                        display: flex;
+                        justify-content: flex-end;
+                        margin-bottom: 30px;
+                    }
+                    .totals-box {
+                        border: 1px solid #ddd;
+                        padding: 20px;
+                        background-color: #f8f9fa;
+                        min-width: 250px;
+                    }
+                    .totals-row {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 10px;
+                        font-size: 14px;
+                    }
+                    .totals-row.total {
+                        border-top: 2px solid #333;
+                        padding-top: 10px;
+                        font-weight: bold;
+                        font-size: 16px;
+                        color: #2c3e50;
+                    }
+                    .footer {
+                        margin-top: 40px;
+                        text-align: center;
+                        font-size: 12px;
+                        color: #7f8c8d;
+                        border-top: 1px solid #ddd;
+                        padding-top: 20px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="invoice-header">
+                    <h1 class="invoice-title">Factura de Venta</h1>
+                    <p class="invoice-subtitle">Vehículo: ${vehicle.marca} ${vehicle.modelo}</p>
+                </div>
+
+                <div class="invoice-info">
+                    <div class="info-section">
+                        <h4>Información del Cliente</h4>
+                        <p><strong>Nombre:</strong> ${saleData.cliente_nombre || 'N/A'} ${saleData.cliente_apellido || ''}</p>
+                        <p><strong>Teléfono:</strong> ${saleData.cliente_telefono || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${saleData.cliente_email || 'N/A'}</p>
+                        <p><strong>Cédula:</strong> ${saleData.cliente_cedula || 'N/A'}</p>
+                    </div>
+                    <div class="info-section">
+                        <h4>Información del Vehículo</h4>
+                        <p><strong>Marca:</strong> ${vehicle.marca || 'N/A'}</p>
+                        <p><strong>Modelo:</strong> ${vehicle.modelo || 'N/A'}</p>
+                        <p><strong>Año:</strong> ${vehicle.anio || 'N/A'}</p>
+                        <p><strong>Placa:</strong> ${vehicle.numero_placa || 'N/A'}</p>
+                        <p><strong>Color:</strong> ${vehicle.color || 'N/A'}</p>
+                        <p><strong>ID Vehículo:</strong> ${vehicle.id}</p>
+                    </div>
+                    <div class="info-section">
+                        <h4>Información de Venta</h4>
+                        <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
+                        <p><strong>Tipo de Pago:</strong> ${saleData.tipo_pago === 'contado' ? 'De Contado' : 'A Cuotas'}</p>
+                        ${saleData.tipo_pago === 'cuotas' ? `
+                        <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
+                        <p><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</p>
+                        <p><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</p>
+                        <p><strong>Tasa de Interés:</strong> ${saleData.tasa_interes}%</p>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="vehicle-details">
+                    <h4>Detalles del Vehículo</h4>
+                    <p><strong>Kilometraje:</strong> ${vehicle.kilometraje || 'N/A'} km</p>
+                    <p><strong>Tipo:</strong> ${vehicle.tipo_vehiculo || 'N/A'}</p>
+                    <p><strong>Tamaño Motor:</strong> ${vehicle.tamano_motor || 'N/A'}</p>
+                    <p><strong>Número de Chasis:</strong> ${vehicle.numero_chasis || 'N/A'}</p>
+                    ${vehicle.observaciones ? `<p><strong>Observaciones:</strong> ${vehicle.observaciones}</p>` : ''}
+                </div>
+
+                <div class="payment-details">
+                    <h4>Detalles del Pago</h4>
+                    <p><strong>Precio de Venta:</strong> $${parseFloat(saleData.precio_venta || 0).toFixed(2)}</p>
+                    ${saleData.tipo_pago === 'cuotas' ? `
+                    <p><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</p>
+                    <p><strong>Financiamiento:</strong> $${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)).toFixed(2)}</p>
+                    <p><strong>Intereses (${saleData.tasa_interes}%):</strong> $${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</p>
+                    <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
+                    <p><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</p>
+                    <p><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</p>
+                    ` : ''}
+                </div>
+
+                ${saleData.tipo_pago === 'cuotas' && saleData.siguientes_pagos ? `
+                <div class="payment-schedule">
+                    <h4>Cronograma de Pagos</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr style="background-color: #f8f9fa;">
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Cuota</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Fecha de Pago</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(() => {
+                                try {
+                                    const pagos = typeof saleData.siguientes_pagos === 'string'
+                                        ? JSON.parse(saleData.siguientes_pagos)
+                                        : saleData.siguientes_pagos;
+                                    return pagos && pagos.length > 0 ? pagos.map(pago => `
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">${pago.numero_cuota}</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">${new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${pago.monto}</td>
+                                        </tr>
+                                    `).join('') : '';
+                                } catch {
+                                    return '';
+                                }
+                            })()}
+                        </tbody>
+                    </table>
+                </div>
+                ` : ''}
+
+                <div class="totals-section">
+                    <div class="totals-box">
+                        <div class="totals-row">
+                            <span>Precio de Venta:</span>
+                            <span>$${parseFloat(saleData.precio_venta || 0).toFixed(2)}</span>
+                        </div>
+                        ${saleData.tipo_pago === 'cuotas' ? `
+                        <div class="totals-row">
+                            <span>Menos Inicial:</span>
+                            <span>-$${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Más Intereses:</span>
+                            <span>+$${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</span>
+                        </div>
+                        ` : ''}
+                        <div class="totals-row total">
+                            <span>Total a Pagar:</span>
+                            <span>$${parseFloat(saleData.total_con_intereses || 0).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p>Gracias por su compra. Venta realizada por Sanocars Taller.</p>
+                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</p>
+                </div>
+            </body>
+            </html>
+        `
+
+        printWindow.document.write(invoiceHTML)
+        printWindow.document.close()
+
+        // Wait for content to load then print
+        printWindow.onload = () => {
+            printWindow.print()
+        }
+    }
+
     // derive visibleVehicles based on filter to keep JSX clean
     const visibleVehicles = (vehicles || []).filter(x => {
         if (filter === 'all') return true
@@ -372,6 +747,9 @@ const useVehicles = () => {
         form,
         uploadingImages,
         imageUploadErrors,
+        salesModalOpen,
+        selectedVehicle,
+        salesForm,
         visibleVehicles,
         fetchVehicles,
         openNew,
@@ -383,6 +761,10 @@ const useVehicles = () => {
         handleSave,
         handleMarkAsSold,
         handleMarkAsDeleted,
+        openSalesModal,
+        closeSalesModal,
+        handleSalesChange,
+        handleSaveSale,
         getImages,
         getArrayImages
     }

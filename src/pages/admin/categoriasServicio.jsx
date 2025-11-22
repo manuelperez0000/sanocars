@@ -14,8 +14,6 @@ const CategoriasServicio = () => {
     const [uploadingImage, setUploadingImage] = useState(false)
     const [imageUploadError, setImageUploadError] = useState('')
 
-
-
     const [formData, setFormData] = useState({
         titulo: '',
         imagen: ''

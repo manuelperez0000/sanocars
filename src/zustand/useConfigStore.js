@@ -9,6 +9,8 @@ const useConfigStore = createWithEqualityFn((set) => ({
     setPhones: (newState) => set(() => ({ phones: newState })),
     schedules: [],
     setSchedules: (newState) => set(() => ({ schedules: newState })),
+    pendingServicesCount: 0,
+    setPendingServicesCount: (newState) => set(() => ({ pendingServicesCount: newState }))
 }))
 
 export default useConfigStore

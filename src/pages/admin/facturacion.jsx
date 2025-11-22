@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useVehicles from '../../hooks/useVehicles'
 import useInventory from '../../hooks/useInventory'
 import useFacturas from '../../hooks/useFacturas'
 
 const Facturacion = () => {
     const navigate = useNavigate()
-    const { vehicles, loading: vehiclesLoading } = useVehicles()
     const { inventory, loading: inventoryLoading } = useInventory()
     const { createFactura } = useFacturas()
 
@@ -20,59 +18,24 @@ const Facturacion = () => {
         clientId: '',
         items: []
     })
-    const [paymentData, setPaymentData] = useState({
-        paymentType: 'contado', // 'contado' or 'cuotas'
-        installments: 1,
-        frequency: 'mensuales', // 'mensuales', 'semanales', 'quincenales'
-        startDate: new Date().toISOString().split('T')[0]
-    })
 
-    // Modal states
-    const [vehicleModalOpen, setVehicleModalOpen] = useState(false)
-    const [productModalOpen, setProductModalOpen] = useState(false)
-    const [serviceModalOpen, setServiceModalOpen] = useState(false)
-    const [rentalModalOpen, setRentalModalOpen] = useState(false)
+    // Product search state
+    const [productSearch, setProductSearch] = useState('')
+    const [filteredProducts, setFilteredProducts] = useState([])
 
-    // Test data for services and rentals since they're not implemented
-    const testServices = [
-        { id: 1, name: 'Mecánica General', price: 50000 },
-        { id: 2, name: 'Planchado y Pintura', price: 150000 },
-        { id: 3, name: 'Grúa 24 Horas', price: 30000 },
-        { id: 4, name: 'Documentación', price: 25000 }
-    ]
-
-    const rentalOptions = [
-        { type: 'Diario', multiplier: 1, basePrice: 25000 },
-        { type: 'Semanal', multiplier: 7, basePrice: 150000 },
-        { type: 'Mensual', multiplier: 30, basePrice: 500000 }
-    ]
-
-    const handleBillingTypeSelect = (type) => {
-        if (type === 'vehicle') {
-            setVehicleModalOpen(true)
-        } else if (type === 'product') {
-            setProductModalOpen(true)
-        } else if (type === 'service') {
-            setServiceModalOpen(true)
-        } else if (type === 'rental') {
-            setRentalModalOpen(true)
+    // Filter products based on search
+    useEffect(() => {
+        if (inventory) {
+            const filtered = inventory.filter(product =>
+                product.nombre?.toLowerCase().includes(productSearch.toLowerCase()) ||
+                product.fabricante?.toLowerCase().includes(productSearch.toLowerCase()) ||
+                product.id?.toString().includes(productSearch)
+            )
+            setFilteredProducts(filtered)
         }
-    }
+    }, [inventory, productSearch])
 
-    const handleVehicleSelect = (vehicle) => {
-        const item = {
-            type: 'vehicle',
-            id: vehicle.id,
-            name: `${vehicle.marca} ${vehicle.modelo} ${vehicle.year}`,
-            price: vehicle.precio,
-            quantity: 1,
-            subtotal: vehicle.precio
-        }
-        setSelectedItems([...selectedItems, item])
-        setVehicleModalOpen(false)
-    }
-
-    const handleProductSelect = (product, quantity) => {
+    const handleProductSelect = (product, quantity = 1) => {
         const item = {
             type: 'product',
             id: product.id,
@@ -82,35 +45,6 @@ const Facturacion = () => {
             subtotal: product.precio * quantity
         }
         setSelectedItems([...selectedItems, item])
-        setProductModalOpen(false)
-    }
-
-    const handleServiceSelect = (service) => {
-        const item = {
-            type: 'service',
-            id: service.id,
-            name: service.name,
-            price: service.price,
-            quantity: 1,
-            subtotal: service.price
-        }
-        setSelectedItems([...selectedItems, item])
-        setServiceModalOpen(false)
-    }
-
-    const handleRentalSelect = (vehicle, rentalType) => {
-        const option = rentalOptions.find(opt => opt.type === rentalType)
-        const item = {
-            type: 'rental',
-            id: vehicle.id,
-            name: `Alquiler ${vehicle.marca} ${vehicle.modelo} - ${rentalType}`,
-            price: option.basePrice,
-            quantity: 1,
-            rentalType: rentalType,
-            subtotal: option.basePrice
-        }
-        setSelectedItems([...selectedItems, item])
-        setRentalModalOpen(false)
     }
 
     const removeItem = (index) => {
@@ -121,64 +55,34 @@ const Facturacion = () => {
         return selectedItems.reduce((total, item) => total + item.subtotal, 0)
     }
 
-    const generateInstallments = (totalAmount, paymentData) => {
-        const installments = []
-        const installmentAmount = Math.ceil(totalAmount / paymentData.installments)
-        let currentDate = new Date(paymentData.startDate)
-
-        for (let i = 1; i <= paymentData.installments; i++) {
-            const dueDate = new Date(currentDate)
-
-            // Calculate next due date based on frequency
-            if (paymentData.frequency === 'semanales') {
-                currentDate.setDate(currentDate.getDate() + 7)
-            } else if (paymentData.frequency === 'quincenales') {
-                currentDate.setDate(currentDate.getDate() + 15)
-            } else if (paymentData.frequency === 'mensuales') {
-                currentDate.setMonth(currentDate.getMonth() + 1)
-            }
-
-            installments.push({
-                number: i,
-                amount: installmentAmount,
-                dueDate: dueDate.toLocaleDateString(),
-                status: 'Pendiente'
-            })
-        }
-
-        return installments
-    }
-
     const generateInvoice = async () => {
         try {
+            // Validation
+            if (!invoiceData.clientName.trim()) {
+                alert('El nombre del cliente es requerido')
+                return
+            }
+
+            if (selectedItems.length === 0) {
+                alert('Debe agregar al menos un producto a la factura')
+                return
+            }
+
             const total = calculateTotal()
-            const hasVehicle = selectedItems.some(item => item.type === 'vehicle')
-            const hasProduct = selectedItems.some(item => item.type === 'product')
-            const hasRental = selectedItems.some(item => item.type === 'rental')
-
-            // Determine invoice type
-            let tipo = 'servicio' // default
-            if (hasVehicle) tipo = 'venta'
-            else if (hasRental) tipo = 'alquiler'
-            else if (hasProduct) tipo = 'producto'
-
-            const installments = hasVehicle && paymentData.paymentType === 'cuotas'
-                ? generateInstallments(total, paymentData)
-                : []
 
             // Prepare invoice data for database
             const invoiceDataForDB = {
-                tipo: tipo,
-                cliente_nombre: invoiceData.clientName,
-                cliente_apellido: invoiceData.clientLastName,
-                cliente_genero: invoiceData.clientGender,
-                cliente_email: invoiceData.clientEmail,
-                cliente_telefono: invoiceData.clientPhone,
-                cliente_cedula: invoiceData.clientId,
+                tipo: 'producto',
+                cliente_nombre: invoiceData.clientName.trim(),
+                cliente_apellido: invoiceData.clientLastName.trim() || null,
+                cliente_genero: invoiceData.clientGender || null,
+                cliente_email: invoiceData.clientEmail.trim() || null,
+                cliente_telefono: invoiceData.clientPhone.trim() || null,
+                cliente_cedula: invoiceData.clientId.trim() || null,
                 items: selectedItems,
                 total: total,
-                datos_pago: hasVehicle ? paymentData : null,
-                cuotas: installments.length > 0 ? installments : null
+                datos_pago: null,
+                cuotas: null
             }
 
             // Save to database
@@ -190,8 +94,6 @@ const Facturacion = () => {
                 id: savedInvoice.id,
                 items: selectedItems,
                 total: total,
-                paymentData: hasVehicle ? paymentData : null,
-                installments: installments,
                 date: new Date().toLocaleDateString()
             }
 
@@ -248,30 +150,6 @@ const Facturacion = () => {
                         <div class="total">
                             <p>Total: $${invoice.total?.toLocaleString() || 0}</p>
                         </div>
-
-                        ${invoice.installments && invoice.installments.length > 0 ? `
-                            <h3>Plan de Cuotas</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Número de Cuota</th>
-                                        <th>Monto</th>
-                                        <th>Fecha de Vencimiento</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${invoice.installments.map(installment => `
-                                        <tr>
-                                            <td>${installment.number}</td>
-                                            <td>$${installment.amount?.toLocaleString() || 0}</td>
-                                            <td>${installment.dueDate}</td>
-                                            <td>${installment.status}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        ` : ''}
                     </body>
                 </html>
             `)
@@ -288,12 +166,6 @@ const Facturacion = () => {
                 clientPhone: '',
                 clientId: '',
                 items: []
-            })
-            setPaymentData({
-                paymentType: 'contado',
-                installments: 1,
-                frequency: 'mensuales',
-                startDate: new Date().toISOString().split('T')[0]
             })
 
             alert('Factura generada exitosamente!')
@@ -317,46 +189,72 @@ const Facturacion = () => {
                         </button>
                     </div>
 
-                    {/* Billing Type Selection */}
+                    {/* Product Search */}
                     <div className="card mb-4">
                         <div className="card-header">
-                            <h5>Seleccionar Tipo de Facturación</h5>
+                            <h5>Buscar Productos</h5>
                         </div>
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-3 mb-3">
-                                    <button
-                                        className="btn btn-outline-primary w-100"
-                                        onClick={() => handleBillingTypeSelect('vehicle')}
-                                    >
-                                        Venta de Vehículo
-                                    </button>
-                                </div>
-                                <div className="col-md-3 mb-3">
-                                    <button
-                                        className="btn btn-outline-success w-100"
-                                        onClick={() => handleBillingTypeSelect('rental')}
-                                    >
-                                        Alquiler de Vehículo
-                                    </button>
-                                </div>
-                                <div className="col-md-3 mb-3">
-                                    <button
-                                        className="btn btn-outline-info w-100"
-                                        onClick={() => handleBillingTypeSelect('product')}
-                                    >
-                                        Producto
-                                    </button>
-                                </div>
-                                <div className="col-md-3 mb-3">
-                                    <button
-                                        className="btn btn-outline-warning w-100"
-                                        onClick={() => handleBillingTypeSelect('service')}
-                                    >
-                                        Servicio
-                                    </button>
-                                </div>
+                            <div className="mb-3">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Buscar por nombre, fabricante o ID..."
+                                    value={productSearch}
+                                    onChange={(e) => setProductSearch(e.target.value)}
+                                />
                             </div>
+                            {inventoryLoading ? (
+                                <div>Cargando productos...</div>
+                            ) : (
+                                <div className="table-responsive">
+                                    <table className="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fabricante</th>
+                                                <th>Precio</th>
+                                                <th>Cantidad Disponible</th>
+                                                <th>Cantidad a Facturar</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filteredProducts.map(product => (
+                                                <tr key={product.id}>
+                                                    <td>{product.id}</td>
+                                                    <td>{product.nombre}</td>
+                                                    <td>{product.fabricante}</td>
+                                                    <td>${product.precio?.toLocaleString() || 0}</td>
+                                                    <td>{product.cantidad || 0}</td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            min="1"
+                                                            max={product.cantidad || 1}
+                                                            className="form-control form-control-sm"
+                                                            id={`quantity-${product.id}`}
+                                                            defaultValue="1"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            className="btn btn-sm btn-primary"
+                                                            onClick={() => {
+                                                                const quantity = parseInt(document.getElementById(`quantity-${product.id}`).value) || 1
+                                                                handleProductSelect(product, quantity)
+                                                            }}
+                                                        >
+                                                            Agregar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -368,10 +266,11 @@ const Facturacion = () => {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Nombre</label>
+                                    <label className="form-label">Nombre <span className="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         className="form-control"
+                                        required
                                         value={invoiceData.clientName}
                                         onChange={(e) => setInvoiceData({...invoiceData, clientName: e.target.value})}
                                     />
@@ -432,67 +331,6 @@ const Facturacion = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Payment Section - Only show when vehicle is selected */}
-                    {selectedItems.some(item => item.type === 'vehicle') && (
-                        <div className="card mb-4">
-                            <div className="card-header">
-                                <h5>Información de Pago</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">Tipo de Pago</label>
-                                        <select
-                                            className="form-control"
-                                            value={paymentData.paymentType}
-                                            onChange={(e) => setPaymentData({...paymentData, paymentType: e.target.value})}
-                                        >
-                                            <option value="contado">Pago de Contado</option>
-                                            <option value="cuotas">Pago en Cuotas</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {paymentData.paymentType === 'cuotas' && (
-                                    <div className="row">
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Número de Cuotas</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                min="1"
-                                                max="60"
-                                                value={paymentData.installments}
-                                                onChange={(e) => setPaymentData({...paymentData, installments: parseInt(e.target.value) || 1})}
-                                            />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Frecuencia</label>
-                                            <select
-                                                className="form-control"
-                                                value={paymentData.frequency}
-                                                onChange={(e) => setPaymentData({...paymentData, frequency: e.target.value})}
-                                            >
-                                                <option value="mensuales">Mensuales</option>
-                                                <option value="semanales">Semanales</option>
-                                                <option value="quincenales">Quincenales</option>
-                                            </select>
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Fecha de Inicio</label>
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={paymentData.startDate}
-                                                onChange={(e) => setPaymentData({...paymentData, startDate: e.target.value})}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
 
                     {/* Invoice Items */}
                     <div className="card mb-4">
@@ -558,241 +396,6 @@ const Facturacion = () => {
                     )}
                 </div>
             </div>
-
-            {/* Vehicle Selection Modal */}
-            {vehicleModalOpen && (
-                <>
-                    <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1040 }}></div>
-                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
-                        <div className="modal-dialog modal-lg" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Seleccionar Vehículo</h5>
-                                    <button type="button" className="btn-close" onClick={() => setVehicleModalOpen(false)}></button>
-                                </div>
-                                <div className="modal-body">
-                                    {vehiclesLoading ? (
-                                        <div>Cargando vehículos...</div>
-                                    ) : (
-                                        <div className="table-responsive">
-                                            <table className="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Marca</th>
-                                                        <th>Modelo</th>
-                                                        <th>Año</th>
-                                                        <th>Precio</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {vehicles.filter(v => v.status === 'En Venta').map(vehicle => (
-                                                        <tr key={vehicle.id}>
-                                                            <td>{vehicle.marca}</td>
-                                                            <td>{vehicle.modelo}</td>
-                                                            <td>{vehicle.year}</td>
-                                                            <td>${vehicle.precio?.toLocaleString() || 0}</td>
-                                                            <td>
-                                                                <button
-                                                                    className="btn btn-sm btn-primary"
-                                                                    onClick={() => handleVehicleSelect(vehicle)}
-                                                                >
-                                                                    Seleccionar
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* Product Selection Modal */}
-            {productModalOpen && (
-                <>
-                    <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1040 }}></div>
-                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
-                        <div className="modal-dialog modal-lg" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Seleccionar Producto</h5>
-                                    <button type="button" className="btn-close" onClick={() => setProductModalOpen(false)}></button>
-                                </div>
-                                <div className="modal-body">
-                                    {inventoryLoading ? (
-                                        <div>Cargando productos...</div>
-                                    ) : (
-                                        <div className="table-responsive">
-                                            <table className="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nombre</th>
-                                                        <th>Fabricante</th>
-                                                        <th>Precio</th>
-                                                        <th>Cantidad Disponible</th>
-                                                        <th>Cantidad a Facturar</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {inventory.map(product => (
-                                                        <tr key={product.id}>
-                                                            <td>{product.nombre}</td>
-                                                            <td>{product.fabricante}</td>
-                                                            <td>${product.precio?.toLocaleString() || 0}</td>
-                                                            <td>{product.cantidad || 0}</td>
-                                                            <td>
-                                                                <input
-                                                                    type="number"
-                                                                    min="1"
-                                                                    max={product.cantidad || 1}
-                                                                    className="form-control form-control-sm"
-                                                                    id={`quantity-${product.id}`}
-                                                                    defaultValue="1"
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <button
-                                                                    className="btn btn-sm btn-primary"
-                                                                    onClick={() => {
-                                                                        const quantity = parseInt(document.getElementById(`quantity-${product.id}`).value) || 1
-                                                                        handleProductSelect(product, quantity)
-                                                                    }}
-                                                                >
-                                                                    Seleccionar
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* Service Selection Modal */}
-            {serviceModalOpen && (
-                <>
-                    <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1040 }}></div>
-                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
-                        <div className="modal-dialog modal-lg" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Seleccionar Servicio</h5>
-                                    <button type="button" className="btn-close" onClick={() => setServiceModalOpen(false)}></button>
-                                </div>
-                                <div className="modal-body">
-                                    <div className="table-responsive">
-                                        <table className="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Servicio</th>
-                                                    <th>Precio</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {testServices.map(service => (
-                                                    <tr key={service.id}>
-                                                        <td>{service.name}</td>
-                                                        <td>${service.price?.toLocaleString() || 0}</td>
-                                                        <td>
-                                                            <button
-                                                                className="btn btn-sm btn-primary"
-                                                                onClick={() => handleServiceSelect(service)}
-                                                            >
-                                                                Seleccionar
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* Rental Selection Modal */}
-            {rentalModalOpen && (
-                <>
-                    <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1040 }}></div>
-                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
-                        <div className="modal-dialog modal-lg" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Seleccionar Vehículo para Alquiler</h5>
-                                    <button type="button" className="btn-close" onClick={() => setRentalModalOpen(false)}></button>
-                                </div>
-                                <div className="modal-body">
-                                    {vehiclesLoading ? (
-                                        <div>Cargando vehículos...</div>
-                                    ) : (
-                                        <div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Tipo de Alquiler</label>
-                                                <select className="form-control" id="rentalType">
-                                                    {rentalOptions.map(option => (
-                                                        <option key={option.type} value={option.type}>
-                                                            {option.type} - ${option.basePrice?.toLocaleString() || 0}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <div className="table-responsive">
-                                                <table className="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Marca</th>
-                                                            <th>Modelo</th>
-                                                            <th>Año</th>
-                                                            <th>Acciones</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {vehicles.filter(v => v.status === 'En alquiler').map(vehicle => (
-                                                            <tr key={vehicle.id}>
-                                                                <td>{vehicle.marca}</td>
-                                                                <td>{vehicle.modelo}</td>
-                                                                <td>{vehicle.year}</td>
-                                                                <td>
-                                                                    <button
-                                                                        className="btn btn-sm btn-primary"
-                                                                        onClick={() => {
-                                                                            const rentalType = document.getElementById('rentalType').value
-                                                                            handleRentalSelect(vehicle, rentalType)
-                                                                        }}
-                                                                    >
-                                                                        Seleccionar
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
         </div>
     )
 }

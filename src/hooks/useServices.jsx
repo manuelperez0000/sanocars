@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
 import request from '../utils/request'
 import { apiurl } from '../utils/globals'
+import useConfigStore from '../zustand/useConfigStore'
 
 const useServices = () => {
+
+    const { setPendingServicesCount, pendingServicesCount } = useConfigStore()
+
     const [services, setServices] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -25,6 +29,8 @@ const useServices = () => {
         try {
             const response = await request.get(apiurl + '/reservas_servicio')
             if (response.data.body) {
+                const pendingCount = response?.data?.body?.filter(service => service?.status === 0).length || 0
+                setPendingServicesCount(pendingCount)
                 setServices(response.data.body)
             } else {
                 setError('Error al obtener los servicios')
@@ -92,7 +98,8 @@ const useServices = () => {
         statusFilter,
         setStatusFilter,
         filteredServices,
-        handleStatusChange
+        handleStatusChange,
+        pendingServicesCount
     }
 }
 

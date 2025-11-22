@@ -13,6 +13,9 @@ const Vehiculos = () => {
         form,
         uploadingImages,
         imageUploadErrors,
+        salesModalOpen,
+        selectedVehicle,
+        salesForm,
         visibleVehicles,
         openNew,
         openEdit,
@@ -23,6 +26,10 @@ const Vehiculos = () => {
         handleSave,
         handleMarkAsSold,
         handleMarkAsDeleted,
+        openSalesModal,
+        closeSalesModal,
+        handleSalesChange,
+        handleSaveSale,
         getImages
     } = useVehicles()
 
@@ -84,7 +91,9 @@ const Vehiculos = () => {
                                                             <td>{v.status}</td>
                                                             <td>
                                                                 <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
-                                                                <button className="btn btn-sm btn-success me-2" onClick={() => handleMarkAsSold(v)}>Vendido</button>
+                                                                {v.status === 'En Venta' && (
+                                                                    <button className="btn btn-sm btn-success me-2" onClick={() => openSalesModal(v)}>Vender</button>
+                                                                )}
                                                                 <button className="btn btn-sm btn-danger" onClick={() => handleMarkAsDeleted(v)}>Eliminar</button>
                                                             </td>
                                                         </tr>
@@ -253,6 +262,209 @@ const Vehiculos = () => {
                                     >
                                         Guardar
                                     </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sales Modal */}
+            {salesModalOpen && (
+                <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1060 }}></div>
+            )}
+            {salesModalOpen && (
+                <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1070 }}>
+                    <div className="modal-dialog modal-xl" role="document">
+                        <div className="modal-content">
+                            <form onSubmit={handleSaveSale}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Vender Vehículo: {selectedVehicle?.marca} {selectedVehicle?.modelo}</h5>
+                                    <button type="button" className="btn-close" aria-label="Close" onClick={closeSalesModal}></button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Client Data Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Datos del Cliente</h6>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Nombre del Cliente *</label>
+                                                <input name="cliente_nombre" value={salesForm.cliente_nombre || ''} onChange={handleSalesChange} className="form-control" required />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Apellido</label>
+                                                <input name="cliente_apellido" value={salesForm.cliente_apellido || ''} onChange={handleSalesChange} className="form-control" />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Teléfono *</label>
+                                                <input name="cliente_telefono" value={salesForm.cliente_telefono || ''} onChange={handleSalesChange} className="form-control" required />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Email</label>
+                                                <input type="email" name="cliente_email" value={salesForm.cliente_email || ''} onChange={handleSalesChange} className="form-control" />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Cédula</label>
+                                                <input name="cliente_cedula" value={salesForm.cliente_cedula || ''} onChange={handleSalesChange} className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Información del Pago</h6>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Tipo de Pago *</label>
+                                                <select name="tipo_pago" value={salesForm.tipo_pago || 'contado'} onChange={handleSalesChange} className="form-control" required>
+                                                    <option value="contado">De Contado</option>
+                                                    <option value="cuotas">A Cuotas</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Precio de Venta *</label>
+                                                <input
+                                                    type="number"
+                                                    name="precio_venta"
+                                                    value={salesForm.precio_venta || ''}
+                                                    onChange={handleSalesChange}
+                                                    className="form-control"
+                                                    step="0.01"
+                                                    min="0"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {salesForm.tipo_pago === 'cuotas' && (
+                                            <div className="row">
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Fecha Inicial *</label>
+                                                    <input
+                                                        type="date"
+                                                        name="fecha_inicial"
+                                                        value={salesForm.fecha_inicial || ''}
+                                                        onChange={handleSalesChange}
+                                                        className="form-control"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Número de Cuotas</label>
+                                                    <input
+                                                        type="number"
+                                                        name="numero_cuotas"
+                                                        value={salesForm.numero_cuotas || 1}
+                                                        onChange={handleSalesChange}
+                                                        className="form-control"
+                                                        min="1"
+                                                        max="60"
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Frecuencia</label>
+                                                    <select name="frecuencia_cuotas" value={salesForm.frecuencia_cuotas || 'mensual'} onChange={handleSalesChange} className="form-control">
+                                                        <option value="semanal">Semanal</option>
+                                                        <option value="quincenal">Quincenal</option>
+                                                        <option value="mensual">Mensual</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Monto Inicial</label>
+                                                    <input
+                                                        type="number"
+                                                        name="monto_inicial"
+                                                        value={salesForm.monto_inicial || 0}
+                                                        onChange={handleSalesChange}
+                                                        className="form-control"
+                                                        step="0.01"
+                                                        min="0"
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Tasa de Interés (%)</label>
+                                                    <input
+                                                        type="number"
+                                                        name="tasa_interes"
+                                                        value={salesForm.tasa_interes || 0}
+                                                        onChange={handleSalesChange}
+                                                        className="form-control"
+                                                        step="0.01"
+                                                        min="0"
+                                                        max="50"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Totals Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Resumen de la Venta</h6>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="border p-3 rounded">
+                                                    <div className="d-flex justify-content-between mb-2">
+                                                        <strong>Precio de Venta:</strong>
+                                                        <span>${parseFloat(salesForm.precio_venta || 0).toFixed(2)}</span>
+                                                    </div>
+                                                    {salesForm.tipo_pago === 'cuotas' && (
+                                                        <>
+                                                            <div className="d-flex justify-content-between mb-2">
+                                                                <strong>Menos Inicial:</strong>
+                                                                <span>-${parseFloat(salesForm.monto_inicial || 0).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between mb-2">
+                                                                <strong>Financiamiento:</strong>
+                                                                <span>${(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between mb-2">
+                                                                <strong>Intereses ({salesForm.tasa_interes}%):</strong>
+                                                                <span>${((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100)).toFixed(2)}</span>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                    <hr />
+                                                    <div className="d-flex justify-content-between">
+                                                        <strong>Total a Pagar:</strong>
+                                                        <span className="text-primary">${parseFloat(salesForm.total_con_intereses || 0).toFixed(2)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {salesForm.tipo_pago === 'cuotas' && salesForm.siguientes_pagos && salesForm.siguientes_pagos.length > 0 && (
+                                                <div className="col-md-6">
+                                                    <div className="border p-3 rounded">
+                                                        <h6 className="mb-3">Cronograma de Pagos</h6>
+                                                        <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                                            <table className="table table-sm table-borderless mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th className="ps-0">Cuota</th>
+                                                                        <th>Fecha</th>
+                                                                        <th className="text-end pe-0">Monto</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {salesForm.siguientes_pagos.map((pago, index) => (
+                                                                        <tr key={index}>
+                                                                            <td className="ps-0">{pago.numero_cuota}</td>
+                                                                            <td>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                                                            <td className="text-end pe-0">${pago.monto}</td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={closeSalesModal}>Cancelar</button>
+                                    {/* <button type="submit" className="btn btn-success me-2">Guardar Venta</button> */}
+                                    <button type="button" className="btn btn-primary" onClick={() => { handleSaveSale({ preventDefault: () => {} }); }}>Guardar e Imprimir</button>
                                 </div>
                             </form>
                         </div>

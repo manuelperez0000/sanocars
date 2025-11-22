@@ -28,7 +28,7 @@ import Facturas from "./pages/admin/facturas"
 import NuevoInformeVehiculos from "./pages/admin/nuevoInformeVehiculos"
 import CategoriasServicio from "./pages/admin/categoriasServicio"
 import Configuracion from "./pages/admin/configuracion"
-
+import Reservas from "./pages/admin/reservas"
 const Router = () => {
     return <>
         <Routes>
@@ -45,6 +45,7 @@ const Router = () => {
             {/* Admin */}
             
             <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
+            <Route path="/admin/reservas" element={<AdminLayout><Reservas /></AdminLayout>} />
             <Route path="/admin/facturacion" element={<AdminLayout><Facturacion /></AdminLayout>} />
             <Route path="/admin/facturas" element={<AdminLayout><Facturas /></AdminLayout>} />
             <Route path="/admin/usuarios" element={<AdminLayout><Usuarios /></AdminLayout>} />
