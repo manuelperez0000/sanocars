@@ -83,7 +83,7 @@ const Service = () => {
                 fecha_reserva: selectedDate
             }
 
-            const response = await request.post(apiurl + '/services/reserve', reservationData)
+            const response = await request.post(apiurl + '/reservas_servicio', reservationData)
 
             if (response.data.status === 200) {
                 alert('Reserva guardada exitosamente')

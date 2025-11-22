@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { FaClock, FaPhone, FaWhatsapp, FaEnvelope, FaEdit, FaTrash } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
 import useConfiguracion from "../../hooks/useConfiguracion";
+import useServices from "../../hooks/useServices";
+import { useNavigate } from "react-router-dom";
 
 const Configuracion = () => {
   const {
@@ -10,76 +10,25 @@ const Configuracion = () => {
     getSchedules,
     getPhones,
     getEmails,
-    createConfiguracion,
-    updateConfiguracion,
-    deleteConfiguracion
+    agregarHorario,
+    agregarTelefono,
+    agregarCorreo,
+    startEditing,
+    cancelEditing,
+    saveEditing,
+    eliminarItem,
+    editingItem,
+    editForm,
+    setEditForm,
   } = useConfiguracion();
 
-  const [editingItem, setEditingItem] = useState(null);
-  const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
+  const navigate = useNavigate()
+  const { loadingServices, errorServices, saving, statusFilter,
+    setStatusFilter,
+    filteredServices,
+    handleStatusChange } = useServices()
 
-  // --- Agregar nuevo item ---
-  const agregarHorario = async () => {
-    try {
-      await createConfiguracion({ tipo: 'schedule', texto: '' });
-    } catch (error) {
-      alert('Error al agregar horario: ' + error.message);
-    }
-  };
-
-  const agregarTelefono = async () => {
-    try {
-      await createConfiguracion({ tipo: 'phone', texto: '', whatsapp: false });
-    } catch (error) {
-      alert('Error al agregar teléfono: ' + error.message);
-    }
-  };
-
-  const agregarCorreo = async () => {
-    try {
-      await createConfiguracion({ tipo: 'email', texto: '' });
-    } catch (error) {
-      alert('Error al agregar correo: ' + error.message);
-    }
-  };
-
-  // --- Editar item ---
-  const startEditing = (item) => {
-    setEditingItem(item);
-    setEditForm({ texto: item.texto, whatsapp: item.whatsapp || false });
-  };
-
-  const cancelEditing = () => {
-    setEditingItem(null);
-    setEditForm({ texto: '', whatsapp: false });
-  };
-
-  const saveEditing = async () => {
-    try {
-      await updateConfiguracion(editingItem.id, {
-        tipo: editingItem.tipo,
-        texto: editForm.texto,
-        whatsapp: editForm.whatsapp
-      });
-      setEditingItem(null);
-      setEditForm({ texto: '', whatsapp: false });
-    } catch (error) {
-      alert('Error al guardar cambios: ' + error.message);
-    }
-  };
-
-  // --- Eliminar item ---
-  const eliminarItem = async (id) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este elemento?')) return;
-
-    try {
-      await deleteConfiguracion(id);
-    } catch (error) {
-      alert('Error al eliminar elemento: ' + error.message);
-    }
-  };
-
-  if (loading) {
+  if (loading || loadingServices) {
     return (
       <div className="container mt-4">
         <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
@@ -92,12 +41,12 @@ const Configuracion = () => {
     );
   }
 
-  if (error) {
+  if (error || errorServices) {
     return (
       <div className="container mt-4">
         <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
         <div className="alert alert-danger">
-          Error: {error}
+          Error: {error || errorServices}
         </div>
       </div>
     );
@@ -109,7 +58,7 @@ const Configuracion = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4 text-center">⚙️ Configuración de la Página</h2>
+      <h2 className="mb-4">Configuración de la Página</h2>
 
       {/* Horarios */}
       <div className="card mb-4 shadow-sm">
@@ -127,7 +76,7 @@ const Configuracion = () => {
                       className="form-control"
                       placeholder="Ejemplo: Lunes a Viernes 9:00 - 18:00"
                       value={editForm.texto}
-                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, texto: e.target.value })}
                     />
                     <button className="btn btn-success btn-sm" onClick={saveEditing}>
                       Guardar
@@ -177,7 +126,7 @@ const Configuracion = () => {
                       className="form-control"
                       placeholder="Número de teléfono"
                       value={editForm.texto}
-                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, texto: e.target.value })}
                     />
                     <div className="form-check d-flex align-items-center ms-2">
                       <input
@@ -185,7 +134,7 @@ const Configuracion = () => {
                         className="form-check-input"
                         id={`whatsapp-edit-${phone.id}`}
                         checked={editForm.whatsapp}
-                        onChange={(e) => setEditForm({...editForm, whatsapp: e.target.checked})}
+                        onChange={(e) => setEditForm({ ...editForm, whatsapp: e.target.checked })}
                       />
                       <label className="form-check-label ms-2" htmlFor={`whatsapp-edit-${phone.id}`}>
                         <FaWhatsapp color="green" /> WhatsApp
@@ -242,7 +191,7 @@ const Configuracion = () => {
                       className="form-control"
                       placeholder="correo@ejemplo.com"
                       value={editForm.texto}
-                      onChange={(e) => setEditForm({...editForm, texto: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, texto: e.target.value })}
                     />
                     <button className="btn btn-success btn-sm" onClick={saveEditing}>
                       Guardar
@@ -273,6 +222,136 @@ const Configuracion = () => {
           >
             + Agregar Correo
           </button>
+        </div>
+      </div>
+      <div className="mb-5">
+        <div className="card mb-4 shadow-sm">
+          <div className="container-fluid py-4">
+            <div className="row">
+              <div className="col-12">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h2>Gestión de Servicios</h2>
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => navigate('/admin/categorias-servicio')}
+                  >
+                    Categorías
+                  </button>
+                </div>
+
+
+
+                {/* Services Table */}
+                <div className="card">
+                  <div className="card-body">
+                    <div className='flex-between'>
+                      <h5 className="card-title">Reservas de clientes ({filteredServices.length})</h5>
+                      <select
+                        className="form-select w-50"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                      >
+                        <option value="">Todos los estados</option>
+                        <option value="0">Pendiente</option>
+                        <option value="1">Aprobado</option>
+                        <option value="2">Cancelado</option>
+                        <option value="3">Ejecutado</option>
+                      </select>
+                    </div>
+
+
+                    {filteredServices.length === 0 ? (
+                      <p>No hay servicios para mostrar.</p>
+                    ) : (
+                      <div className="table-responsive">
+                        <table className="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>Nombre</th>
+                              <th>Email</th>
+                              <th>Teléfono</th>
+                              <th>Servicio</th>
+                              <th>Fecha Reserva</th>
+
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredServices.map((service) => (
+                              <tr key={service.id}>
+                                <td>{service.nombre}</td>
+                                <td>{service.email}</td>
+                                <td>{service.telefono}</td>
+                                <td>{service.servicio}</td>
+                                <td>{new Date(service.fecha_reserva).toLocaleDateString()}</td>
+
+                                <td>
+                                  <div className="btn-group" role="group">
+                                    <input
+                                      type="radio"
+                                      className="btn-check"
+                                      name={`status-${service.id}`}
+                                      id={`pending-${service.id}`}
+                                      checked={service.status === 0}
+                                      onChange={() => handleStatusChange(service.id, 0)}
+                                      disabled={saving}
+                                    />
+                                    <label className="btn btn-outline-warning btn-sm" htmlFor={`pending-${service.id}`}>
+                                      Pendiente
+                                    </label>
+
+                                    <input
+                                      type="radio"
+                                      className="btn-check"
+                                      name={`status-${service.id}`}
+                                      id={`approved-${service.id}`}
+                                      checked={service.status === 1}
+                                      onChange={() => handleStatusChange(service.id, 1)}
+                                      disabled={saving}
+                                    />
+                                    <label className="btn btn-outline-success btn-sm" htmlFor={`approved-${service.id}`}>
+                                      Aprobado
+                                    </label>
+
+                                    <input
+                                      type="radio"
+                                      className="btn-check"
+                                      name={`status-${service.id}`}
+                                      id={`cancelled-${service.id}`}
+                                      checked={service.status === 2}
+                                      onChange={() => handleStatusChange(service.id, 2)}
+                                      disabled={saving}
+                                    />
+                                    <label className="btn btn-outline-danger btn-sm" htmlFor={`cancelled-${service.id}`}>
+                                      Cancelado
+                                    </label>
+
+                                    <input
+                                      type="radio"
+                                      className="btn-check"
+                                      name={`status-${service.id}`}
+                                      id={`executed-${service.id}`}
+                                      checked={service.status === 3}
+                                      onChange={() => handleStatusChange(service.id, 3)}
+                                      disabled={saving}
+                                    />
+                                    <label className="btn btn-outline-info btn-sm" htmlFor={`executed-${service.id}`}>
+                                      Ejecutado
+                                    </label>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

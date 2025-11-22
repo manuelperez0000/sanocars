@@ -1,8 +1,12 @@
-import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { FaInstagram, FaFacebook, FaWhatsapp, FaTiktok, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'
+import useApp from '../hooks/useApp'
+import { formatNumber } from '../utils/globals'
 
 const Footer = ({ visitCount }) => {
+
+    const { emails,phones } = useApp()
+
     return (
         <footer className="footer-dark">
             <div className="container">
@@ -32,14 +36,22 @@ const Footer = ({ visitCount }) => {
                     <div className="col-lg-3 col-md-6 mb-4">
                         <h5 className="footer-title mb-3">Información de Contacto</h5>
                         <ul className="footer-nav">
-                            <li className="mb-2">
-                                <FaEnvelope className="me-2" />
-                                <a href="mailto:sanocars@hotmail.com" className="footer-link">sanocars@hotmail.com</a>
-                            </li>
-                            <li className="mb-2">
+                            {emails && emails.map((item, index) => (
+                                <li key={index} className="mb-2">
+                                    <FaEnvelope className="me-2" />
+                                    <a href={`mailto:${item.texto}`} className="footer-link">{item.texto}</a>
+                                </li>
+                            ))}
+                            {phones && phones.map((item, index) => (
+                                <li key={index} className="mb-2">
+                                    <FaPhone className="me-2" />
+                                    <a href={`tel:${item.texto}`} className="footer-link">{formatNumber(item.texto)}</a>
+                                </li>
+                            ))}
+                            {/* <li className="mb-2">
                                 <FaPhone className="me-2" />
                                 <a href="tel:+8108091171993" className="footer-link">080 9117 1993</a>
-                            </li>
+                            </li> */}
                             <li className="mb-2">
                                 <FaMapMarkerAlt className="me-2" />
                                 <span className="footer-link">Shizuoka, Japón</span>
@@ -76,7 +88,7 @@ const Footer = ({ visitCount }) => {
                     <div className="col-12">
                         <hr className="footer-divider" />
                         <p className="text-center mb-2">
-                            <span className="copyright">Eres nuestro visitante Nº {Math.floor(visitCount/2) || 0}</span>
+                            <span className="copyright">Eres nuestro visitante Nº {Math.floor(visitCount / 2) || 0}</span>
                         </p>
                         <p className="copyright text-center">
                             © {new Date().getFullYear()} SanoCars. Todos los derechos reservados.

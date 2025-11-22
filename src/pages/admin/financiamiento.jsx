@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import request from '../../utils/request'
 import { apiurl } from '../../utils/globals'
 const Financiamiento = () => {
@@ -103,7 +103,10 @@ const Financiamiento = () => {
         <div className="container-fluid py-4">
             <div className="row">
                 <div className="col-12">
-                    <h2 className="mb-4">Gestión de Financiamiento</h2>
+                    <div className='flex-between'>
+                        <h2 className="mb-4">Gestión de Financiamiento</h2>
+                        <Link to="/financiamiento" className="btn btn-success mb-4">Nuevo Financiamiento</Link>
+                    </div>
 
                     {/* Filter */}
                     <div className="card mb-4">

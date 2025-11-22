@@ -1,7 +1,11 @@
-import React from 'react'
+import useApp from '../hooks/useApp'
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaUsers, FaAward, FaCar, FaTools } from 'react-icons/fa'
+import { formatNumber } from '../utils/globals'
 
 const Empresa = () => {
+    
+    const { emails, phones, schedules } = useApp()
+
     return (
         <div className="empresa-page">
             <div className="container py-5">
@@ -121,14 +125,18 @@ const Empresa = () => {
                                     <FaMapMarkerAlt className="me-2" />
                                     Shizuoka, Japón
                                 </p>
-                                <p className="mb-2">
-                                    <FaPhone className="me-2" />
-                                    <a href="tel:+8108091171993" className="text-decoration-none">080 9117 1993</a>
-                                </p>
-                                <p className="mb-0">
-                                    <FaEnvelope className="me-2" />
-                                    <a href="mailto:sanocars@hotmail.com" className="text-decoration-none">sanocars@hotmail.com</a>
-                                </p>
+                                {phones && phones.map((item, index) => (
+                                    <p key={index} className="mb-2">
+                                        <FaPhone className="me-2" />
+                                        <a href={`tel:${item.texto}`} className="text-decoration-none">{formatNumber(item.texto)}</a>
+                                    </p>
+                                ))}
+                                {emails && emails.map((item, index) => (
+                                    <p key={index} className="mb-0">
+                                        <FaEnvelope className="me-2" />
+                                        <a href={`mailto:${item.texto}`} className="text-decoration-none">{item.texto}</a>
+                                    </p>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -136,18 +144,13 @@ const Empresa = () => {
                         <div className="card shadow">
                             <div className="card-body">
                                 <h5 className="card-title mb-3">Horarios de Atención</h5>
-                                <p className="mb-2">
-                                    <FaClock className="me-2" />
-                                    Lunes - Viernes: 8:00 AM - 6:00 PM
-                                </p>
-                                <p className="mb-2">
-                                    <FaClock className="me-2" />
-                                    Sábados: 8:00 AM - 4:00 PM
-                                </p>
-                                <p className="mb-0">
-                                    <FaClock className="me-2" />
-                                    Domingos: Cerrado
-                                </p>
+                                
+                                {schedules && schedules.map((item, index) => (
+                                    <p key={index} className="mb-2">
+                                        <FaClock className="me-2" />
+                                        {item.texto}
+                                    </p>
+                                ))}
                             </div>
                         </div>
                     </div>

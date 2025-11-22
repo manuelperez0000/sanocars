@@ -7,10 +7,23 @@ const useServices = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [saving, setSaving] = useState(false)
+    const [statusFilter, setStatusFilter] = useState('')
+
+    const filteredServices = statusFilter === ''
+        ? services
+        : services.filter(service => service.status === parseInt(statusFilter))
+
+    const handleStatusChange = async (serviceId, newStatus) => {
+        try {
+            await updateServiceStatus(serviceId, newStatus)
+        } catch (error) {
+            alert('Error al actualizar el estado: ' + error.message)
+        }
+    }
 
     const fetchServices = async () => {
         try {
-            const response = await request.get(apiurl + '/services/reservas_servicio')
+            const response = await request.get(apiurl + '/reservas_servicio')
             if (response.data.body) {
                 setServices(response.data.body)
             } else {
@@ -31,7 +44,7 @@ const useServices = () => {
     const updateServiceStatus = async (serviceId, status) => {
         setSaving(true)
         try {
-            const response = await request.put(apiurl + '/services/reservas_servicio/' + serviceId, { status })
+            const response = await request.put(apiurl + '/reservas_servicio/' + serviceId, { status })
             if (response.data) {
                 // Refresh the services list after successful update
                 await fetchServices()
@@ -75,7 +88,11 @@ const useServices = () => {
         fetchServices,
         updateServiceStatus,
         getStatusText,
-        getStatusColor
+        getStatusColor,
+        statusFilter,
+        setStatusFilter,
+        filteredServices,
+        handleStatusChange
     }
 }
 

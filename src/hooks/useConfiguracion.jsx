@@ -76,6 +76,70 @@ const useConfiguracion = () => {
         return configuraciones.filter(config => config.tipo === 'email')
     }
 
+    const [editingItem, setEditingItem] = useState(null);
+    const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
+
+    // --- Agregar nuevo item ---
+    const agregarHorario = async () => {
+        try {
+            await createConfiguracion({ tipo: 'schedule', texto: '' });
+        } catch (error) {
+            alert('Error al agregar horario: ' + error.message);
+        }
+    };
+
+    const agregarTelefono = async () => {
+        try {
+            await createConfiguracion({ tipo: 'phone', texto: '', whatsapp: false });
+        } catch (error) {
+            alert('Error al agregar teléfono: ' + error.message);
+        }
+    };
+
+    const agregarCorreo = async () => {
+        try {
+            await createConfiguracion({ tipo: 'email', texto: '' });
+        } catch (error) {
+            alert('Error al agregar correo: ' + error.message);
+        }
+    };
+
+    // --- Editar item ---
+    const startEditing = (item) => {
+        setEditingItem(item);
+        setEditForm({ texto: item.texto, whatsapp: item.whatsapp || false });
+    };
+
+    const cancelEditing = () => {
+        setEditingItem(null);
+        setEditForm({ texto: '', whatsapp: false });
+    };
+
+    const saveEditing = async () => {
+        try {
+            await updateConfiguracion(editingItem.id, {
+                tipo: editingItem.tipo,
+                texto: editForm.texto,
+                whatsapp: editForm.whatsapp
+            });
+            setEditingItem(null);
+            setEditForm({ texto: '', whatsapp: false });
+        } catch (error) {
+            alert('Error al guardar cambios: ' + error.message);
+        }
+    };
+
+    // --- Eliminar item ---
+    const eliminarItem = async (id) => {
+        if (!confirm('¿Estás seguro de que quieres eliminar este elemento?')) return;
+
+        try {
+            await deleteConfiguracion(id);
+        } catch (error) {
+            alert('Error al eliminar elemento: ' + error.message);
+        }
+    };
+
     return {
         configuraciones,
         loading,
@@ -86,7 +150,18 @@ const useConfiguracion = () => {
         deleteConfiguracion,
         getSchedules,
         getPhones,
-        getEmails
+        getEmails,
+        agregarHorario,
+        agregarTelefono,
+        agregarCorreo,
+        startEditing,
+        cancelEditing,
+        saveEditing,
+        eliminarItem,
+        editingItem,
+        setEditingItem,
+        editForm,
+        setEditForm
     }
 }
 
