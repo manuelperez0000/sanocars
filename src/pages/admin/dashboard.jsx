@@ -19,6 +19,7 @@ import {
 } from 'react-icons/fa';
 import useServices from '../../hooks/useServices';
 import useDashboard from '../../hooks/useDashboard';
+import Calendario from './calendario';
 
 ChartJS.register(
     CategoryScale,
@@ -208,9 +209,12 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-
+                <div className='m-auto'>
+                    <Calendario />
+                    </div>     
+                    
                 {/* Gráfico de Ingresos por Categoría */}
-                <div className="card border-0 shadow-lg"
+                {/* <div className="card border-0 shadow-lg"
                     style={{
                         background: 'rgba(255, 255, 255, 0.95)',
                         backdropFilter: 'blur(10px)',
@@ -226,7 +230,7 @@ const Dashboard = () => {
                     <div className="card-body p-4">
                         <Bar data={chartData} options={chartOptions} />
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     )
