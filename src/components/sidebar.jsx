@@ -2,11 +2,14 @@ import { Link, useLocation } from 'react-router-dom'
 import { FaTachometerAlt, FaUsers, FaMoneyBillWave, FaCar, FaTools, FaImages, FaSignOutAlt, FaCog } from 'react-icons/fa'
 import useLogin from '../hooks/useLogin'
 import useServices from '../hooks/useServices'
+
+
 const Sidebar = () => {
+    
     const { pendingServicesCount } = useServices()
     const location = useLocation()
     const { logout } = useLogin()
-
+    /* console.log("location: ", location.pathname) */
     const menuItems = [
         { title: 'Dashboard', path: '/admin/dashboard', icon: FaTachometerAlt },
         { title: 'Facturacion', path: '/admin/facturacion', icon: FaTachometerAlt },
@@ -28,21 +31,22 @@ const Sidebar = () => {
         <hr className='text-light' />
         {menuItems.map((item) => {
             const IconComponent = item.icon
+            console.log("Comparing:", location.pathname, "with", item.path)
             return (
                 <Link
                     key={item.path}
                     to={item.path}
-                    className={`sidebar-item text-light relative ${location.pathname === item.path && 'active'}`}
+                    className={`sidebar-item bg-danger text-light relative mb-0`}
                     style={{ borderRadius: 8, textDecoration: 'none', color: 'inherit' }}
                 >
-                    <span>
+                    <span className={`mb-0 py-2 ${(location.pathname == item.path || location.pathname.startsWith(item.path + '/')) && 'active'}`}>
                         <IconComponent className="me-2" /> {item.title}
                     </span>
                     {/* only show status=0 */}
                     {item.title === 'Reservas' && pendingServicesCount > 0 && (
-                        <span className="badge-2">
+                        <b className="badge-2 m-0 p-0">
                             {pendingServicesCount}
-                        </span>
+                        </b>
                     )}
                 </Link>
             )
