@@ -25,7 +25,7 @@ const useItemsServicio = (categoriaId) => {
             }
         } catch (err) {
             console.error('fetchItems error', err)
-            setError(err.message || 'Error cargando items de servicio')
+            setError(err?.response?.data?.message || 'Error cargando items de servicio')
         } finally {
             setLoading(false)
         }
@@ -40,7 +40,7 @@ const useItemsServicio = (categoriaId) => {
             }
         } catch (err) {
             console.error('createItem error', err)
-            throw new Error(err.message || 'Error creando item de servicio')
+            throw new Error(err?.response?.data?.message || 'Error creando item de servicio')
         }
     }
 
@@ -50,7 +50,7 @@ const useItemsServicio = (categoriaId) => {
             fetchItems() // Refresh the list
         } catch (err) {
             console.error('deleteItem error', err)
-            throw new Error(err.message || 'Error eliminando item de servicio')
+            throw new Error(err?.response?.data?.message || 'Error eliminando item de servicio')
         }
     }
 

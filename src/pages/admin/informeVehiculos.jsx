@@ -20,7 +20,7 @@ const InformeVehiculos = () => {
         try {
             await deleteInforme(id)
         } catch (err) {
-            alert('Error eliminando informe: ' + err.message)
+            alert('Error eliminando informe: ' + err?.response?.data?.message)
         }
     }
 

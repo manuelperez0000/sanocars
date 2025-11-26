@@ -31,7 +31,7 @@ const useDashboard = () => {
             }
         } catch (err) {
             console.error('fetchDashboardData error', err)
-            setError(err.message || 'Error cargando datos del dashboard')
+            setError(err?.response?.data?.message || 'Error cargando datos del dashboard')
         } finally {
             setLoading(false)
         }

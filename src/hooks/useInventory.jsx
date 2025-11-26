@@ -36,7 +36,7 @@ const useInventory = () => {
             }
         } catch (err) {
             console.error('fetchInventory error', err)
-            setError(err.message || 'Error cargando inventario')
+            setError(err?.response?.data?.message || 'Error cargando inventario')
         } finally {
             setLoading(false)
         }
@@ -176,7 +176,7 @@ const useInventory = () => {
             fetchInventory()
         } catch (err) {
             console.error('save inventory item error', err)
-            setError(err.message || 'Error guardando producto')
+            setError(err?.response?.data?.message || 'Error guardando producto')
         }
     }
 
@@ -187,7 +187,7 @@ const useInventory = () => {
             fetchInventory()
         } catch (err) {
             console.error('delete inventory item error', err)
-            setError(err.message || 'Error eliminando producto')
+            setError(err?.response?.data?.message || 'Error eliminando producto')
         }
     }
 

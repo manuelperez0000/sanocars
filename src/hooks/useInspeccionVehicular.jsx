@@ -50,7 +50,7 @@ const useInspeccionVehicular = () => {
             }
         } catch (err) {
             console.error('fetchInspecciones error', err)
-            setError(err.message || 'Error cargando inspecciones')
+            setError(err?.response?.data?.message || 'Error cargando inspecciones')
         } finally {
             setLoading(false)
         }
@@ -183,9 +183,6 @@ const useInspeccionVehicular = () => {
             if (dataToSend.vehiculo_pastillas_freno) {
                 dataToSend.vehiculo_pastillas_freno = parseInt(dataToSend.vehiculo_pastillas_freno)
             }
-            if (dataToSend.vehiculo_neumaticos) {
-                dataToSend.vehiculo_neumaticos = parseInt(dataToSend.vehiculo_neumaticos)
-            }
 
             if (editing && editing.id) {
                 await request.put(apiurl + '/inspeccion-vehicular/' + editing.id, dataToSend)
@@ -196,7 +193,7 @@ const useInspeccionVehicular = () => {
             fetchInspecciones()
         } catch (err) {
             console.error('save inspeccion error', err)
-            setError(err.message || 'Error guardando inspección')
+            setError(err.response.data.message || 'Error guardando inspección')
         }
     }
 
@@ -207,7 +204,7 @@ const useInspeccionVehicular = () => {
             fetchInspecciones()
         } catch (err) {
             console.error('delete inspeccion error', err)
-            setError(err.message || 'Error eliminando inspección')
+            setError(err?.response?.data?.message || 'Error eliminando inspección')
         }
     }
 

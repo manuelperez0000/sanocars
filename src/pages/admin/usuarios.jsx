@@ -159,7 +159,7 @@ const Usuarios = () => {
                                 {editingUser ? (
                                     <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar cambios'}</button>
                                 ) : (
-                                    <button className="btn btn-primary" onClick={async () => { try { await handleCreate(); } catch (err) { alert('Error creando usuario: ' + (err.message || err)) } }} disabled={saving}>{saving ? 'Guardando...' : 'Crear usuario'}</button>
+                                    <button className="btn btn-primary" onClick={async () => { try { await handleCreate(); } catch (err) { alert('Error creando usuario: ' + (err?.response?.data?.message || err)) } }} disabled={saving}>{saving ? 'Guardando...' : 'Crear usuario'}</button>
                                 )}
                             </div>
                         </div>

@@ -55,7 +55,7 @@ export default function VehicleDetail() {
       }
     } catch (err) {
       console.error('fetchVehicle error', err)
-      setError(err.message || 'Error cargando vehículo')
+      setError(err?.response?.data?.message || 'Error cargando vehículo')
     } finally {
       setLoading(false)
     }

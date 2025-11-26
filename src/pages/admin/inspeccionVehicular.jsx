@@ -4,7 +4,6 @@ import useInspeccionVehicular from '../../hooks/useInspeccionVehicular'
 import useConfiguracion from '../../hooks/useConfiguracion'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
-import { useState } from 'react'
 
 const InspeccionVehicular = () => {
     const {
@@ -22,15 +21,8 @@ const InspeccionVehicular = () => {
         handleChange,
         handleImageChange,
         handleSave,
-        handleDelete,
-        clientes,
-        searchClients,
-        selectClient
+        handleDelete
     } = useInspeccionVehicular()
-
-    // State for ClientInformation component
-    const [userSearch, setUserSearch] = useState('')
-    const [showUserDropdown, setShowUserDropdown] = useState(false)
 
     // Adapt form data for ClientInformation component
     const invoiceData = {
@@ -45,22 +37,6 @@ const InspeccionVehicular = () => {
         handleChange({ target: { name: 'cliente_email', value: newData.clientEmail } })
         handleChange({ target: { name: 'cliente_telefono', value: newData.clientPhone } })
         handleChange({ target: { name: 'cliente_direccion', value: newData.clientAddress } })
-    }
-
-    const setClientType = (value) => {
-        handleChange({ target: { name: 'cliente_tipo', value } })
-    }
-
-    const handleUserSearch = (value) => {
-        setUserSearch(value)
-        searchClients(value)
-        setShowUserDropdown(value.length > 0)
-    }
-
-    const handleSelectUser = (user) => {
-        selectClient(user)
-        setUserSearch('')
-        setShowUserDropdown(false)
     }
 
     const { getPhones, getEmails, getCompanyName, getCompanyAddress } = useConfiguracion()
@@ -133,7 +109,7 @@ const InspeccionVehicular = () => {
                             <div class="info-item"><span class="label">Año:</span> ${inspeccion.vehiculo_anio}</div>
                             <div class="info-item"><span class="label">Color:</span> ${inspeccion.vehiculo_color}</div>
                             <div class="info-item"><span class="label">Placa:</span> ${inspeccion.vehiculo_placa}</div>
-                            <div class="info-item"><span class="label">Fecha Shaken:</span> ${new Date(inspeccion.vehiculo_fecha_shaken).toLocaleDateString()  || 'N/A'}</div>
+                            <div class="info-item"><span class="label">Fecha Shaken:</span> ${new Date(inspeccion.vehiculo_fecha_shaken).toLocaleDateString() || 'N/A'}</div>
                         </div>
                     </div>
 
@@ -263,13 +239,6 @@ const InspeccionVehicular = () => {
                                             <ClientInformation
                                                 invoiceData={invoiceData}
                                                 setInvoiceData={setInvoiceData}
-                                                userSearch={userSearch}
-                                                handleUserSearch={handleUserSearch}
-                                                filteredUsers={clientes}
-                                                showUserDropdown={showUserDropdown}
-                                                selectUser={handleSelectUser}
-                                                clientType={form.cliente_tipo}
-                                                setClientType={setClientType}
                                             />
                                         </div>
 
@@ -442,12 +411,18 @@ const InspeccionVehicular = () => {
                                                             </div>
                                                         )}
                                                     </div>
+
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className='px-3'>
+                                    {error && <div className="alert alert-danger">{error}</div>}
+                                </div>
                                 <div className="modal-footer">
+
                                     <button type="button" className="btn btn-secondary" onClick={() => setModalOpen(false)}>Cancelar</button>
                                     <button
                                         type="submit"

@@ -4,6 +4,7 @@ import useInformeVehiculos from '../../hooks/useInformeVehiculos'
 import request from '../../utils/request'
 import { apiurl, topurl } from '../../utils/globals'
 import imageCompression from 'browser-image-compression'
+import ClientInformation from '../../components/ClientInformation'
 
 const NuevoInformeVehiculos = () => {
     const navigate = useNavigate()
@@ -449,48 +450,23 @@ const NuevoInformeVehiculos = () => {
                         </div>
 
                         {/* Client Information */}
-                        <div className="card mb-4">
-                            <div className="card-header">
-                                <h5>Datos del Cliente</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">Nombre *</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="cliente_nombre"
-                                            value={formData.cliente_nombre}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">Teléfono</label>
-                                        <input
-                                            type="tel"
-                                            className="form-control"
-                                            name="cliente_telefono"
-                                            value={formData.cliente_telefono}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">Email</label>
-                                        <input
-                                            type="email"
-                                            className="form-control"
-                                            name="cliente_email"
-                                            value={formData.cliente_email}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ClientInformation
+                            invoiceData={{
+                                clientName: formData.cliente_nombre || '',
+                                clientEmail: formData.cliente_email || '',
+                                clientPhone: formData.cliente_telefono || '',
+                                clientAddress: formData.cliente_direccion || ''
+                            }}
+                            setInvoiceData={(updatedData) => {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    cliente_nombre: updatedData.clientName || '',
+                                    cliente_email: updatedData.clientEmail || '',
+                                    cliente_telefono: updatedData.clientPhone || '',
+                                    cliente_direccion: updatedData.clientAddress || ''
+                                }))
+                            }}
+                        />
 
                         {/* Vehicle Information */}
                         <div className="card mb-4">

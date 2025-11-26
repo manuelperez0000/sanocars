@@ -21,7 +21,7 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('fetchFacturas error', err)
-            setError(err.message || 'Error cargando facturas')
+            setError(err?.response?.data?.message || 'Error cargando facturas')
         } finally {
             setLoading(false)
         }
@@ -36,7 +36,7 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('createFactura error', err)
-            const errorMessage = err.response?.data?.message || err.message || 'Error creando factura'
+            const errorMessage = err.response?.data?.message || err?.response?.data?.message || 'Error creando factura'
             throw new Error(errorMessage)
         }
     }
@@ -50,7 +50,7 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('updateFactura error', err)
-            const errorMessage = err.response?.data?.message || err.message || 'Error actualizando factura'
+            const errorMessage = err.response?.data?.message || err?.response?.data?.message || 'Error actualizando factura'
             throw new Error(errorMessage)
         }
     }
@@ -61,7 +61,7 @@ const useFacturas = () => {
             fetchFacturas() // Refresh the list
         } catch (err) {
             console.error('deleteFactura error', err)
-            const errorMessage = err.response?.data?.message || err.message || 'Error eliminando factura'
+            const errorMessage = err.response?.data?.message || err?.response?.data?.message || 'Error eliminando factura'
             throw new Error(errorMessage)
         }
     }
@@ -74,7 +74,7 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('getFactura error', err)
-            const errorMessage = err.response?.data?.message || err.message || 'Error obteniendo factura'
+            const errorMessage = err.response?.data?.message || err?.response?.data?.message || 'Error obteniendo factura'
             throw new Error(errorMessage)
         }
     }

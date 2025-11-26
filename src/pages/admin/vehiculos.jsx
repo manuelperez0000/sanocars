@@ -1,5 +1,6 @@
 import useVehicles from '../../hooks/useVehicles'
-import { apiurl, topurl } from '../../utils/globals'
+import { topurl } from '../../utils/globals'
+import ClientInformation from '../../components/ClientInformation'
 
 const Vehiculos = () => {
     const {
@@ -291,31 +292,20 @@ const Vehiculos = () => {
                                 </div>
                                 <div className="modal-body">
                                     {/* Client Data Section */}
-                                    <div className="mb-4">
-                                        <h6 className="text-primary mb-3">Datos del Cliente</h6>
-                                        <div className="row">
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Nombre del Cliente *</label>
-                                                <input name="cliente_nombre" value={salesForm.cliente_nombre || ''} onChange={handleSalesChange} className="form-control" required />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Apellido</label>
-                                                <input name="cliente_apellido" value={salesForm.cliente_apellido || ''} onChange={handleSalesChange} className="form-control" />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Teléfono *</label>
-                                                <input name="cliente_telefono" value={salesForm.cliente_telefono || ''} onChange={handleSalesChange} className="form-control" required />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Email</label>
-                                                <input type="email" name="cliente_email" value={salesForm.cliente_email || ''} onChange={handleSalesChange} className="form-control" />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Dirección</label>
-                                                <input name="cliente_direccion" value={salesForm.cliente_direccion || ''} onChange={handleSalesChange} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ClientInformation
+                                        invoiceData={{
+                                            clientName: salesForm.cliente_nombre || '',
+                                            clientEmail: salesForm.cliente_email || '',
+                                            clientPhone: salesForm.cliente_telefono || '',
+                                            clientAddress: salesForm.cliente_direccion || ''
+                                        }}
+                                        setInvoiceData={(updatedData) => {
+                                            handleSalesChange({ target: { name: 'cliente_nombre', value: updatedData.clientName || '' } })
+                                            handleSalesChange({ target: { name: 'cliente_email', value: updatedData.clientEmail || '' } })
+                                            handleSalesChange({ target: { name: 'cliente_telefono', value: updatedData.clientPhone || '' } })
+                                            handleSalesChange({ target: { name: 'cliente_direccion', value: updatedData.clientAddress || '' } })
+                                        }}
+                                    />
                                     
 
                                     {/* Payment Section */}

@@ -36,7 +36,7 @@ const useServicios = () => {
             }
         } catch (err) {
             console.error('fetchServicios error', err)
-            setError(err.message || 'Error cargando servicios')
+            setError(err?.response?.data?.message || 'Error cargando servicios')
         } finally {
             setLoading(false)
         }
@@ -275,7 +275,7 @@ const useServicios = () => {
             fetchServicios()
         } catch (err) {
             console.error('save servicio error', err)
-            setError(err.message || 'Error guardando servicio')
+            setError(err?.response?.data?.message || 'Error guardando servicio')
         }
     }
 
@@ -286,7 +286,7 @@ const useServicios = () => {
             fetchServicios()
         } catch (err) {
             console.error('delete servicio error', err)
-            setError(err.message || 'Error eliminando servicio')
+            setError(err?.response?.data?.message || 'Error eliminando servicio')
         }
     }
 

@@ -1,16 +1,65 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import request from "../utils/request"
+import { apiurl } from "../utils/globals"
 
 const ClientInformation = ({
     invoiceData,
-    setInvoiceData,
-    userSearch,
-    handleUserSearch,
-    filteredUsers,
-    showUserDropdown,
-    selectUser
+    setInvoiceData
 }) => {
 
     const [clientType, setClientType] = useState()
+    const [users, setUsers] = useState([])
+    const [userSearch, setUserSearch] = useState('')
+    const [filteredUsers, setFilteredUsers] = useState([])
+    const [showUserDropdown, setShowUserDropdown] = useState(false)
+
+    // Fetch users on component mount
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await request.get(apiurl + '/users')
+                if (response.data.body) {
+                    setUsers(response.data.body)
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error)
+            }
+        }
+
+        fetchUsers()
+    }, [])
+
+    // Filter users based on search
+    useEffect(() => {
+        if (users && userSearch.trim()) {
+            const filtered = users.filter(user =>
+                user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                user.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                user.mobile_no?.includes(userSearch)
+            )
+            setFilteredUsers(filtered)
+            setShowUserDropdown(filtered.length > 0)
+        } else {
+            setFilteredUsers([])
+            setShowUserDropdown(false)
+        }
+    }, [users, userSearch])
+
+    const handleUserSearch = (value) => {
+        setUserSearch(value)
+    }
+
+    const selectUser = (user) => {
+        setInvoiceData({
+            ...invoiceData,
+            clientName: user.name || '',
+            clientEmail: user.email || '',
+            clientPhone: user.mobile_no || '',
+            clientAddress: user.address || ''
+        })
+        setUserSearch('')
+        setShowUserDropdown(false)
+    }
 
     return (
         <div className="card mb-4">

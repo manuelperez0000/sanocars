@@ -91,7 +91,7 @@ export const useImagenes = () => {
             }
         } catch (err) {
             console.error('Error fetching images:', err)
-            setError(err.message || 'Error cargando imágenes')
+            setError(err?.response?.data?.message || 'Error cargando imágenes')
         } finally {
             setLoading(false)
         }
@@ -108,7 +108,7 @@ export const useImagenes = () => {
             setImages(prev => prev.filter(img => img !== imageName))
         } catch (err) {
             console.error('Error deleting image:', err)
-            setError(err.message || 'Error eliminando imagen')
+            setError(err?.response?.data?.message || 'Error eliminando imagen')
         }
     }
 

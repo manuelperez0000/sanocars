@@ -21,7 +21,7 @@ const useCategoriasServicio = () => {
             }
         } catch (err) {
             console.error('fetchCategorias error', err)
-            setError(err.message || 'Error cargando categorías de servicio')
+            setError(err?.response?.data?.message || 'Error cargando categorías de servicio')
         } finally {
             setLoading(false)
         }
@@ -36,7 +36,7 @@ const useCategoriasServicio = () => {
             }
         } catch (err) {
             console.error('createCategoria error', err)
-            throw new Error(err.message || 'Error creando categoría de servicio')
+            throw new Error(err?.response?.data?.message || 'Error creando categoría de servicio')
         }
     }
 
@@ -49,7 +49,7 @@ const useCategoriasServicio = () => {
             }
         } catch (err) {
             console.error('updateCategoria error', err)
-            throw new Error(err.message || 'Error actualizando categoría de servicio')
+            throw new Error(err?.response?.data?.message || 'Error actualizando categoría de servicio')
         }
     }
 
@@ -59,7 +59,7 @@ const useCategoriasServicio = () => {
             fetchCategorias() // Refresh the list
         } catch (err) {
             console.error('deleteCategoria error', err)
-            throw new Error(err.message || 'Error eliminando categoría de servicio')
+            throw new Error(err?.response?.data?.message || 'Error eliminando categoría de servicio')
         }
     }
 
@@ -71,7 +71,7 @@ const useCategoriasServicio = () => {
             }
         } catch (err) {
             console.error('getCategoria error', err)
-            throw new Error(err.message || 'Error obteniendo categoría de servicio')
+            throw new Error(err?.response?.data?.message || 'Error obteniendo categoría de servicio')
         }
     }
 

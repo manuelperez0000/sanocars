@@ -174,7 +174,7 @@ const useUsers = () => {
             return resp
         } catch (err) {
             console.error('Error creando usuario desde hook:', err)
-            const errorMessage = err.response?.data?.message || err.message || 'Error al crear usuario'
+            const errorMessage = err.response?.data?.message || err?.response?.data?.message || 'Error al crear usuario'
             throw new Error(errorMessage)
         } finally {
             setSaving(false)

@@ -12,7 +12,7 @@ const Facturas = () => {
         try {
             await deleteFactura(id)
         } catch (err) {
-            alert('Error eliminando factura: ' + err.message)
+            alert('Error eliminando factura: ' + err?.response?.data?.message)
         }
     }
 

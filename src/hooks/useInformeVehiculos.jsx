@@ -21,7 +21,7 @@ const useInformeVehiculos = () => {
             }
         } catch (err) {
             console.error('fetchInformes error', err)
-            setError(err.message || 'Error cargando informes de vehículos')
+            setError(err?.response?.data?.message || 'Error cargando informes de vehículos')
         } finally {
             setLoading(false)
         }
@@ -36,7 +36,7 @@ const useInformeVehiculos = () => {
             }
         } catch (err) {
             console.error('createInforme error', err)
-            throw new Error(err.message || 'Error creando informe de vehículo')
+            throw new Error(err?.response?.data?.message || 'Error creando informe de vehículo')
         }
     }
 
@@ -49,7 +49,7 @@ const useInformeVehiculos = () => {
             }
         } catch (err) {
             console.error('updateInforme error', err)
-            throw new Error(err.message || 'Error actualizando informe de vehículo')
+            throw new Error(err?.response?.data?.message || 'Error actualizando informe de vehículo')
         }
     }
 
@@ -59,7 +59,7 @@ const useInformeVehiculos = () => {
             fetchInformes() // Refresh the list
         } catch (err) {
             console.error('deleteInforme error', err)
-            throw new Error(err.message || 'Error eliminando informe de vehículo')
+            throw new Error(err?.response?.data?.message || 'Error eliminando informe de vehículo')
         }
     }
 
@@ -71,7 +71,7 @@ const useInformeVehiculos = () => {
             }
         } catch (err) {
             console.error('getInforme error', err)
-            throw new Error(err.message || 'Error obteniendo informe de vehículo')
+            throw new Error(err?.response?.data?.message || 'Error obteniendo informe de vehículo')
         }
     }
 

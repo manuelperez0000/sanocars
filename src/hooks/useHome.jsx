@@ -27,7 +27,7 @@ const useHome = () => {
             }
         } catch (err) {
             console.error('fetchVehicles error', err)
-            setError(err.message || 'Error cargando vehículos')
+            setError(err?.response?.data?.message || 'Error cargando vehículos')
         } finally {
             setLoading(false)
         }

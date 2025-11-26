@@ -3,50 +3,10 @@ import useServicios from '../../hooks/useServicios'
 import { topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
 import ClientInformation from '../../components/ClientInformation'
-import useUsers from '../../hooks/useUsers'
-import { useState, useEffect } from 'react'
+
 const Servicios = () => {
 
     const { getEmails, getPhones } = useConfiguracion()
-    const { users } = useUsers()
-
-    // User search state
-    const [userSearch, setUserSearch] = useState('')
-    const [filteredUsers, setFilteredUsers] = useState([])
-    const [showUserDropdown, setShowUserDropdown] = useState(false)
-
-    // Filter users based on search
-    useEffect(() => {
-        if (users && userSearch.trim()) {
-            const filtered = users.filter(user =>
-                user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
-                user.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
-                user.mobile_no?.includes(userSearch)
-            )
-            setFilteredUsers(filtered)
-            setShowUserDropdown(filtered.length > 0)
-        } else {
-            setFilteredUsers([])
-            setShowUserDropdown(false)
-        }
-    }, [users, userSearch])
-
-    const handleUserSearch = (value) => {
-        setUserSearch(value)
-    }
-
-    const selectUser = (user) => {
-        // Update form with selected user data
-        setForm(prev => ({
-            ...prev,
-            nombre_cliente: user.name || '',
-            email_cliente: user.email || '',
-            telefono_cliente: user.mobile_no || '',
-            direccion_cliente: user.address || ''
-        }))
-        setUserSearch('')
-        setShowUserDropdown(false)
-    }
 
     const {
         loading,
@@ -433,11 +393,6 @@ const Servicios = () => {
                                                 direccion_cliente: updatedData.clientAddress || ''
                                             }))
                                         }}
-                                        userSearch={userSearch}
-                                        handleUserSearch={handleUserSearch}
-                                        filteredUsers={filteredUsers}
-                                        showUserDropdown={showUserDropdown}
-                                        selectUser={selectUser}
                                     />
 
                                     {/* Vehicle Data Section */}

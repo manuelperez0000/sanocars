@@ -35,7 +35,7 @@ const useVehicles = () => {
                 setVehicles(resp.data.body)
             }
         } catch (err) {
-            setError(err.message || 'Error cargando vehículos')
+            setError(err?.response?.data?.message || 'Error cargando vehículos')
         } finally {
             setLoading(false)
         }
@@ -111,8 +111,6 @@ const useVehicles = () => {
             // Subir al servidor externo
             const response = await request.post(apiurl + '/imagesUploader/upload', formData)
 
-            console.log("response post image: ", response)
-
             const fileName = response.data.body.filename
             // Guardar el nombre en el array
             setForm(prev => {
@@ -124,7 +122,7 @@ const useVehicles = () => {
             // Clear any error for this image on success
             setImageUploadErrors(prev => ({ ...prev, [index]: null }))
         } catch (error) {
-            console.error('Error uploading image:', error)
+            console.error('image upload error', error)
             // Set specific error for this image
             setImageUploadErrors(prev => ({
                 ...prev,
@@ -174,7 +172,7 @@ const useVehicles = () => {
             fetchVehicles()
         } catch (err) {
             console.error('save vehicle error', err)
-            setError(err.message || 'Error guardando vehículo')
+            setError(err?.response?.data?.message || 'Error guardando vehículo')
         }
     }
 
@@ -185,7 +183,7 @@ const useVehicles = () => {
             fetchVehicles()
         } catch (err) {
             console.error('mark as sold error', err)
-            setError(err.message || 'Error marcando vehículo como vendido')
+            setError(err?.response?.data?.message || 'Error marcando vehículo como vendido')
         }
     }
 
@@ -196,7 +194,7 @@ const useVehicles = () => {
             fetchVehicles()
         } catch (err) {
             console.error('mark as deleted error', err)
-            setError(err.message || 'Error marcando vehículo como eliminado')
+            setError(err?.response?.data?.message || 'Error marcando vehículo como eliminado')
         }
     }
 
@@ -328,7 +326,7 @@ const useVehicles = () => {
 
         } catch (err) {
             console.error('save sale error', err)
-            setError(err.message || 'Error guardando venta')
+            setError(err?.response?.data?.message || 'Error guardando venta')
         }
     }
 
@@ -393,6 +391,22 @@ const useVehicles = () => {
                         color: #2c3e50;
                         font-size: 16px;
                     }
+                    .details-grid {
+                        display: grid;
+                        grid-template-columns: repeat(5, 1fr);
+                        gap: 15px;
+                        margin-bottom: 15px;
+                    }
+                    .detail-item {
+                        font-size: 14px;
+                        line-height: 1.4;
+                        padding: 5px 0;
+                        padding: 5px;
+                    }
+                    .border{
+                        border: 1px solid #020202ff;
+                        padding: 5px;
+                    }
                     .payment-details {
                         margin-bottom: 30px;
                     }
@@ -424,6 +438,12 @@ const useVehicles = () => {
                         font-weight: bold;
                         font-size: 16px;
                         color: #2c3e50;
+                    }
+                    .text-center{
+                        display: flex;
+                        justify-content: start;
+                        align-items: center;
+                        flex-direction: column;
                     }
                     .footer {
                         margin-top: 40px;
@@ -477,24 +497,38 @@ const useVehicles = () => {
 
                 <div class="vehicle-details">
                     <h4>Detalles del Vehículo</h4>
-                    <p><strong>Kilometraje:</strong> ${vehicle.kilometraje || 'N/A'} km</p>
-                    <p><strong>Tipo:</strong> ${vehicle.tipo_vehiculo || 'N/A'}</p>
-                    <p><strong>Tamaño Motor:</strong> ${vehicle.tamano_motor || 'N/A'}</p>
-                    <p><strong>Número de Chasis:</strong> ${vehicle.numero_chasis || 'N/A'}</p>
-                    ${vehicle.observaciones ? `<p><strong>Observaciones:</strong> ${vehicle.observaciones}</p>` : ''}
+                    <div class="details-grid">
+                        <div class="detail-item text-center">
+                            <strong>Kilometraje:</strong>
+                            
+                            ${vehicle.kilometraje || 'N/A'} km
+                        </div>
+                        <div class="detail-item text-center"><strong>Tipo:</strong> ${vehicle.tipo_vehiculo || 'N/A'}</div>
+                        <div class="detail-item text-center"><strong>Tamaño Motor:</strong> ${vehicle.tamano_motor || 'N/A'}</div>
+                        <div class="detail-item text-center"><strong>Número de Chasis:</strong> ${vehicle.numero_chasis || 'N/A'}</div>
+                        ${vehicle.observaciones ? `<div class="detail-item text-center"><strong>Observaciones:</strong> ${vehicle.observaciones}</div>` : '<div class="detail-item"></div>'}
+                    </div>
                 </div>
 
                 <div class="payment-details">
                     <h4>Detalles del Pago</h4>
-                    <p><strong>Precio de Venta:</strong> $${parseFloat(saleData.precio_venta || 0).toFixed(2)}</p>
-                    ${saleData.tipo_pago === 'cuotas' ? `
-                    <p><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</p>
-                    <p><strong>Financiamiento:</strong> $${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)).toFixed(2)}</p>
-                    <p><strong>Intereses (${saleData.tasa_interes}%):</strong> $${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</p>
-                    <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
-                    <p><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</p>
-                    <p><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</p>
-                    ` : ''}
+                    <div class="details-grid">
+                        <div class="detail-item"><strong>Precio de Venta:</strong> $${parseFloat(saleData.precio_venta || 0).toFixed(2)}</div>
+                        ${saleData.tipo_pago === 'cuotas' ? `
+                        <div class="detail-item"><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Financiamiento:</strong> $${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> $${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
+                        <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
+                        <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</div>
+                        ` : `
+                        <div class="detail-item"></div>
+                        <div class="detail-item"></div>
+                        <div class="detail-item"></div>
+                        <div class="detail-item"></div>
+                        <div class="detail-item"></div>
+                        `}
+                    </div>
                 </div>
 
                 ${saleData.tipo_pago === 'cuotas' && saleData.siguientes_pagos ? `

@@ -68,7 +68,7 @@ export default function useLogin() {
             return { user, token }
         } catch (err) {
             console.error('Login error:', err)
-            setError(err.message || 'Error en login')
+            setError(err?.response?.data?.message || 'Error en login')
             setLoading(false)
             throw err
         }

@@ -21,7 +21,7 @@ const useVisits = () => {
             }
         } catch (err) {
             console.error('fetchAndIncrementVisits error', err)
-            setError(err.message || 'Error cargando contador de visitas')
+            setError(err?.response?.data?.message || 'Error cargando contador de visitas')
         } finally {
             setLoading(false)
         }

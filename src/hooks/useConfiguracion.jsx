@@ -21,7 +21,7 @@ const useConfiguracion = () => {
             }
         } catch (err) {
             console.error('fetchConfiguraciones error', err)
-            setError(err.message || 'Error cargando configuraciones')
+            setError(err?.response?.data?.message || 'Error cargando configuraciones')
         } finally {
             setLoading(false)
         }
@@ -36,7 +36,7 @@ const useConfiguracion = () => {
             }
         } catch (err) {
             console.error('createConfiguracion error', err)
-            throw new Error(err.message || 'Error creando configuración')
+            throw new Error(err?.response?.data?.message || 'Error creando configuración')
         }
     }
 
@@ -49,7 +49,7 @@ const useConfiguracion = () => {
             }
         } catch (err) {
             console.error('updateConfiguracion error', err)
-            throw new Error(err.message || 'Error actualizando configuración')
+            throw new Error(err?.response?.data?.message || 'Error actualizando configuración')
         }
     }
 
@@ -59,7 +59,7 @@ const useConfiguracion = () => {
             fetchConfiguraciones() // Refresh the list
         } catch (err) {
             console.error('deleteConfiguracion error', err)
-            throw new Error(err.message || 'Error eliminando configuración')
+            throw new Error(err?.response?.data?.message || 'Error eliminando configuración')
         }
     }
 

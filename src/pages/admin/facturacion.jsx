@@ -8,10 +8,7 @@ const Facturacion = () => {
         setInvoiceData, removeItem,
         calculateTotal, productSearch,
         setProductSearch,
-        inventoryLoading, filteredProducts, handleProductSelect,
-        // User search functionality
-        userSearch, handleUserSearch,
-        filteredUsers, showUserDropdown, selectUser } = useFacturacion()
+        inventoryLoading, filteredProducts, handleProductSelect } = useFacturacion()
 
     return (
         <div className="container-fluid py-4">
@@ -43,11 +40,6 @@ const Facturacion = () => {
                     <ClientInformation
                         invoiceData={invoiceData}
                         setInvoiceData={setInvoiceData}
-                        userSearch={userSearch}
-                        handleUserSearch={handleUserSearch}
-                        filteredUsers={filteredUsers}
-                        showUserDropdown={showUserDropdown}
-                        selectUser={selectUser}
                     />
 
                     {/* Product Search */}
