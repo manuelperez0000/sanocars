@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useCategoriasServicio from '../../hooks/useCategoriasServicio'
 import request from '../../utils/request'
-import { hostUrl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 import imageCompression from 'browser-image-compression'
 import CategoryCard from './CategoryCard'
 
@@ -50,8 +50,8 @@ const CategoriasServicio = () => {
             const formDataUpload = new FormData()
             formDataUpload.append('image', newFile)
 
-            const response = await request.post(hostUrl + '/upload', formDataUpload)
-            const fileName = response.data.filename
+            const response = await request.post(apiurl + '/imagesUploader/upload', formDataUpload)
+            const fileName = response.data.body.filename
 
             setFormData(prev => ({
                 ...prev,
@@ -242,8 +242,8 @@ const CategoriasServicio = () => {
                                                     <small className="text-success">Imagen subida: {formData.imagen}</small>
                                                     <div className="mt-2">
                                                         <img
-                                                            src={`${hostUrl}/uploads/${formData.imagen}`}
-                                                            alt="Preview"
+                                                            src={`${topurl}/uploads/${formData.imagen}`}
+                                                            alt={formData.imagen}
                                                             style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'cover' }}
                                                         />
                                                     </div>

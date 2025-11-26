@@ -1,5 +1,5 @@
 import useVehicles from '../../hooks/useVehicles'
-import { hostUrl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 
 const Vehiculos = () => {
     const {
@@ -24,7 +24,6 @@ const Vehiculos = () => {
         addImageInput,
         removeImageInput,
         handleSave,
-        handleMarkAsSold,
         handleMarkAsDeleted,
         openSalesModal,
         closeSalesModal,
@@ -73,6 +72,7 @@ const Vehiculos = () => {
                                                     <th>Año</th>
                                                     <th>Kms</th>
                                                     <th>Color</th>
+                                                    <th>Fecha Shaken</th>
                                                     <th>Status</th>
                                                     <th>Acciones</th>
                                                 </tr>
@@ -88,6 +88,7 @@ const Vehiculos = () => {
                                                             <td>{v.anio}</td>
                                                             <td>{v.kilometraje}</td>
                                                             <td>{v.color}</td>
+                                                            <td>{v.fecha_shaken || '-'}</td>
                                                             <td>{v.status}</td>
                                                             <td>
                                                                 <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
@@ -100,7 +101,7 @@ const Vehiculos = () => {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan={9} className="text-center p-4">No hay vehículos</td>
+                                                        <td colSpan={10} className="text-center p-4">No hay vehículos</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -179,12 +180,18 @@ const Vehiculos = () => {
                                             <input type="date" name="fecha_ingreso" value={form.fecha_ingreso || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label className="form-label">Tamaño motor</label>
-                                            <input name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
+                                            <label className="form-label">Fecha de shaken</label>
+                                            <input type="date" name="fecha_shaken" value={form.fecha_shaken || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Trabajos a realizar</label>
                                             <textarea name="trabajos_realizar" value={form.trabajos_realizar || ''} onChange={handleChange} className="form-control" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Tamaño motor</label>
+                                            <input name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -229,7 +236,7 @@ const Vehiculos = () => {
                                                     {imagen && !uploadingImages[index] && (
                                                         <div className="mt-2">
                                                             <img
-                                                                src={`${hostUrl}/uploads/${imagen}`}
+                                                                src={`${topurl}/uploads/${imagen}`}
                                                                 alt={`Preview ${imagen}`}
                                                                 className="img-thumbnail"
                                                                 style={{ maxWidth: '200px', maxHeight: '150px' }}
@@ -304,11 +311,12 @@ const Vehiculos = () => {
                                                 <input type="email" name="cliente_email" value={salesForm.cliente_email || ''} onChange={handleSalesChange} className="form-control" />
                                             </div>
                                             <div className="col-md-6 mb-3">
-                                                <label className="form-label">Cédula</label>
-                                                <input name="cliente_cedula" value={salesForm.cliente_cedula || ''} onChange={handleSalesChange} className="form-control" />
+                                                <label className="form-label">Dirección</label>
+                                                <input name="cliente_direccion" value={salesForm.cliente_direccion || ''} onChange={handleSalesChange} className="form-control" />
                                             </div>
                                         </div>
                                     </div>
+                                    
 
                                     {/* Payment Section */}
                                     <div className="mb-4">

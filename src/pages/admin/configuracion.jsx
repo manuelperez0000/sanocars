@@ -1,4 +1,4 @@
-import { FaClock, FaPhone, FaWhatsapp, FaEnvelope, FaEdit, FaTrash } from "react-icons/fa";
+import { FaClock, FaPhone, FaWhatsapp, FaEnvelope, FaEdit, FaTrash, FaBuilding, FaMapMarkerAlt } from "react-icons/fa";
 import useConfiguracion from "../../hooks/useConfiguracion";
 import CategoriasServicio from "./categoriasServicio";
 
@@ -9,9 +9,13 @@ const Configuracion = () => {
     getSchedules,
     getPhones,
     getEmails,
+    getCompanyName,
+    getCompanyAddress,
     agregarHorario,
     agregarTelefono,
     agregarCorreo,
+    agregarNombreEmpresa,
+    agregarDireccionEmpresa,
     startEditing,
     cancelEditing,
     saveEditing,
@@ -19,6 +23,7 @@ const Configuracion = () => {
     editingItem,
     editForm,
     setEditForm,
+    createConfiguracion,
   } = useConfiguracion();
 
 
@@ -50,6 +55,8 @@ const Configuracion = () => {
   const schedules = getSchedules();
   const phones = getPhones();
   const emails = getEmails();
+  const companyNames = getCompanyName();
+  const companyAddresses = getCompanyAddress();
 
   return (
     <div className="container mt-4">

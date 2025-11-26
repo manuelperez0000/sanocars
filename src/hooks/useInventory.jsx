@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, hostUrl } from '../utils/globals'
+import { apiurl, topurl } from '../utils/globals'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 
@@ -113,12 +113,11 @@ const useInventory = () => {
             formData.append('image', newFile)
 
             // Upload to external server
-            const response = await request.post(hostUrl + '/upload', formData)
+            const response = await request.post(apiurl + '/imagesUploader/upload', formData)
 
             console.log("response post image: ", response)
 
-            const fileName = response.data.filename
-
+            const fileName = response.data.body?.filename
             // Save the name in the array
             setForm(prev => {
                 const newImagenes = [...prev.imagenes]
@@ -248,7 +247,7 @@ const useInventory = () => {
                         {imagesArray.map((imageName, index) => (
                             <img
                                 key={index}
-                                src={`${hostUrl}/uploads/${imageName}`}
+                                src={`${topurl}/uploads/${imageName}`}
                                 alt={imageName}
                                 onClick={() => openModal(index)}
                                 style={{
@@ -310,7 +309,7 @@ const useInventory = () => {
                             </button>
 
                             <img
-                                src={`${hostUrl}/uploads/${imagesArray[modalIndex]}`}
+                                src={`${apiurl}/uploads/${imagesArray[modalIndex]}`}
                                 alt={`full-${modalIndex}`}
                                 className="img-fluid"
                                 onClick={(e) => e.stopPropagation()}

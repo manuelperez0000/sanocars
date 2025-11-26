@@ -1,8 +1,53 @@
 
 import useServicios from '../../hooks/useServicios'
-import { hostUrl } from '../../utils/globals'
-
+import { topurl } from '../../utils/globals'
+import useConfiguracion from '../../hooks/useConfiguracion'
+import ClientInformation from '../../components/ClientInformation'
+import useUsers from '../../hooks/useUsers'
+import { useState, useEffect } from 'react'
 const Servicios = () => {
+
+    const { getEmails, getPhones } = useConfiguracion()
+    const { users } = useUsers()
+
+    // User search state
+    const [userSearch, setUserSearch] = useState('')
+    const [filteredUsers, setFilteredUsers] = useState([])
+    const [showUserDropdown, setShowUserDropdown] = useState(false)
+
+    // Filter users based on search
+    useEffect(() => {
+        if (users && userSearch.trim()) {
+            const filtered = users.filter(user =>
+                user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                user.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                user.mobile_no?.includes(userSearch)
+            )
+            setFilteredUsers(filtered)
+            setShowUserDropdown(filtered.length > 0)
+        } else {
+            setFilteredUsers([])
+            setShowUserDropdown(false)
+        }
+    }, [users, userSearch])
+
+    const handleUserSearch = (value) => {
+        setUserSearch(value)
+    }
+
+    const selectUser = (user) => {
+        // Update form with selected user data
+        setForm(prev => ({
+            ...prev,
+            nombre_cliente: user.name || '',
+            email_cliente: user.email || '',
+            telefono_cliente: user.mobile_no || '',
+            direccion_cliente: user.address || ''
+        }))
+        setUserSearch('')
+        setShowUserDropdown(false)
+    }
+
     const {
         loading,
         error,
@@ -10,6 +55,7 @@ const Servicios = () => {
         setModalOpen,
         editing,
         form,
+        setForm,
         uploadingImages,
         imageUploadErrors,
         detailsModalOpen,
@@ -49,7 +95,7 @@ const Servicios = () => {
 
         // Calculate IVA percentage from the totals
         const subtotal = parseFloat(servicio.subtotal || 0)
-        const iva = parseFloat(servicio.iva || 0)
+        const iva = parseFloat(servicio.iva || 10)
         const ivaPercentage = subtotal > 0 ? (iva / subtotal * 100).toFixed(2) : 0
 
         const printWindow = window.open('', '_blank')
@@ -68,6 +114,7 @@ const Servicios = () => {
                         color: #333;
                         line-height: 1.4;
                     }
+                        .text-left { text-align: left; }
                     .invoice-header {
                         text-align: center;
                         border-bottom: 2px solid #333;
@@ -77,12 +124,11 @@ const Servicios = () => {
                     .invoice-title {
                         font-size: 28px;
                         font-weight: bold;
-                        margin-bottom: 10px;
-                        color: #2c3e50;
+                        color: #202122ff;
                     }
                     .invoice-subtitle {
                         font-size: 16px;
-                        color: #7f8c8d;
+                        color: #242424ff;
                     }
                     .invoice-info {
                         display: flex;
@@ -177,6 +223,11 @@ const Servicios = () => {
                         border-top: 1px solid #ddd;
                         padding-top: 20px;
                     }
+                        .flex-between {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                    }
                     @media print {
                         body { margin: 0; }
                         .no-print { display: none; }
@@ -185,17 +236,25 @@ const Servicios = () => {
             </head>
             <body>
                 <div class="invoice-header">
-                    <h1 class="invoice-title">Factura de Servicio</h1>
-                    <p class="invoice-subtitle">Servicio #${servicio.id}</p>
+                    <div class="flex-between">
+                        <div class="text-left">
+                            <h5 class="invoice-title">Factura de Servicio</h5>
+                            <p class="invoice-subtitle">Servicio #${servicio.id}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <h1>SANOCARS</h1>
+                            Dirección: Numazu Shizuoka, Japón <br>
+                            Teléfono: ${getPhones()[0]?.texto || '080 9117 1993'}<br>
+                            Email: ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}
+                        </div>
+                    </div>
                 </div>
-
                 <div class="invoice-info">
                     <div class="info-section">
                         <h4>Información del Cliente</h4>
                         <p><strong>Nombre:</strong> ${servicio.nombre_cliente || 'N/A'}</p>
                         <p><strong>Teléfono:</strong> ${servicio.telefono_cliente || 'N/A'}</p>
                         <p><strong>Email:</strong> ${servicio.email_cliente || 'N/A'}</p>
-                        <p><strong>Cédula:</strong> ${servicio.cedula_cliente || 'N/A'}</p>
                     </div>
                     <div class="info-section">
                         <h4>Información del Vehículo</h4>
@@ -209,8 +268,6 @@ const Servicios = () => {
                     <div class="info-section">
                         <h4>Información del Servicio</h4>
                         <p><strong>Fecha:</strong> ${new Date(servicio.fecha_servicio).toLocaleDateString('es-ES')}</p>
-                        <p><strong>Status:</strong> ${servicio.status || 'N/A'}</p>
-                        <p><strong>ID Servicio:</strong> ${servicio.id}</p>
                     </div>
                 </div>
 
@@ -360,27 +417,28 @@ const Servicios = () => {
                                 </div>
                                 <div className="modal-body">
                                     {/* Client Data Section */}
-                                    <div className="mb-4">
-                                        <h6 className="text-primary mb-3">Datos del Cliente</h6>
-                                        <div className="row">
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Nombre del Cliente *</label>
-                                                <input name="nombre_cliente" value={form.nombre_cliente || ''} onChange={handleChange} className="form-control" required />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Teléfono</label>
-                                                <input name="telefono_cliente" value={form.telefono_cliente || ''} onChange={handleChange} className="form-control" />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Email</label>
-                                                <input type="email" name="email_cliente" value={form.email_cliente || ''} onChange={handleChange} className="form-control" />
-                                            </div>
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Cédula</label>
-                                                <input name="cedula_cliente" value={form.cedula_cliente || ''} onChange={handleChange} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ClientInformation
+                                        invoiceData={{
+                                            clientName: form.nombre_cliente || '',
+                                            clientEmail: form.email_cliente || '',
+                                            clientPhone: form.telefono_cliente || '',
+                                            clientAddress: form.direccion_cliente || ''
+                                        }}
+                                        setInvoiceData={(updatedData) => {
+                                            setForm(prev => ({
+                                                ...prev,
+                                                nombre_cliente: updatedData.clientName || '',
+                                                email_cliente: updatedData.clientEmail || '',
+                                                telefono_cliente: updatedData.clientPhone || '',
+                                                direccion_cliente: updatedData.clientAddress || ''
+                                            }))
+                                        }}
+                                        userSearch={userSearch}
+                                        handleUserSearch={handleUserSearch}
+                                        filteredUsers={filteredUsers}
+                                        showUserDropdown={showUserDropdown}
+                                        selectUser={selectUser}
+                                    />
 
                                     {/* Vehicle Data Section */}
                                     <div className="mb-4">
@@ -550,7 +608,7 @@ const Servicios = () => {
                                                 {foto && !uploadingImages[index] && (
                                                     <div className="mt-2">
                                                         <img
-                                                            src={`${hostUrl}/uploads/${foto}`}
+                                                            src={`${topurl}/uploads/${foto}`}
                                                             alt={`Preview ${foto}`}
                                                             className="img-thumbnail"
                                                             style={{ maxWidth: '200px', maxHeight: '150px' }}

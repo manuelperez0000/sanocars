@@ -4,7 +4,7 @@ import { FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { Link } from 'react-router-dom'
 import useVehicles from '../hooks/useVehicles.jsx';
-import { hostUrl } from "../utils/globals.js";
+import { apiurl } from "../utils/globals.js";
 
 export default function VehicleCard({ v, type }) {
 
@@ -12,7 +12,7 @@ export default function VehicleCard({ v, type }) {
 
   const getFirstImage = (arrayImages) => {
     const refactArray = getArrayImages(arrayImages);
-    if (refactArray.length > 0) return `${hostUrl}/uploads/${refactArray[0]}`;
+    if (refactArray.length > 0) return `${apiurl}/uploads/${refactArray[0]}`;
     return 'default-image.jpg';
   }
 

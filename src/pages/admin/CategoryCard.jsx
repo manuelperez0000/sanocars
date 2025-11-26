@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useItemsServicio from '../../hooks/useItemsServicio'
-import { hostUrl } from '../../utils/globals'
+import {  topurl } from '../../utils/globals'
 import {FaTrashAlt} from 'react-icons/fa'
 
 const CategoryCard = ({ categoria, onEdit, onDelete }) => {
@@ -56,7 +56,7 @@ const CategoryCard = ({ categoria, onEdit, onDelete }) => {
                 <div className="card h-100">
                     <div className="card-img-top" style={{ height: '200px', overflow: 'hidden' }}>
                         <img
-                            src={`${hostUrl}/uploads/${categoria.imagen}`}
+                            src={`${topurl}/uploads/${categoria.imagen}`}
                             alt={categoria.titulo}
                             className="w-100 h-100"
                             style={{ objectFit: 'cover' }}

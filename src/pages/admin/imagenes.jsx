@@ -1,4 +1,4 @@
-import { hostUrl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 import { useImagenes } from '../../hooks/useImagenes'
 
 const Imagenes = () => {
@@ -66,7 +66,7 @@ const Imagenes = () => {
                     <div className="card h-100">
                       <div className="card-img-container" style={{ height: '150px', overflow: 'hidden' }}>
                         <img
-                          src={`${hostUrl}/uploads/${imageName}`}
+                          src={`${topurl}/uploads/${imageName}`}
                           alt={imageName}
                           className="card-img-top w-100 h-100 object-fit-cover"
                           style={{ objectFit: 'cover' }}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, hostUrl } from '../utils/globals'
+import { apiurl } from '../utils/globals'
 import imageCompression from 'browser-image-compression';
 
 const useInspeccionVehicular = () => {
@@ -27,8 +27,9 @@ const useInspeccionVehicular = () => {
         vehiculo_pastillas_freno: '',
         vehiculo_neumaticos: '',
         vehiculo_estado_bateria: '',
-        vehiculo_detalles_pintura: '',
         vehiculo_observaciones: '',
+        vehiculo_trabajos_realizar: '',
+        vehiculo_detalles_pintura: '',
         foto_vehiculo: '',
         foto_documento: ''
     })
@@ -74,8 +75,9 @@ const useInspeccionVehicular = () => {
             vehiculo_pastillas_freno: '',
             vehiculo_neumaticos: '',
             vehiculo_estado_bateria: '',
-            vehiculo_detalles_pintura: '',
             vehiculo_observaciones: '',
+            vehiculo_trabajos_realizar: '',
+            vehiculo_detalles_pintura: '',
             foto_vehiculo: '',
             foto_documento: ''
         }
@@ -149,12 +151,11 @@ const useInspeccionVehicular = () => {
             formData.append('image', newFile)
 
             // Upload to external server
-            const response = await request.post(hostUrl + '/upload', formData)
+            const response = await request.post(apiurl + '/imagesUploader/upload', formData)
 
             console.log("response post image: ", response)
 
-            const fileName = response.data.filename
-
+            const fileName = response.data.body?.filename
             // Save the name in the form
             setForm(prev => ({ ...prev, [field]: fileName }))
 

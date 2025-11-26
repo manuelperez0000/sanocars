@@ -1,6 +1,7 @@
 export function getEmptyForm() {
     return {
         fecha_ingreso: '',
+        fecha_shaken: '',
         origen: '',
         marca: '',
         modelo: '',

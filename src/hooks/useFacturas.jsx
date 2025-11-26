@@ -36,7 +36,8 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('createFactura error', err)
-            throw new Error(err.message || 'Error creando factura')
+            const errorMessage = err.response?.data?.message || err.message || 'Error creando factura'
+            throw new Error(errorMessage)
         }
     }
 
@@ -49,7 +50,8 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('updateFactura error', err)
-            throw new Error(err.message || 'Error actualizando factura')
+            const errorMessage = err.response?.data?.message || err.message || 'Error actualizando factura'
+            throw new Error(errorMessage)
         }
     }
 
@@ -59,7 +61,8 @@ const useFacturas = () => {
             fetchFacturas() // Refresh the list
         } catch (err) {
             console.error('deleteFactura error', err)
-            throw new Error(err.message || 'Error eliminando factura')
+            const errorMessage = err.response?.data?.message || err.message || 'Error eliminando factura'
+            throw new Error(errorMessage)
         }
     }
 
@@ -71,7 +74,8 @@ const useFacturas = () => {
             }
         } catch (err) {
             console.error('getFactura error', err)
-            throw new Error(err.message || 'Error obteniendo factura')
+            const errorMessage = err.response?.data?.message || err.message || 'Error obteniendo factura'
+            throw new Error(errorMessage)
         }
     }
 

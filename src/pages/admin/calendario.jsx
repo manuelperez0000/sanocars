@@ -303,7 +303,7 @@ const Calendario = () => {
                             <span>${parseFloat(form.subtotal || 0).toFixed(2)}</span>
                           </div>
                           <div className="d-flex justify-content-between">
-                            <strong>IVA (16%):</strong>
+                            <strong>IVA (10%):</strong>
                             <span>${parseFloat(form.iva || 0).toFixed(2)}</span>
                           </div>
                           <hr />

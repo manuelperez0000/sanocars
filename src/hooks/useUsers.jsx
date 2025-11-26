@@ -12,12 +12,14 @@ const useUsers = () => {
     const [formData, setFormData] = useState({
         name: '',
         lastname: '',
-        gender: '',
+        nationality: '',
+        address: '',
         email: '',
         password: '',
         mobile_no: '',
         role: ''
     })
+
     const [loadingUser, setLoadingUser] = useState(false)
     const [saving, setSaving] = useState(false)
 
@@ -83,7 +85,8 @@ const useUsers = () => {
             setFormData({
                 name: fetched.name || '',
                 lastname: fetched.lastname || '',
-                gender: fetched.gender !== undefined && fetched.gender !== null ? String(fetched.gender) : '',
+                nationality: fetched.nationality || '',
+                address: fetched.address || '',
                 email: fetched.email || '',
                 mobile_no: fetched.mobile_no || '',
                 role: fetched.role || ''
@@ -94,7 +97,8 @@ const useUsers = () => {
             setFormData({
                 name: user.name || '',
                 lastname: user.lastname || '',
-                gender: user.gender !== undefined && user.gender !== null ? String(user.gender) : '',
+                nationality: user.nationality || '',
+                address: user.address || '',
                 email: user.email || '',
                 mobile_no: user.mobile_no || '',
                 role: user.role || ''
@@ -108,7 +112,7 @@ const useUsers = () => {
 
     const openNewModal = () => {
         setEditingUser(null)
-        setFormData({ name: '', lastname: '', gender: '', email: '', password: '', mobile_no: '', role: '' })
+        setFormData({ name: '', lastname: '', nationality: '', address: '', email: '', password: '', mobile_no: '', role: '' })
         setModalOpen(true)
     }
 
@@ -130,7 +134,8 @@ const useUsers = () => {
             const payload = {
                 name: formData.name,
                 lastname: formData.lastname,
-                gender: formData.gender === '' ? null : Number(formData.gender),
+                nationality: formData.nationality,
+                address: formData.address,
                 email: formData.email,
                 mobile_no: formData.mobile_no,
                 role: formData.role
@@ -145,28 +150,32 @@ const useUsers = () => {
         }
     }
 
-    const handleCreate = async () => {
+    const handleCreate = async (userPayload) => {
         // create new user
         setSaving(true)
         try {
-            var payload = {
+            const payload = userPayload || {
                 name: formData.name,
                 lastname: formData.lastname,
                 email: formData.email,
                 password: formData.password,
                 mobile_no: formData.mobile_no,
-                gender:formData.gender,
+                nationality:formData.nationality,
+                address:formData.address,
                 role: formData.role,
                 soft_delete: 1
             }
             const resp = await request.post(apiurl + '/users', payload)
             // refresh list
             await fetchUsers()
-            setModalOpen(false)
+            if (!userPayload) {
+                setModalOpen(false)
+            }
             return resp
         } catch (err) {
             console.error('Error creando usuario desde hook:', err)
-            throw err
+            const errorMessage = err.response?.data?.message || err.message || 'Error al crear usuario'
+            throw new Error(errorMessage)
         } finally {
             setSaving(false)
         }

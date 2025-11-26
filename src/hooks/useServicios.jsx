@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, hostUrl } from '../utils/globals'
+import { apiurl } from '../utils/globals'
 import imageCompression from 'browser-image-compression';
 
 const useServicios = () => {
@@ -20,7 +20,7 @@ const useServicios = () => {
 
     // Modal for IVA editing
     const [ivaModalOpen, setIvaModalOpen] = useState(false)
-    const [ivaPercentage, setIvaPercentage] = useState(16)
+    const [ivaPercentage, setIvaPercentage] = useState(10)
 
     useEffect(() => {
         fetchServicios()
@@ -48,7 +48,7 @@ const useServicios = () => {
             nombre_cliente: '',
             telefono_cliente: '',
             email_cliente: '',
-            cedula_cliente: '',
+            direccion_cliente: '',
 
             // Vehicle data
             marca_vehiculo: '',
@@ -63,7 +63,7 @@ const useServicios = () => {
 
             // Totals
             subtotal: 0,
-            iva: 0,
+            iva: 10,
             total: 0,
 
             // Additional
@@ -222,8 +222,8 @@ const useServicios = () => {
             const formData = new FormData()
             formData.append('image', newFile)
 
-            const response = await request.post(hostUrl + '/upload', formData)
-            const fileName = response.data.filename
+            const response = await request.post(apiurl + '/imagesUploader/upload', formData)
+            const fileName = response.data.body?.filename
 
             setForm(prev => {
                 const newFotos = [...prev.fotos]
@@ -298,6 +298,7 @@ const useServicios = () => {
         setModalOpen,
         editing,
         form,
+        setForm,
         uploadingImages,
         imageUploadErrors,
         detailsModalOpen,

@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
 import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
 import request from '../utils/request'
-import { apiurl, hostUrl } from '../utils/globals'
+import { apiurl } from '../utils/globals'
 
 function formatCurrency(n) { return `$${n.toLocaleString()}` }
 
@@ -18,6 +18,7 @@ export default function VehicleDetail() {
   const [modalIndex, setModalIndex] = useState(0)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     fetchVehicle()
   }, [id])
 
@@ -46,7 +47,7 @@ export default function VehicleDetail() {
           passengers: dbVehicle.passengers,
           ac: dbVehicle.ac,
           numero_placa: dbVehicle.numero_placa,
-          images: dbVehicle.imagen1 ? dbVehicle.imagen1.split(',').map(img => img.trim().replace(/^'|'$/g, '')).map(img => `${hostUrl}/uploads/${img}`) : []
+          images: dbVehicle.imagen1 ? dbVehicle.imagen1.split(',').map(img => img.trim().replace(/^'|'$/g, '')).map(img => `${apiurl}/uploads/${img}`) : []
         }
         setVehicle(mappedVehicle)
       } else {

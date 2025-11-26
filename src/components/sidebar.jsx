@@ -31,7 +31,6 @@ const Sidebar = () => {
         <hr className='text-light' />
         {menuItems.map((item) => {
             const IconComponent = item.icon
-            console.log("Comparing:", location.pathname, "with", item.path)
             return (
                 <Link
                     key={item.path}

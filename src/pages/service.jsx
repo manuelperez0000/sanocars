@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { FaWhatsapp, FaCalendarAlt } from 'react-icons/fa'
 import request from '../utils/request.js'
-import { apiurl, hostUrl } from '../utils/globals.js'
+import { apiurl } from '../utils/globals.js'
 import useItemsServicio from '../hooks/useItemsServicio'
 
 const Service = () => {
@@ -13,6 +13,7 @@ const Service = () => {
     const { items, loading: itemsLoading } = useItemsServicio(id)
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedDate, setSelectedDate] = useState('')
+    const [selectedTime, setSelectedTime] = useState('')
     const [showForm, setShowForm] = useState(false)
     const [formData, setFormData] = useState({
         nombre: '',
@@ -21,6 +22,9 @@ const Service = () => {
     })
 
     useEffect(() => {
+        // Scroll to top when component mounts
+        window.scrollTo(0, 0)
+
         const fetchCategoria = async () => {
             try {
                 setLoading(true)
@@ -51,6 +55,7 @@ const Service = () => {
     const openModal = () => {
         setModalOpen(true)
         setSelectedDate('')
+        setSelectedTime('')
         setShowForm(false)
         setFormData({ nombre: '', email: '', telefono: '' })
     }
@@ -61,7 +66,14 @@ const Service = () => {
 
     const handleDateChange = (e) => {
         setSelectedDate(e.target.value)
-        if (e.target.value) {
+        if (e.target.value && selectedTime) {
+            setShowForm(true)
+        }
+    }
+
+    const handleTimeChange = (e) => {
+        setSelectedTime(e.target.value)
+        if (selectedDate && e.target.value) {
             setShowForm(true)
         }
     }
@@ -80,7 +92,8 @@ const Service = () => {
                 email: formData.email,
                 telefono: formData.telefono,
                 servicio: categoria?.titulo,
-                fecha_reserva: selectedDate
+                fecha_reserva: selectedDate,
+                hora_reserva: selectedTime
             }
 
             const response = await request.post(apiurl + '/reservas_servicio', reservationData)
@@ -125,7 +138,7 @@ const Service = () => {
             <h1 className='momo mb-4'>{categoria.titulo}</h1>
             <div className='row'>
                 <div className='col-md-6'>
-                    <img src={`${hostUrl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image' />
+                    <img src={`${apiurl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image-detail' />
                 </div>
                 <div className='col-md-6'>
                     <h3>Servicios incluidos:</h3>
@@ -166,15 +179,24 @@ const Service = () => {
                                         <h6>Selecciona una fecha:</h6>
                                         <input
                                             type="date"
-                                            className="form-control"
+                                            className="form-control mb-3"
                                             value={selectedDate}
                                             onChange={handleDateChange}
                                             min={new Date().toISOString().split('T')[0]}
                                         />
+                                        <h6>Selecciona una hora:</h6>
+                                        <input
+                                            type="time"
+                                            className="form-control"
+                                            value={selectedTime}
+                                            onChange={handleTimeChange}
+                                            min="09:00"
+                                            max="18:00"
+                                        />
                                     </div>
                                 ) : (
                                     <div>
-                                        <h6>Fecha seleccionada: {selectedDate}</h6>
+                                        <h6>Fecha y hora seleccionada: {selectedDate} a las {selectedTime}</h6>
                                         <div className="mb-3">
                                             <label className="form-label">Nombre:</label>
                                             <input

@@ -1,5 +1,5 @@
 import useInventory from '../../hooks/useInventory'
-import { hostUrl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 
 const Inventario = () => {
     const {
@@ -158,7 +158,7 @@ const Inventario = () => {
                                                     {imagen && !uploadingImages[index] && (
                                                         <div className="mt-2">
                                                             <img
-                                                                src={`${hostUrl}/uploads/${imagen}`}
+                                                                src={`${topurl}/uploads/${imagen}`}
                                                                 alt={`Preview ${imagen}`}
                                                                 className="img-thumbnail"
                                                                 style={{ maxWidth: '200px', maxHeight: '150px' }}

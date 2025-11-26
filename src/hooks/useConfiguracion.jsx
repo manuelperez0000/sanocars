@@ -76,6 +76,14 @@ const useConfiguracion = () => {
         return configuraciones.filter(config => config.tipo === 'email')
     }
 
+    function getCompanyName() {
+        return configuraciones.filter(config => config.tipo === 'company_name')
+    }
+
+    function getCompanyAddress() {
+        return configuraciones.filter(config => config.tipo === 'company_address')
+    }
+
     const [editingItem, setEditingItem] = useState(null);
     const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
 
@@ -101,6 +109,22 @@ const useConfiguracion = () => {
             await createConfiguracion({ tipo: 'email', texto: '' });
         } catch (error) {
             alert('Error al agregar correo: ' + error.message);
+        }
+    };
+
+    const agregarNombreEmpresa = async () => {
+        try {
+            await createConfiguracion({ tipo: 'company_name', texto: '' });
+        } catch (error) {
+            alert('Error al agregar nombre de empresa: ' + error.message);
+        }
+    };
+
+    const agregarDireccionEmpresa = async () => {
+        try {
+            await createConfiguracion({ tipo: 'company_address', texto: '' });
+        } catch (error) {
+            alert('Error al agregar dirección de empresa: ' + error.message);
         }
     };
 
@@ -151,9 +175,13 @@ const useConfiguracion = () => {
         getSchedules,
         getPhones,
         getEmails,
+        getCompanyName,
+        getCompanyAddress,
         agregarHorario,
         agregarTelefono,
         agregarCorreo,
+        agregarNombreEmpresa,
+        agregarDireccionEmpresa,
         startEditing,
         cancelEditing,
         saveEditing,

@@ -25,6 +25,7 @@ import InspeccionVehicular from "./pages/admin/inspeccionVehicular"
 import InformeVehiculos from "./pages/admin/informeVehiculos"
 import Facturacion from "./pages/admin/facturacion"
 import Facturas from "./pages/admin/facturas"
+import Factura from "./pages/admin/factura"
 import NuevoInformeVehiculos from "./pages/admin/nuevoInformeVehiculos"
 import CategoriasServicio from "./pages/admin/categoriasServicio"
 import Configuracion from "./pages/admin/configuracion"
@@ -51,6 +52,7 @@ const Router = () => {
             <Route path="/admin/reservas" element={<AdminLayout><Reservas /></AdminLayout>} />
             <Route path="/admin/facturacion" element={<AdminLayout><Facturacion /></AdminLayout>} />
             <Route path="/admin/facturas" element={<AdminLayout><Facturas /></AdminLayout>} />
+            <Route path="/admin/factura/:id" element={<AdminLayout><Factura /></AdminLayout>} />
             <Route path="/admin/usuarios" element={<AdminLayout><Usuarios /></AdminLayout>} />
             <Route path="/admin/financiamiento" element={<AdminLayout><AdminFinanciamiento /></AdminLayout>} />
             <Route path="/admin/financiamiento/:id" element={<AdminLayout><FinancingDetail /></AdminLayout>} />
@@ -63,6 +65,7 @@ const Router = () => {
             <Route path="/admin/inspeccion-vehicular" element={<AdminLayout><InspeccionVehicular /></AdminLayout>} />
             <Route path="/admin/informe-vehiculos" element={<AdminLayout><InformeVehiculos /></AdminLayout>} />
             <Route path="/admin/informe-vehiculos/nuevo" element={<AdminLayout><NuevoInformeVehiculos /></AdminLayout>} />
+            <Route path="/admin/informe-vehiculos/editar/:id" element={<AdminLayout><NuevoInformeVehiculos /></AdminLayout>} />
             <Route path="/admin/categorias-servicio" element={<AdminLayout><CategoriasServicio /></AdminLayout>} />
             <Route path="/admin/configuracion" element={<AdminLayout><Configuracion /></AdminLayout>} />
             <Route path="/*" element={<> <h1 className="text-center mt-5 pt-5"> 404 NOT FOUND</h1> <hr /> </>} />

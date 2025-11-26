@@ -17,8 +17,13 @@ var informeVehiculos = require("./routes/informeVehiculos.js")
 var categoriasServicio = require("./routes/categoriasServicio.js")
 var configuracion = require("./routes/configuracion.js")
 var route = express.Router()
+var imagesUploader = require("./routes/imagesUploader.js")
+var path = require('path')
+var uploadsDir = path.join(__dirname, './uploads')
 
 var router = (app) => {
+    // Servir imágenes estáticamente
+    app.use('/uploads', express.static(uploadsDir))
     app.use('/api/v1', route)
     route.use('/users', users)
     route.use('/auth', auth)
@@ -35,6 +40,7 @@ var router = (app) => {
     route.use('/informe-vehiculos', informeVehiculos)
     route.use('/categorias-servicio', categoriasServicio)
     route.use('/configuracion', configuracion)
+    route.use('/imagesUploader', imagesUploader)
     // Ruta por defecto: 404 Not Found
     app.use((req, res) => {
         res.status(404).json({ error: 'Not Found', message: 'La ruta solicitada no existe' })

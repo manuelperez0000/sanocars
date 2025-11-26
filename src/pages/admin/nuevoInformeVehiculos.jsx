@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
 import request from '../../utils/request'
-import { hostUrl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 import imageCompression from 'browser-image-compression'
 
 const NuevoInformeVehiculos = () => {
     const navigate = useNavigate()
-    const { createInforme } = useInformeVehiculos()
+    const { id } = useParams()
+    const { createInforme, updateInforme, getInforme } = useInformeVehiculos()
+    const isEditing = !!id
 
     const [formData, setFormData] = useState({
         fecha_ingreso: new Date().toISOString().split('T')[0],
@@ -16,7 +18,7 @@ const NuevoInformeVehiculos = () => {
         cliente_email: '',
         vehiculo_marca: '',
         vehiculo_modelo: '',
-        vehiculo_vin: '',
+        vehiculo_motor: '',
         vehiculo_anio: '',
         vehiculo_color: '',
         vehiculo_kilometraje: '',
@@ -25,7 +27,7 @@ const NuevoInformeVehiculos = () => {
         vehiculo_estado_aceite: 'Buen estado',
         vehiculo_estado_liquido_frenos: 'Buen estado',
         vehiculo_porcentaje_pastillas_freno: 100,
-        vehiculo_porcentaje_neumaticos: 100,
+        vehiculo_porcentaje_neumaticos: '',
         vehiculo_estado_liquido_refrigerante: 'Buen estado',
         vehiculo_detalles_pintura: '',
         vehiculo_observacion_general: '',
@@ -37,6 +39,33 @@ const NuevoInformeVehiculos = () => {
     const [loading, setLoading] = useState(false)
     const [uploadingImages, setUploadingImages] = useState({})
     const [imageUploadErrors, setImageUploadErrors] = useState({})
+
+    useEffect(() => {
+        if (isEditing) {
+            loadInformeData()
+        }
+    }, [id])
+
+    const loadInformeData = async () => {
+        try {
+            setLoading(true)
+            const informe = await getInforme(id)
+            if (informe) {
+                // Format date fields properly
+                const formattedData = {
+                    ...informe,
+                    fecha_ingreso: informe.fecha_ingreso ? new Date(informe.fecha_ingreso).toISOString().split('T')[0] : '',
+                    vehiculo_fecha_shaken: informe.vehiculo_fecha_shaken ? new Date(informe.vehiculo_fecha_shaken).toISOString().split('T')[0] : ''
+                }
+                setFormData(formattedData)
+            }
+        } catch (error) {
+            console.error('Error loading informe:', error)
+            alert('Error al cargar el informe: ' + error.message)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -76,12 +105,11 @@ const NuevoInformeVehiculos = () => {
             formDataUpload.append('image', newFile)
 
             // Upload to external server
-            const response = await request.post(hostUrl + '/upload', formDataUpload)
+            const response = await request.post(apiurl + '/imagesUploader/upload', formDataUpload)
 
             console.log("response post image: ", response)
 
-            const fileName = response.data.filename
-
+            const fileName = response.data.body?.filename
             // Save the name in the form data
             setFormData(prev => ({
                 ...prev,
@@ -245,7 +273,7 @@ const NuevoInformeVehiculos = () => {
                     </div>
                     <div class="row">
                         <div class="col">
-                            <span class="label">VIN:</span> ${reportData.vehiculo_vin || 'N/A'}
+                            <span class="label">Motor:</span> ${reportData.vehiculo_motor || 'N/A'}
                         </div>
                         <div class="col">
                             <span class="label">Kilometraje:</span> ${reportData.vehiculo_kilometraje || 'N/A'}
@@ -318,7 +346,7 @@ const NuevoInformeVehiculos = () => {
                         <div class="col">
                             <span class="label">Imagen del Vehículo:</span>
                             <div class="image-container">
-                                <img src="${hostUrl}/uploads/${reportData.vehiculo_imagen}" alt="Vehículo" />
+                                <img src="${topurl}/uploads/${reportData.vehiculo_imagen}" alt="Vehículo" />
                             </div>
                         </div>
                         ` : ''}
@@ -326,7 +354,7 @@ const NuevoInformeVehiculos = () => {
                         <div class="col">
                             <span class="label">Foto de Documentos:</span>
                             <div class="image-container">
-                                <img src="${hostUrl}/uploads/${reportData.vehiculo_foto_documentos}" alt="Documentos" />
+                                <img src="${topurl}/uploads/${reportData.vehiculo_foto_documentos}" alt="Documentos" />
                             </div>
                         </div>
                         ` : ''}
@@ -358,18 +386,24 @@ const NuevoInformeVehiculos = () => {
                 return
             }
 
-            const createdReport = await createInforme(formData)
-            alert('Informe de vehículo creado exitosamente')
+            let result
+            if (isEditing) {
+                result = await updateInforme(id, formData)
+                alert('Informe de vehículo actualizado exitosamente')
+            } else {
+                result = await createInforme(formData)
+                alert('Informe de vehículo creado exitosamente')
 
-            // Print the report
-            if (createdReport && createdReport.data) {
-                printReport(createdReport.data)
+                // Print the report only when creating new
+                if (result && result.data) {
+                    printReport(result.data)
+                }
             }
 
             navigate('/admin/informe-vehiculos')
         } catch (error) {
-            console.error('Error creating report:', error)
-            alert('Error al crear el informe: ' + error.message)
+            console.error(`Error ${isEditing ? 'updating' : 'creating'} report:`, error)
+            alert(`Error al ${isEditing ? 'actualizar' : 'crear'} el informe: ` + error.message)
         } finally {
             setLoading(false)
         }
@@ -382,7 +416,7 @@ const NuevoInformeVehiculos = () => {
             <div className="row">
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h2>Nuevo Informe de Vehículo</h2>
+                        <h2>{isEditing ? 'Editar Informe de Vehículo' : 'Nuevo Informe de Vehículo'}</h2>
                         <button
                             className="btn btn-secondary"
                             onClick={() => navigate('/admin/informe-vehiculos')}
@@ -514,12 +548,12 @@ const NuevoInformeVehiculos = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6 mb-3">
-                                        <label className="form-label">VIN</label>
+                                        <label className="form-label">Motor</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            name="vehiculo_vin"
-                                            value={formData.vehiculo_vin}
+                                            name="vehiculo_motor"
+                                            value={formData.vehiculo_motor}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -626,15 +660,14 @@ const NuevoInformeVehiculos = () => {
                                     </div>
                                     <div className="col-md-6 mb-3">
                                         <label className="form-label">Porcentaje Neumáticos</label>
-                                        <input
-                                            type="number"
+                                        <textarea
                                             className="form-control"
                                             name="vehiculo_porcentaje_neumaticos"
                                             value={formData.vehiculo_porcentaje_neumaticos}
                                             onChange={handleChange}
-                                            min="0"
-                                            max="100"
-                                        />
+                                            rows="3"
+                                            placeholder="Describe el estado de los neumáticos..."
+                                        ></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -748,7 +781,7 @@ const NuevoInformeVehiculos = () => {
                                 className="btn btn-primary btn-lg"
                                 disabled={loading}
                             >
-                                {loading ? 'Guardando...' : 'Crear Informe'}
+                                {loading ? 'Guardando...' : (isEditing ? 'Actualizar Informe' : 'Crear Informe')}
                             </button>
                         </div>
                     </form>

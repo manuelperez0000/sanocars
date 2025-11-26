@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
-import { hostUrl } from '../../utils/globals'
-
+import {  topurl } from '../../utils/globals'
+import carrito from '../../assets/carrito.svg'
 const InformeVehiculos = () => {
     const navigate = useNavigate()
     const { informes, loading, error, deleteInforme } = useInformeVehiculos()
@@ -36,11 +36,11 @@ const InformeVehiculos = () => {
 
         const getStatusBadge = (status) => {
             const colors = {
-                'Buen estado': 'green',
-                'Requiere atención': 'orange',
-                'Malo': 'red'
+                'Buen estado': '#ffffffff',
+                'Requiere atención': '#fffefaff',
+                'Malo': '#ffffffff'
             }
-            return colors[status] || 'gray'
+            return colors[status] || '#ffffffff'
         }
 
         printWindow.document.write(`
@@ -49,218 +49,337 @@ const InformeVehiculos = () => {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Informe de Vehículo #${reportData.id}</title>
+                <title>Informe de Inspección de Vehículo #${reportData.id}</title>
                 <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 20px;
-                        line-height: 1.6;
-                    }
-                    .header {
-                        text-align: center;
-                        border-bottom: 2px solid #333;
-                        padding-bottom: 20px;
-                        margin-bottom: 30px;
-                    }
-                    .header h1 {
-                        color: #333;
+                    * {
                         margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
                     }
-                    .section {
-                        margin-bottom: 30px;
-                        border: 1px solid #ddd;
-                        padding: 15px;
-                        border-radius: 5px;
-                    }
-                    .section h2 {
+
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        font-size: 12px;
+                        line-height: 1.4;
                         color: #333;
-                        border-bottom: 1px solid #ddd;
-                        padding-bottom: 5px;
-                        margin-top: 0;
+                        background: #fff;
                     }
-                    .row {
+
+                    .invoice-container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                        background: #fff;
+                    }
+
+                    .invoice-header {
                         display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 2px solid #333;
+                        padding-bottom: 15px;
+                        margin-bottom: 20px;
+                    }
+
+                    .company-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .company-logo {
+                        width: 60px;
+                        height: 60px;
+                        object-fit: contain;
+                    }
+
+                    .company-name {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #333;
+                        text-transform: uppercase;
+                    }
+
+                    .document-title {
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #666;
+                        text-align: right;
+                    }
+
+                    .date-section {
+                        text-align: right;
+                        margin-bottom: 20px;
+                        font-size: 14px;
+                    }
+
+                    .date-section strong {
+                        color: #333;
+                    }
+
+                    .section {
                         margin-bottom: 10px;
                     }
-                    .col {
-                        flex: 1;
-                        margin-right: 20px;
-                    }
-                    .col:last-child {
-                        margin-right: 0;
-                    }
-                    .label {
+
+                    .section-header {
+                        background: #f8f9fa;
+                        padding: 10px 15px;
+                        border-bottom: 1px solid #e0e0e0;
                         font-weight: bold;
-                        color: #555;
+                        font-size: 14px;
+                        color: #333;
                     }
-                    .status {
-                        padding: 2px 8px;
-                        border-radius: 3px;
-                        color: white;
-                        font-size: 12px;
+
+                    .section-content {
+                        padding: 15px;
                     }
-                    .status-green { background-color: green; }
-                    .status-orange { background-color: orange; }
-                    .status-red { background-color: red; }
-                    .image-container {
+
+                    .info-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 15px;
+                        margin-bottom: 15px;
+                    }
+                    .info-grid-2 {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 15px;
+                        margin-bottom: 15px;
+                    }
+
+                    .info-item {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 5px 5px;
+                        border:1px solid black;
+                        justify-content: center;
+                    }
+
+                    .info-label {
+                        font-weight: bold;
+                        font-size: 11px;
+                        color: #000000ff;
+                        text-transform: uppercase;
+                        margin-bottom: 3px;
+                        width: 100%;
                         text-align: center;
-                        margin: 20px 0;
                     }
-                    .image-container img {
-                        max-width: 300px;
-                        max-height: 200px;
-                        border: 1px solid #ddd;
-                        border-radius: 5px;
+
+                    .info-value {
+                        font-size: 13px;
+                        color: #000000ff;
+                        padding: 5px 0;
                     }
+
+                    .status-badge {
+                        display: inline-block;
+                        padding: 3px 8px;
+                        border-radius: 12px;
+                        color: black;
+                        font-size: 10px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+
+                    .full-width {
+                        grid-column: 1 / -1;
+                    }
+
+                    .text-area {
+                        padding: 10px;
+                        border-radius: 4px;
+                        min-height: 60px;
+                        font-size: 12px;
+                        line-height: 1.4;
+                    }
+
+                    .vehicle-grid {
+                        display: grid;
+                        grid-template-columns: repeat(7, 1fr);
+                        gap: 15px;
+                    }
+
+                    .condition-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 15px;
+                    }
+
+                    .footer {
+                        margin-top: 30px;
+                        text-align: center;
+                        font-size: 10px;
+                        color: #666;
+                        border-top: 1px solid #e0e0e0;
+                        padding-top: 15px;
+                    }
+
                     @media print {
-                        body { margin: 0; }
-                        .section { page-break-inside: avoid; }
+                        body {
+                            font-size: 11px;
+                        }
+                        .invoice-container {
+                            border: none;
+                            padding: 0;
+                            max-width: none;
+                        }
+                        .section {
+                            page-break-inside: avoid;
+                        }
+                    }
+
+                    @page {
+                        margin: 0.5in;
+                        size: A4;
                     }
                 </style>
             </head>
             <body>
-                <div class="header">
-                    <h1>Informe de Inspección de Vehículo</h1>
-                    <p><strong>ID del Informe:</strong> ${reportData.id}</p>
-                </div>
+                <div class="invoice-container">
+                    <!-- Invoice Header -->
+                    <div class="invoice-header">
+                        <div class="company-info">
+                            <img src="/logo.png" alt="Sanocars Logo" class="company-logo">
+                            <div class="company-name">Sanocars</div>
+                        </div>
+                        <div class="document-title">Informe de Inspección de Vehículo</div>
+                    </div>
 
-                <div class="section">
-                    <h2>Información General</h2>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Fecha de Ingreso:</span> ${formatDate(reportData.fecha_ingreso)}
-                        </div>
+                    <!-- Date -->
+                    <div class="date-section">
+                        <strong>Fecha:</strong> ${formatDate(reportData.fecha_ingreso)}
                     </div>
-                </div>
 
-                <div class="section">
-                    <h2>Datos del Cliente</h2>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Nombre:</span> ${reportData.cliente_nombre}
-                        </div>
-                        <div class="col">
-                            <span class="label">Teléfono:</span> ${reportData.cliente_telefono || 'N/A'}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Email:</span> ${reportData.cliente_email || 'N/A'}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h2>Datos del Vehículo</h2>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Marca:</span> ${reportData.vehiculo_marca}
-                        </div>
-                        <div class="col">
-                            <span class="label">Modelo:</span> ${reportData.vehiculo_modelo}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Año:</span> ${reportData.vehiculo_anio}
-                        </div>
-                        <div class="col">
-                            <span class="label">Color:</span> ${reportData.vehiculo_color}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">VIN:</span> ${reportData.vehiculo_vin || 'N/A'}
-                        </div>
-                        <div class="col">
-                            <span class="label">Kilometraje:</span> ${reportData.vehiculo_kilometraje || 'N/A'}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Fecha Shaken:</span> ${reportData.vehiculo_fecha_shaken ? formatDate(reportData.vehiculo_fecha_shaken) : 'N/A'}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h2>Estado del Vehículo</h2>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Estado de la Batería:</span>
-                            <span class="status status-${getStatusBadge(reportData.vehiculo_estado_bateria)}">${reportData.vehiculo_estado_bateria}</span>
-                        </div>
-                        <div class="col">
-                            <span class="label">Estado del Aceite:</span>
-                            <span class="status status-${getStatusBadge(reportData.vehiculo_estado_aceite)}">${reportData.vehiculo_estado_aceite}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Estado Líquido de Frenos:</span>
-                            <span class="status status-${getStatusBadge(reportData.vehiculo_estado_liquido_frenos)}">${reportData.vehiculo_estado_liquido_frenos}</span>
-                        </div>
-                        <div class="col">
-                            <span class="label">Estado Líquido Refrigerante:</span>
-                            <span class="status status-${getStatusBadge(reportData.vehiculo_estado_liquido_refrigerante)}">${reportData.vehiculo_estado_liquido_refrigerante}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Porcentaje Pastillas de Freno:</span> ${reportData.vehiculo_porcentaje_pastillas_freno}%
-                        </div>
-                        <div class="col">
-                            <span class="label">Porcentaje Neumáticos:</span> ${reportData.vehiculo_porcentaje_neumaticos}%
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h2>Información Adicional</h2>
-                    <div class="row">
-                        <div class="col">
-                            <span class="label">Detalles de Pintura:</span><br>
-                            ${reportData.vehiculo_detalles_pintura || 'N/A'}
-                        </div>
-                        <div class="col">
-                            <span class="label">Observación General:</span><br>
-                            ${reportData.vehiculo_observacion_general || 'N/A'}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col" style="width: 100%;">
-                            <span class="label">Trabajos a Realizar:</span><br>
-                            ${reportData.vehiculo_trabajos_realizar || 'N/A'}
-                        </div>
-                    </div>
-                </div>
-
-                ${reportData.vehiculo_imagen || reportData.vehiculo_foto_documentos ? `
-                <div class="section">
-                    <h2>Imágenes</h2>
-                    <div class="row">
-                        ${reportData.vehiculo_imagen ? `
-                        <div class="col">
-                            <span class="label">Imagen del Vehículo:</span>
-                            <div class="image-container">
-                                <img src="${hostUrl}/uploads/${reportData.vehiculo_imagen}" alt="Vehículo" />
+                    <!-- Client Information -->
+                    <div class="">
+                        <div class="section-header">Información del Cliente</div>
+                        <div class="section-content">
+                            <div class="info-grid-2">
+                                <div class="info-item">
+                                    <div class="info-label">Nombre</div>
+                                    <div class="info-value">${reportData.cliente_nombre}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Teléfono</div>
+                                    <div class="info-value">${reportData.cliente_telefono || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">${reportData.cliente_email || 'N/A'}</div>
+                                </div>
                             </div>
                         </div>
-                        ` : ''}
-                        ${reportData.vehiculo_foto_documentos ? `
-                        <div class="col">
-                            <span class="label">Foto de Documentos:</span>
-                            <div class="image-container">
-                                <img src="${hostUrl}/uploads/${reportData.vehiculo_foto_documentos}" alt="Documentos" />
+                    </div>
+
+                    <!-- Vehicle Information -->
+                    <div class="section">
+                        <div class="section-header">Información del Vehículo</div>
+                        <div class="section-content">
+                            <div class="vehicle-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Marca</div>
+                                    <div class="info-value">${reportData.vehiculo_marca}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Modelo</div>
+                                    <div class="info-value">${reportData.vehiculo_modelo}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Año</div>
+                                    <div class="info-value">${reportData.vehiculo_anio}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Color</div>
+                                    <div class="info-value">${reportData.vehiculo_color}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Motor</div>
+                                    <div class="info-value">${reportData.vehiculo_motor || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Kilometraje</div>
+                                    <div class="info-value">${reportData.vehiculo_kilometraje || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Fecha Shaken</div>
+                                    <div class="info-value">${reportData.vehiculo_fecha_shaken ? formatDate(reportData.vehiculo_fecha_shaken) : 'N/A'}</div>
+                                </div>
                             </div>
                         </div>
-                        ` : ''}
                     </div>
-                </div>
-                ` : ''}
 
-                <div class="section" style="text-align: center; margin-top: 50px;">
-                    <p><strong>Fecha de Impresión:</strong> ${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</p>
+                    <!-- Vehicle Condition -->
+                    <div class="section">
+                        <div class="section-header">Estado del Vehículo</div>
+                        <div class="section-content">
+                            <div class="condition-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Estado de la Batería</div>
+                                    <div class="info-value">
+                                        <span class="status-badge" style="background-color: ${getStatusBadge(reportData.vehiculo_estado_bateria)}">${reportData.vehiculo_estado_bateria}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado del Aceite</div>
+                                    <div class="info-value">
+                                        <span class="status-badge" style="background-color: ${getStatusBadge(reportData.vehiculo_estado_aceite)}">${reportData.vehiculo_estado_aceite}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado Líquido de Frenos</div>
+                                    <div class="info-value">
+                                        <span class="status-badge" style="background-color: ${getStatusBadge(reportData.vehiculo_estado_liquido_frenos)}">${reportData.vehiculo_estado_liquido_frenos}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado Líquido Refrigerante</div>
+                                    <div class="info-value">
+                                        <span class="status-badge" style="background-color: ${getStatusBadge(reportData.vehiculo_estado_liquido_refrigerante)}">${reportData.vehiculo_estado_liquido_refrigerante}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Porcentaje Pastillas de Freno</div>
+                                    <div class="info-value">${reportData.vehiculo_porcentaje_pastillas_freno}%</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Porcentaje Neumáticos</div>
+                                    <div class="info-value">${reportData.vehiculo_porcentaje_neumaticos}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">Información Adicional</div>
+                        <div class="section-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Observaciones</div>
+                                    <div class="text-area">${reportData.vehiculo_observacion_general || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Trabajos de Pintura</div>
+                                    <div class="text-area">${reportData.vehiculo_trabajos_realizar || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
+                            <div class="info-item">
+                                <img src="${carrito}" alt="Carrito" style="width: 130px; height: 130px; object-fit: cover;">
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Detalles de Pintura</div>
+                                <div class="text-area">${reportData.vehiculo_detalles_pintura || 'N/A'}</div>
+                            </div>
+                        </div>
+
+                    <!-- Footer -->
+                    <div class="footer">
+                        <div>Informe generado el ${new Date().toLocaleDateString('es-VE')} a las ${new Date().toLocaleTimeString('es-VE')}</div>
+                        <div>ID del Informe: #${reportData.id}</div>
+                    </div>
                 </div>
             </body>
             </html>
@@ -355,6 +474,12 @@ const InformeVehiculos = () => {
                                                             Ver
                                                         </button>
                                                         <button
+                                                            className="btn btn-sm btn-warning me-2"
+                                                            onClick={() => navigate(`/admin/informe-vehiculos/editar/${informe.id}`)}
+                                                        >
+                                                            Editar
+                                                        </button>
+                                                        <button
                                                             className="btn btn-sm btn-primary me-2"
                                                             onClick={() => printReport(informe)}
                                                         >
@@ -425,7 +550,7 @@ const InformeVehiculos = () => {
                                                     <p><strong>Color:</strong> {selectedInforme.vehiculo_color}</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p><strong>VIN:</strong> {selectedInforme.vehiculo_vin || 'N/A'}</p>
+                                                    <p><strong>Motor:</strong> {selectedInforme.vehiculo_motor || 'N/A'}</p>
                                                     <p><strong>Kilometraje:</strong> {selectedInforme.vehiculo_kilometraje || 'N/A'}</p>
                                                     <p><strong>Fecha Shaken:</strong> {selectedInforme.vehiculo_fecha_shaken ? formatDate(selectedInforme.vehiculo_fecha_shaken) : 'N/A'}</p>
                                                 </div>
@@ -478,53 +603,50 @@ const InformeVehiculos = () => {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <p><strong>Detalles de Pintura:</strong></p>
-                                                    <p>{selectedInforme.vehiculo_detalles_pintura || 'N/A'}</p>
+                                                    <p><strong>Observaciones:</strong></p>
+                                                    <p>{selectedInforme.vehiculo_observacion_general || 'N/A'}</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p><strong>Observación General:</strong></p>
-                                                    <p>{selectedInforme.vehiculo_observacion_general || 'N/A'}</p>
+                                                    <p><strong>Trabajos de Pintura:</strong></p>
+                                                    <p>{selectedInforme.vehiculo_trabajos_realizar || 'N/A'}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-12">
-                                                    <p><strong>Trabajos a Realizar:</strong></p>
-                                                    <p>{selectedInforme.vehiculo_trabajos_realizar || 'N/A'}</p>
+                                                <div className="col-md-6">
+                                                    {selectedInforme.vehiculo_imagen && (
+                                                        <img
+                                                            src={`${topurl}/uploads/${selectedInforme.vehiculo_imagen}`}
+                                                            alt="Vehículo"
+                                                            className="img-fluid"
+                                                            style={{ maxHeight: '200px' }}
+                                                        />
+                                                    )}
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p><strong>Detalles de Pintura:</strong></p>
+                                                    <p>{selectedInforme.vehiculo_detalles_pintura || 'N/A'}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Images */}
-                                    {(selectedInforme.vehiculo_imagen || selectedInforme.vehiculo_foto_documentos) && (
+                                    {selectedInforme.vehiculo_foto_documentos && (
                                         <div className="card">
                                             <div className="card-header">
                                                 <h6>Imágenes</h6>
                                             </div>
                                             <div className="card-body">
                                                 <div className="row">
-                                                    {selectedInforme.vehiculo_imagen && (
-                                                        <div className="col-md-6">
-                                                            <p><strong>Imagen del Vehículo:</strong></p>
-                                                            <img
-                                                                src={`${hostUrl}/uploads/${selectedInforme.vehiculo_imagen}`}
-                                                                alt="Vehículo"
-                                                                className="img-fluid"
-                                                                style={{ maxHeight: '200px' }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    {selectedInforme.vehiculo_foto_documentos && (
-                                                        <div className="col-md-6">
-                                                            <p><strong>Foto de Documentos:</strong></p>
-                                                            <img
-                                                                src={`${hostUrl}/uploads/${selectedInforme.vehiculo_foto_documentos}`}
-                                                                alt="Documentos"
-                                                                className="img-fluid"
-                                                                style={{ maxHeight: '200px' }}
-                                                            />
-                                                        </div>
-                                                    )}
+                                                    <div className="col-md-6">
+                                                        <p><strong>Foto de Documentos:</strong></p>
+                                                        <img
+                                                            src={`${topurl}/uploads/${selectedInforme.vehiculo_foto_documentos}`}
+                                                            alt="Documentos"
+                                                            className="img-fluid"
+                                                            style={{ maxHeight: '200px' }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

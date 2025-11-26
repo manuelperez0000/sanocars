@@ -1,6 +1,6 @@
 import axios from "axios"
+import { apiurl } from "../utils/globals"
 import { useEffect, useState } from "react"
-import { hostUrl } from "../utils/globals"
 import request from '../utils/request'
 
 export const useImagenes = () => {
@@ -39,7 +39,7 @@ export const useImagenes = () => {
         form.append('image', file)
 
         try {
-            const url = 'http://mitaller.sanocarstaller.com/upload'
+            const url = apiurl + '/imagesUploader/upload'
             const resp = await axios.post(url, form, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 onUploadProgress: (progressEvent) => {
@@ -72,7 +72,7 @@ export const useImagenes = () => {
             }
             setStatus({ type: 'error', message: `Error en la subida${detail}` })
         }
-    }
+    } 
 
 
 
@@ -84,10 +84,10 @@ export const useImagenes = () => {
         setLoading(true)
         setError(null)
         try {
-            const response = await axios.get(hostUrl + '/images')
-            console.log("response get images: ", response.data.files)
-            if (response?.data.files) {
-                setImages(response.data.files)
+            const response = await axios.get(apiurl + '/imagesUploader/uploads')
+            console.log("response get images: ", response.data.body)
+            if (response?.data.body) {
+                setImages(response.data.body?.files || [])
             }
         } catch (err) {
             console.error('Error fetching images:', err)
@@ -103,7 +103,7 @@ export const useImagenes = () => {
         }
 
         try {
-            await request.delete(hostUrl + `/upload/${imageName}`)
+            await request.delete(apiurl + `/upload/${imageName}`)
             // Remove from local state
             setImages(prev => prev.filter(img => img !== imageName))
         } catch (err) {

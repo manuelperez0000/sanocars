@@ -41,7 +41,7 @@ const Usuarios = () => {
                                                         <th>ID</th>
                                                         <th>Nombre</th>
                                                         <th>Apellido</th>
-                                                        <th>Género</th>
+                                                        <th>Nacionalidad</th>
                                                         <th>Email</th>
                                                         <th>Teléfono</th>
                                                         <th>Rol</th>
@@ -54,11 +54,11 @@ const Usuarios = () => {
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.id}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.name || 'Sin nombre'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.lastname || '-'}</td>
-                                                            <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.gender === 1 ? 'Femenino' : user.gender === 0 ? 'Masculino' : '-'}</td>
+                                                            <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.nationality || '-'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.email || '-'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.mobile_no || '-'}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.role || '-'}</td>
-                                                            
+
                                                             <td>
                                                                 <div className="d-flex gap-1">
                                                                     <button className="btn btn-sm btn-primary" onClick={() => openEditModal(user)}>Editar</button>
@@ -94,6 +94,7 @@ const Usuarios = () => {
                     </div>
                 </div>
             </div>
+            
             {modalOpen && (
                 <div className="modal fade show" style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }} aria-modal="true" role="dialog">
                     <div className="modal-dialog modal-dialog-centered">
@@ -121,12 +122,12 @@ const Usuarios = () => {
                                             <input name="lastname" value={formData.lastname} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="mb-2">
-                                            <label className="form-label">Género</label>
-                                            <select name="gender" value={formData.gender} onChange={handleChange} className="form-select">
-                                                <option value="">-- Seleccione --</option>
-                                                <option value="0">Masculino</option>
-                                                <option value="1">Femenino</option>
-                                            </select>
+                                            <label className="form-label">Direccion</label>
+                                            <input name="address" value={formData.address} onChange={handleChange} className="form-control" />
+                                        </div>
+                                        <div className="mb-2">
+                                            <label className="form-label">Nacionalidad</label>
+                                            <input name="nationality" value={formData.nationality} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="mb-2">
                                             <label className="form-label">Email</label>
@@ -146,8 +147,8 @@ const Usuarios = () => {
                                             <label className="form-label">Rol</label>
                                             <select name="role" value={formData.role} onChange={handleChange} className="form-select">
                                                 <option value="">-- Seleccione rol --</option>
-                                                <option value="employe">employe</option>
-                                                <option value="Customer">Customer</option>
+                                                <option selected value="Customer">Cliente</option>
+                                                <option value="employe">Empleado</option>
                                             </select>
                                         </div>
                                     </>

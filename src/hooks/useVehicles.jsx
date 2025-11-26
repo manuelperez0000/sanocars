@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, hostUrl } from '../utils/globals'
+import { apiurl, topurl } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
@@ -35,7 +35,6 @@ const useVehicles = () => {
                 setVehicles(resp.data.body)
             }
         } catch (err) {
-            console.error('fetchVehicles error', err)
             setError(err.message || 'Error cargando vehículos')
         } finally {
             setLoading(false)
@@ -110,12 +109,11 @@ const useVehicles = () => {
             formData.append('image', newFile)
 
             // Subir al servidor externo
-            const response = await request.post(hostUrl + '/upload', formData)
+            const response = await request.post(apiurl + '/imagesUploader/upload', formData)
 
             console.log("response post image: ", response)
 
-            const fileName = response.data.filename
-
+            const fileName = response.data.body.filename
             // Guardar el nombre en el array
             setForm(prev => {
                 const newImagenes = [...prev.imagenes]
@@ -210,7 +208,7 @@ const useVehicles = () => {
             cliente_apellido: '',
             cliente_email: '',
             cliente_telefono: '',
-            cliente_cedula: '',
+            cliente_direccion: '',
 
             // Payment data
             precio_venta: 0,
@@ -453,7 +451,7 @@ const useVehicles = () => {
                         <p><strong>Nombre:</strong> ${saleData.cliente_nombre || 'N/A'} ${saleData.cliente_apellido || ''}</p>
                         <p><strong>Teléfono:</strong> ${saleData.cliente_telefono || 'N/A'}</p>
                         <p><strong>Email:</strong> ${saleData.cliente_email || 'N/A'}</p>
-                        <p><strong>Cédula:</strong> ${saleData.cliente_cedula || 'N/A'}</p>
+                        <p><strong>Dirección:</strong> ${saleData.cliente_direccion || 'N/A'}</p>
                     </div>
                     <div class="info-section">
                         <h4>Información del Vehículo</h4>
@@ -635,7 +633,7 @@ const useVehicles = () => {
                         {imagesArray.map((imageName, index) => (
                             <img
                                 key={index}
-                                src={`${hostUrl}/uploads/${imageName}`}
+                                src={`${topurl}/uploads/${imageName}`}
                                 alt={imageName}
                                 onClick={() => openModal(index)}
                                 style={{
@@ -697,7 +695,7 @@ const useVehicles = () => {
                             </button>
 
                             <img
-                                src={`${hostUrl}/uploads/${imagesArray[modalIndex]}`}
+                                src={`${apiurl}/uploads/${imagesArray[modalIndex]}`}
                                 alt={`full-${modalIndex}`}
                                 className="img-fluid"
                                 onClick={(e) => e.stopPropagation()}
