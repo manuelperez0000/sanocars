@@ -17,6 +17,8 @@ var informeVehiculos = require("./routes/informeVehiculos.js")
 var categoriasServicio = require("./routes/categoriasServicio.js")
 var configuracion = require("./routes/configuracion.js")
 var seguimiento = require("./routes/seguimiento.js")
+var alquileres = require("./routes/alquileres.js")
+var pagosAlquileres = require("./routes/pagos-alquileres.js")
 var route = express.Router()
 var imagesUploader = require("./routes/imagesUploader.js")
 var path = require('path')
@@ -42,6 +44,8 @@ var router = (app) => {
     route.use('/categorias-servicio', categoriasServicio)
     route.use('/configuracion', configuracion)
     route.use('/seguimiento', seguimiento)
+    route.use('/alquileres', alquileres)
+    route.use('/pagos-alquileres', pagosAlquileres)
     route.use('/imagesUploader', imagesUploader)
     // Ruta por defecto: 404 Not Found
     app.use((req, res) => {

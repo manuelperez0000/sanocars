@@ -46,6 +46,13 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
       setUpdatingQuota(null);
     }
   };
+
+  const calcVencidas = (pagos) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+    return pagos.filter(pago => !pago.status && new Date(pago.fecha_pago) < today).length;
+  }
+
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -66,7 +73,10 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
     );
   }
 
-  const bgStatus = (status) => status ? "bg-success text-white" : "bg-warning text-dark"
+  const bgStatus = (status, pago) => {
+
+    return status ? "bg-success text-white" : calcVencidas([pago]) > 0 ? "bg-danger text-light" : "bg-warning text-dark"
+  }
 
   return (
     <div>
@@ -86,7 +96,10 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                     <div className="mt-3">
 
                       <h6>Cuotas totales ({vehicle.siguientes_pagos.length})</h6>
-                      <h4 className="px-3 py-2 bg-warning text-light">Cuotas por pagar: {vehicle.siguientes_pagos.filter(pago => !pago.status).length}</h4>
+                      <h6 className="">Cuotas por pagar: {vehicle.siguientes_pagos.filter(pago => !pago.status).length}</h6>
+                      {calcVencidas(vehicle.siguientes_pagos) > 0 && <div role="alert" className='alert alert-danger'>
+                        <h5>{calcVencidas(vehicle.siguientes_pagos)} {calcVencidas(vehicle.siguientes_pagos) > 1 ? ` cuotas vencidas` : ` cuota vencida`}</h5>
+                      </div>}
                       <button
                         className="btn btn-primary w-100"
                         onClick={() => handleVerCuotas(vehicle)}
@@ -149,15 +162,13 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                       <tbody>
                         {selectedVehicle.siguientes_pagos?.map((pago, index) => (
                           <tr key={index}>
-                            <td className={bgStatus(pago.status)}>{pago.numero_cuota}</td>
-                            <td className={bgStatus(pago.status)}>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
-                            <td className={bgStatus(pago.status)}>${pago.monto}</td>
-                            <td className={bgStatus(pago.status)}>
-                              {pago.status ? 'Pagada' : 'Pendiente'}
+                            <td className={bgStatus(pago.status, pago)}>{pago.numero_cuota}</td>
+                            <td className={bgStatus(pago.status, pago)}>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                            <td className={bgStatus(pago.status, pago)}>${pago.monto}</td>
+                            <td className={bgStatus(pago.status, pago)}>
+                              {pago.status ? 'Pagada' : calcVencidas([pago]) > 0 ? "Vencida" : 'Pendiente'}
                             </td>
-                            {/*  <td> <button onClick={() => {
-                              console.log(selectedVehicle.id, "cuotaId: ", pago.numero_cuota)
-                            }}> sdf </button> </td> */}
+
                             <td>
                               {!pago.status ? (
                                 <button

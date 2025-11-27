@@ -1,8 +1,10 @@
 import useVehicles from '../../hooks/useVehicles'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
+import { useNavigate } from 'react-router-dom' 
 
 const Vehiculos = () => {
+    const navigate = useNavigate()
     const {
         loading,
         error,
@@ -17,6 +19,9 @@ const Vehiculos = () => {
         salesModalOpen,
         selectedVehicle,
         salesForm,
+        rentalModalOpen,
+        selectedRentalVehicle,
+        rentalForm,
         visibleVehicles,
         openNew,
         openEdit,
@@ -30,6 +35,10 @@ const Vehiculos = () => {
         closeSalesModal,
         handleSalesChange,
         handleSaveSale,
+        openRentalModal,
+        closeRentalModal,
+        handleRentalChange,
+        handleSaveRental,
         getImages
     } = useVehicles()
 
@@ -40,6 +49,7 @@ const Vehiculos = () => {
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h2 className="mb-0">Gestión de Vehículos</h2>
                         <div>
+                            <button className="btn btn-info me-2" onClick={() => navigate('/admin/alquilados') }>Vehículos en alquiler</button>
                             <button className="btn btn-primary" onClick={openNew}>Nuevo vehículo</button>
                         </div>
                     </div>
@@ -95,6 +105,9 @@ const Vehiculos = () => {
                                                                 <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
                                                                 {v.status === 'En Venta' && (
                                                                     <button className="btn btn-sm btn-success me-2" onClick={() => openSalesModal(v)}>Vender</button>
+                                                                )}
+                                                                {v.status === 'En alquiler' && (
+                                                                    <button className="btn btn-sm btn-warning me-2" onClick={() => openRentalModal(v)}>Alquilar</button>
                                                                 )}
                                                                 <button className="btn btn-sm btn-danger" onClick={() => handleMarkAsDeleted(v)}>Eliminar</button>
                                                             </td>
@@ -463,6 +476,98 @@ const Vehiculos = () => {
                                     <button type="button" className="btn btn-secondary" onClick={closeSalesModal}>Cancelar</button>
                                     {/* <button type="submit" className="btn btn-success me-2">Guardar Venta</button> */}
                                     <button type="button" className="btn btn-primary" onClick={() => { handleSaveSale({ preventDefault: () => {} }); }}>Guardar e Imprimir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Rental Modal */}
+            {rentalModalOpen && (
+                <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1080 }}></div>
+            )}
+            {rentalModalOpen && (
+                <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1090 }}>
+                    <div className="modal-dialog modal-xl" role="document">
+                        <div className="modal-content">
+                            <form onSubmit={handleSaveRental}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Alquilar Vehículo: {selectedRentalVehicle?.marca} {selectedRentalVehicle?.modelo}</h5>
+                                    <button type="button" className="btn-close" aria-label="Close" onClick={closeRentalModal}></button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Client Data Section */}
+                                    <ClientInformation
+                                        invoiceData={{
+                                            clientName: rentalForm.cliente_nombre || '',
+                                            clientEmail: rentalForm.cliente_email || '',
+                                            clientPhone: rentalForm.cliente_telefono || '',
+                                            clientAddress: rentalForm.cliente_direccion || ''
+                                        }}
+                                        setInvoiceData={(updatedData) => {
+                                            handleRentalChange({ target: { name: 'cliente_nombre', value: updatedData.clientName || '' } })
+                                            handleRentalChange({ target: { name: 'cliente_email', value: updatedData.clientEmail || '' } })
+                                            handleRentalChange({ target: { name: 'cliente_telefono', value: updatedData.clientPhone || '' } })
+                                            handleRentalChange({ target: { name: 'cliente_direccion', value: updatedData.clientAddress || '' } })
+                                        }}
+                                    />
+
+                                    {/* Rental Information Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Información del Alquiler</h6>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Fecha de Inicio *</label>
+                                                <input
+                                                    type="date"
+                                                    name="fecha_inicio"
+                                                    value={rentalForm.fecha_inicio || ''}
+                                                    onChange={handleRentalChange}
+                                                    className="form-control"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Precio de Alquiler *</label>
+                                                <input
+                                                    type="number"
+                                                    name="precio_alquiler"
+                                                    value={rentalForm.precio_alquiler || ''}
+                                                    onChange={handleRentalChange}
+                                                    className="form-control"
+                                                    step="0.01"
+                                                    min="0"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Vehicle Information Summary */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Información del Vehículo</h6>
+                                        <div className="border p-3 rounded">
+                                            <div className="row">
+                                                <div className="col-md-3">
+                                                    <strong>Marca:</strong> {selectedRentalVehicle?.marca}
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <strong>Modelo:</strong> {selectedRentalVehicle?.modelo}
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <strong>Año:</strong> {selectedRentalVehicle?.anio}
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <strong>Placa:</strong> {selectedRentalVehicle?.numero_placa}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={closeRentalModal}>Cancelar</button>
+                                    <button type="submit" className="btn btn-warning">Guardar Alquiler</button>
                                 </div>
                             </form>
                         </div>

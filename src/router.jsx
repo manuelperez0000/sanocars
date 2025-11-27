@@ -31,6 +31,7 @@ import CategoriasServicio from "./pages/admin/categoriasServicio"
 import Configuracion from "./pages/admin/configuracion"
 import Reservas from "./pages/admin/reservas"
 import Calendario from "./pages/admin/calendario"
+import Alquilados from "./pages/admin/alquilados"
 
 const Router = () => {
     return <>
@@ -60,6 +61,7 @@ const Router = () => {
             <Route path="/admin/servicios" element={<AdminLayout><AdminServicios /></AdminLayout>} />
             <Route path="/admin/imagenes" element={<AdminLayout><Imagenes /></AdminLayout>} />
             
+            <Route path="/admin/alquilados" element={<AdminLayout><Alquilados /></AdminLayout>} />
             <Route path="/admin/inventario" element={<AdminLayout><Inventario /></AdminLayout>} />
             <Route path="/admin/seguimiento" element={<AdminLayout><Seguimiento /></AdminLayout>} />
             <Route path="/admin/inspeccion-vehicular" element={<AdminLayout><InspeccionVehicular /></AdminLayout>} />

@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
     var status = req.body.status || 'En Venta'
 
     // Validate status
-    const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido']
+    const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido', 'alquilado']
     if (!validStatuses.includes(status)) {
       return responser.error({ res, message: 'Status no válido', status: 400 })
     }
@@ -104,7 +104,7 @@ router.put('/:id', async (req, res) => {
       if (req.body[f] !== undefined) {
         // Validate status if being updated
         if (f === 'status') {
-          const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido']
+          const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido','alquilado']
           if (!validStatuses.includes(req.body[f])) {
             return responser.error({ res, message: 'Status no válido', status: 400 })
           }

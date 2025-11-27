@@ -22,6 +22,11 @@ const useVehicles = () => {
     const [selectedVehicle, setSelectedVehicle] = useState(null)
     const [salesForm, setSalesForm] = useState(getEmptySalesForm())
 
+    // Rental modal
+    const [rentalModalOpen, setRentalModalOpen] = useState(false)
+    const [selectedRentalVehicle, setSelectedRentalVehicle] = useState(null)
+    const [rentalForm, setRentalForm] = useState(getEmptyRentalForm())
+
     useEffect(() => {
         fetchVehicles()
     }, [])
@@ -221,6 +226,21 @@ const useVehicles = () => {
         }
     }
 
+    // Rental functions
+    function getEmptyRentalForm() {
+        return {
+            // Client data
+            cliente_nombre: '',
+            cliente_email: '',
+            cliente_telefono: '',
+            cliente_direccion: '',
+
+            // Rental data
+            fecha_inicio: new Date().toISOString().split('T')[0], // Today's date
+            precio_alquiler: 0
+        }
+    }
+
     function openSalesModal(vehicle) {
         setSelectedVehicle(vehicle)
         const salesFormData = getEmptySalesForm()
@@ -234,6 +254,56 @@ const useVehicles = () => {
         setSalesModalOpen(false)
         setSelectedVehicle(null)
         setSalesForm(getEmptySalesForm())
+    }
+
+    function openRentalModal(vehicle) {
+        setSelectedRentalVehicle(vehicle)
+        const rentalFormData = getEmptyRentalForm()
+        setRentalForm(rentalFormData)
+        setRentalModalOpen(true)
+    }
+
+    function closeRentalModal() {
+        setRentalModalOpen(false)
+        setSelectedRentalVehicle(null)
+        setRentalForm(getEmptyRentalForm())
+    }
+
+    function handleRentalChange(e) {
+        const { name, value } = e.target
+        setRentalForm(prev => ({ ...prev, [name]: value }))
+    }
+
+    async function handleSaveRental(e) {
+        e.preventDefault()
+
+        try {
+            const rentalData = {
+                vehiculo_id: selectedRentalVehicle.id,
+                ...rentalForm
+            }
+
+            // Save the rental
+            await request.post(apiurl + '/alquileres', rentalData)
+
+            // Create payment tracking record for the rental
+            const paymentData = {
+                vehiculo_id: selectedRentalVehicle.id,
+                pagos_realizados: [], // Start with empty array
+                fecha_proximo_pago: rentalForm.fecha_inicio // Next payment date starts as rental start date
+            }
+            await request.post(apiurl + '/pagos-alquileres', paymentData)
+
+            // Mark vehicle as rented (not available for sale anymore)
+            await request.put(apiurl + '/vehicles/' + selectedRentalVehicle.id, { status: 'alquilado' })
+
+            closeRentalModal()
+            fetchVehicles()
+
+        } catch (err) {
+            console.error('save rental error', err)
+            setError(err?.response?.data?.message || 'Error guardando alquiler')
+        }
     }
 
     function handleSalesChange(e) {
@@ -782,6 +852,9 @@ const useVehicles = () => {
         salesModalOpen,
         selectedVehicle,
         salesForm,
+        rentalModalOpen,
+        selectedRentalVehicle,
+        rentalForm,
         visibleVehicles,
         fetchVehicles,
         openNew,
@@ -797,6 +870,10 @@ const useVehicles = () => {
         closeSalesModal,
         handleSalesChange,
         handleSaveSale,
+        openRentalModal,
+        closeRentalModal,
+        handleRentalChange,
+        handleSaveRental,
         getImages,
         getArrayImages
     }

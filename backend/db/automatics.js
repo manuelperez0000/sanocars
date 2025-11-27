@@ -435,4 +435,36 @@ module.exports = async  function automatics(conn) {
     } catch (error) {
       console.log("Columna 'datos_pago' ya existe o error al agregar:", error.message);
     }
+
+    var alquileres = `
+      CREATE TABLE IF NOT EXISTS alquileres (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        vehiculo_id INT NOT NULL,
+        cliente_nombre VARCHAR(255) NOT NULL,
+        cliente_email VARCHAR(255),
+        cliente_telefono VARCHAR(20),
+        cliente_direccion TEXT,
+        fecha_inicio DATE NOT NULL,
+        precio_alquiler DECIMAL(10,2) NOT NULL,
+        fecha_alquiler TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (vehiculo_id) REFERENCES vehiculos_venta(id) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+    await conn.query(alquileres);
+    console.log("Tabla 'alquileres' asegurada.");
+
+    var pagosAlquileres = `
+      CREATE TABLE IF NOT EXISTS pagos_alquileres (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        vehiculo_id INT NOT NULL,
+        pagos_realizados JSON,
+        fecha_proximo_pago DATE,
+        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (vehiculo_id) REFERENCES vehiculos_venta(id) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+    await conn.query(pagosAlquileres);
+    console.log("Tabla 'pagos_alquileres' asegurada.");
 }
