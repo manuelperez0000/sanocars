@@ -29,6 +29,7 @@ const SegAlquileres = () => {
               nextPayment: paymentsResponse.data.body?.fecha_proximo_pago || null
             };
           } catch (error) {
+            void error
             // If no payment record exists, return rental with empty payments
             return {
               ...rental,
