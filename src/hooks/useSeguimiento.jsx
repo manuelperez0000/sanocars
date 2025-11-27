@@ -27,7 +27,7 @@ const useSeguimiento = () => {
     }
 
     async function updateQuotaStatus({ vehicleId, cuotaIndex, status }) {
-        //{ ventaIndex, cuotaIndex, status }
+        //{ ventaIndex, cuotaIndex, status } 
         try {
             const resp = await request.put(apiurl + `/seguimiento/${vehicleId}/${cuotaIndex}/${status}`, { status })
             console.log("vehiculo: ", vehicleId)

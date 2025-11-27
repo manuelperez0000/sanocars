@@ -16,19 +16,19 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
   };
 
   const handleMarkAsPaid = async ({ vehicleId, cuotaIndex, status }) => {
- 
+
     setUpdatingQuota(`${vehicleId}-${cuotaIndex}`);
 
     try {
       const result = await updateQuotaStatus({ vehicleId, cuotaIndex, status });
       if (result.success) {
         // Update the local state to reflect the change immediately
-       
+
         setSelectedVehicle(prev => {
           if (!prev) return prev;
           const updatedPagos = [...prev.siguientes_pagos];
-          if (updatedPagos[cuotaIndex -1]) {
-            updatedPagos[cuotaIndex -1].status = true;
+          if (updatedPagos[cuotaIndex - 1]) {
+            updatedPagos[cuotaIndex - 1].status = status;
           }
           return {
             ...prev,
@@ -172,7 +172,9 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                                   )}
                                 </button>
                               )}
-                              {pago.status && <button className='w-100'> Marcar como no pagada </button>}
+                              {pago.status && <button
+                                onClick={() => handleMarkAsPaid({ vehicleId: selectedVehicle.id, cuotaIndex: pago.numero_cuota, status: false })}
+                                className='w-100'> Marcar como no pagada </button>}
                             </td>
                           </tr>
                         ))}

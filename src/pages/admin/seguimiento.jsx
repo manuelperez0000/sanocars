@@ -28,7 +28,7 @@ const Seguimiento = () => {
       icon: <FaKey className="me-2" />
     }
   ];
-
+ 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'venta-vehiculo':

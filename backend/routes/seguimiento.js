@@ -50,15 +50,30 @@ router.get('/', async (req, res) => {
 })
 
 // PUT /api/v1/seguimiento/:vehicleId/cuota/:cuotaIndex - Update quota status
-router.put('/:indexVenta/:indexCuota', async (req, res) => {
+router.put('/:vehicleId/:cuotaIndex/:status', async (req, res) => {
 
-  const { indexVenta, indexCuota } = req.params
-  console.log("indexventa: ", indexVenta)
-  console.log("indexCuota: ", indexCuota)
-  
-  //need index venta index cuota 
+  try {
 
-  /*  var db = connect(req, res)
+    const { vehicleId, cuotaIndex, status } = req.params
+    var db = connect(req, res)
+    const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
+    var [result] = await db.execute(queryPagos)
+    const pagos = JSON.parse(result[0].siguientes_pagos)
+    const cuota = pagos.find(p => Number(p.numero_cuota) === Number(cuotaIndex))
+    //modifico la cuota
+    cuota.status = status
+    pagos[cuotaIndex - 1] = cuota
+    const queryVentas = `UPDATE venta SET siguientes_pagos = ? WHERE vehiculo_id = ?`;
+    await db.execute(queryVentas, [JSON.stringify(pagos), vehicleId])
+    responser.success({ res, body: { message: 'Estado de cuota actualizado correctamente' } })
+
+  } catch (error) {
+    responser.error({ res, message: error.message || "No se ha podido actualizar la cuota" })
+  }
+
+  /* console.log("indexventa: ", vehicleId)
+  console.log("indexCuota: ", cuotaIndex) */
+  /*  
    const { cuotaIndex } = req.params
    //get siguientes_pagos from id cuotaindex
    const queryGet = `SELECT v.siguientes_pagos FROM venta v WHERE id = ${cuotaIndex}`
@@ -66,7 +81,6 @@ router.put('/:indexVenta/:indexCuota', async (req, res) => {
  
    console.log(JSON.parse(rows[0].siguientes_pagos)) */
 
-  responser.success({ res, body: { message: 'Estado de cuota actualizado correctamente' } })
   /* let siguientes_pagos = []
   if (rows.length > 0) {
     try {
