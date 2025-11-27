@@ -1,0 +1,137 @@
+/* eslint-disable no-undef */
+var connect = require('../db/connect.js')
+var express = require('express')
+var router = express.Router()
+var responser = require('../network/responser.js')
+
+// GET /api/v1/vehicles - Get all vehicles
+router.get('/', async (req, res) => {
+  try {
+    var db = connect(req, res)
+    var [rows] = await db.execute('SELECT * FROM vehiculos_venta ORDER BY id DESC')
+    responser.success({ res, body: rows })
+  } catch (error) {
+    console.error('Error fetching vehicles:', error)
+    responser.error({ res, message: error?.message || 'Error interno del servidor' })
+  }
+})
+
+// POST /api/v1/vehicles - Create a new vehicle
+router.post('/', async (req, res) => {
+  try {
+    var db = connect(req, res)
+    if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
+
+    var fecha_ingreso = req.body.fecha_ingreso || null
+    var fecha_shaken = req.body.fecha_shaken || null
+    var origen = req.body.origen || null
+    var marca = req.body.marca || null
+    var modelo = req.body.modelo || null
+    var numero_placa = req.body.numero_placa || null
+    var anio = req.body.anio || null
+    var kilometraje = req.body.kilometraje || null
+    var color = req.body.color || null
+    var tipo_vehiculo = req.body.tipo_vehiculo || null
+    var tamano_motor = req.body.tamano_motor || null
+    var numero_chasis = req.body.numero_chasis || null
+    var observaciones = req.body.observaciones || null
+    var trabajos_realizar = req.body.trabajos_realizar || null
+    var imagen1 = req.body.imagen1 || null
+    var imagen2 = req.body.imagen2 || null
+    var status = req.body.status || 'En Venta'
+
+    // Validate status
+    const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido']
+    if (!validStatuses.includes(status)) {
+      return responser.error({ res, message: 'Status no válido', status: 400 })
+    }
+
+    // Basic required fields
+    if (!marca || !modelo) {
+      return responser.error({ res, message: 'Marca y modelo son requeridos', status: 400 })
+    }
+
+    // Use provided fecha_ingreso or current date
+    var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status]
+
+    var [result] = await db.execute(insertQuery, params)
+    if (!result || !result.insertId) {
+      return responser.error({ res, message: 'No se pudo crear el vehículo', status: 500 })
+    }
+
+    var newId = result.insertId
+    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [newId])
+    return responser.success({ res, body: rows[0], message: 'Vehículo creado', status: 201 })
+
+  } catch (error) {
+    console.error('Error creating vehicle:', error)
+    return responser.error({ res, message: error?.message || 'Error interno del servidor', status: 500 })
+  }
+})
+
+// GET /api/v1/vehicles/:id - Get vehicle by id
+router.get('/:id', async (req, res) => {
+  try {
+    var db = connect(req, res)
+    var { id } = req.params
+    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
+    if (!rows || rows.length === 0) {
+      return responser.error({ res, message: 'Vehículo no encontrado', status: 404 })
+    }
+    return responser.success({ res, body: rows[0] })
+  } catch (error) {
+    console.error('Error fetching vehicle by id:', error)
+    return responser.error({ res, message: error?.message || 'Error interno del servidor', status: 500 })
+  }
+})
+
+// PUT /api/v1/vehicles/:id - Update vehicle
+router.put('/:id', async (req, res) => {
+  try {
+    var db = connect(req, res)
+    var { id } = req.params
+
+    // Allowed fields to update
+    var fields = [
+      'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'observaciones', 'trabajos_realizar', 'imagen1', 'imagen2', 'status'
+    ]
+
+    var updates = []
+    var params = []
+    for (var i = 0; i < fields.length; i++) {
+      var f = fields[i]
+      if (req.body[f] !== undefined) {
+        // Validate status if being updated
+        if (f === 'status') {
+          const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido']
+          if (!validStatuses.includes(req.body[f])) {
+            return responser.error({ res, message: 'Status no válido', status: 400 })
+          }
+        }
+        updates.push(f + ' = ?')
+        params.push(req.body[f])
+      }
+    }
+
+    if (updates.length === 0) {
+      return responser.error({ res, message: 'No hay campos para actualizar', status: 400 })
+    }
+
+    params.push(id)
+    var sql = 'UPDATE vehiculos_venta SET ' + updates.join(', ') + ' WHERE id = ?'
+    var [result] = await db.execute(sql, params)
+    if (result.affectedRows === 0) {
+      return responser.error({ res, message: 'Vehículo no encontrado', status: 404 })
+    }
+
+    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
+    return responser.success({ res, body: rows[0], message: 'Vehículo actualizado' })
+
+  } catch (error) {
+    console.error('Error updating vehicle:', error)
+    return responser.error({ res, message: error?.message || 'Error interno del servidor', status: 500 })
+  }
+})
+
+module.exports = router

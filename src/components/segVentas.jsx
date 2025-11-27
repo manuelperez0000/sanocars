@@ -28,7 +28,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
           if (!prev) return prev;
           const updatedPagos = [...prev.siguientes_pagos];
           if (updatedPagos[cuotaIndex -1]) {
-            updatedPagos[cuotaIndex -1].status = status;
+            updatedPagos[cuotaIndex -1].status = true;
           }
           return {
             ...prev,
@@ -172,7 +172,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                                   )}
                                 </button>
                               )}
-                              {pago.status && <button onClick={() => handleMarkAsPaid({ vehicleId: selectedVehicle.id, cuotaIndex: pago.numero_cuota, status: false })} className='w-100'> Marcar como no pagada </button>}
+                              {pago.status && <button className='w-100'> Marcar como no pagada </button>}
                             </td>
                           </tr>
                         ))}
