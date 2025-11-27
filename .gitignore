@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 access.jpg
 backend
+
+backend/uploads/
+backend/node_modules/
