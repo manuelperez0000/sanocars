@@ -9,7 +9,7 @@ import useSeguimiento from '../../hooks/useSeguimiento';
 
 const Seguimiento = () => {
   const [activeTab, setActiveTab] = useState('venta-vehiculo');
-  const { vehicles, loading, error } = useSeguimiento();
+  const { vehicles, loading, error, updateQuotaStatus } = useSeguimiento();
 
   const tabs = [
     {
@@ -32,7 +32,7 @@ const Seguimiento = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'venta-vehiculo':
-        return <SegVentas vehicles={vehicles} loading={loading} error={error} />;
+        return <SegVentas vehicles={vehicles} loading={loading} error={error} updateQuotaStatus={updateQuotaStatus} />;
       case 'pagos-alquiler':
         return <SegAlquileres />;
       case 'shaken':
@@ -88,16 +88,9 @@ const Seguimiento = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="card border-0 shadow-lg"
-             style={{
-               background: 'rgba(255, 255, 255, 0.95)',
-               backdropFilter: 'blur(10px)',
-               borderRadius: '15px'
-             }}>
-          <div className="card-body p-4">
+        <div className="pt-3">
             {renderTabContent()}
-          </div>
-        </div>
+         </div>
       </div>
     </div>
   )

@@ -245,6 +245,29 @@ h1 {
   background: linear-gradient(100deg, var(--red1), var(--red2));
 }
 
+.bg-modal{
+  background: rgba(0, 0, 0, 0.86);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content{
+  position: absolute;
+  width: 90%;
+  padding: 20px;
+  overflow-y: scroll;
+  max-height: 90%;
+  background: white;
+  border-radius: 8px;
+}
+
 .bg-japon {
   background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 255, 0)), url("https://sanocarstaller.com/uploads/newImages/financiamiento.webp");
   color: white;
@@ -540,6 +563,7 @@ h1 {
   justify-content: center;
   gap: 20px;
 }
+
 
 .gallery-modal img {
   border-radius: 6px;
