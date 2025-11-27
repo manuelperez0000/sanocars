@@ -50,21 +50,27 @@ router.get('/', async (req, res) => {
 })
 
 // PUT /api/v1/seguimiento/:vehicleId/cuota/:cuotaIndex - Update quota status
-router.put('/:vehicleId/:cuotaIndex/:status', async (req, res) => {
+router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
 
   try {
-
-    const { vehicleId, cuotaIndex, status } = req.params
+    const { status } = req.body
+    const { vehicleId, cuotaIndex } = req.params
+    console.log(vehicleId, " ", cuotaIndex, " ", status)
     var db = connect(req, res)
     const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
     var [result] = await db.execute(queryPagos)
+
+
     const pagos = JSON.parse(result[0].siguientes_pagos)
     const cuota = pagos.find(p => Number(p.numero_cuota) === Number(cuotaIndex))
-    //modifico la cuota
+   
     cuota.status = status
+   /*  console.log(cuota) */
+    //modifico la cuota
     pagos[cuotaIndex - 1] = cuota
     const queryVentas = `UPDATE venta SET siguientes_pagos = ? WHERE vehiculo_id = ?`;
-    await db.execute(queryVentas, [JSON.stringify(pagos), vehicleId])
+    /* const resultUpdate =  */await db.execute(queryVentas, [JSON.stringify(pagos), vehicleId])
+    /* console.log(resultUpdate) */
     responser.success({ res, body: { message: 'Estado de cuota actualizado correctamente' } })
 
   } catch (error) {

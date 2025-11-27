@@ -159,7 +159,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                               console.log(selectedVehicle.id, "cuotaId: ", pago.numero_cuota)
                             }}> sdf </button> </td> */}
                             <td>
-                              {!pago.status && (
+                              {!pago.status ? (
                                 <button
                                   className="btn btn-success btn-sm w-100"
                                   onClick={() => handleMarkAsPaid({ vehicleId: selectedVehicle.id, cuotaIndex: pago.numero_cuota, status: true })}
@@ -171,8 +171,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                                     'Marcar como pagada'
                                   )}
                                 </button>
-                              )}
-                              {pago.status && <button
+                              ) : <button
                                 onClick={() => handleMarkAsPaid({ vehicleId: selectedVehicle.id, cuotaIndex: pago.numero_cuota, status: false })}
                                 className='w-100'> Marcar como no pagada </button>}
                             </td>

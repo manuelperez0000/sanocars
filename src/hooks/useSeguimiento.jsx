@@ -29,16 +29,15 @@ const useSeguimiento = () => {
     async function updateQuotaStatus({ vehicleId, cuotaIndex, status }) {
         //{ ventaIndex, cuotaIndex, status } 
         try {
-            const resp = await request.put(apiurl + `/seguimiento/${vehicleId}/${cuotaIndex}/${status}`, { status })
-            console.log("vehiculo: ", vehicleId)
-            console.log("cuota: ", cuotaIndex)
+            const resp = await request.put(apiurl + `/seguimiento/${vehicleId}/${cuotaIndex}`, {status})
+            
             void resp
-            return { success: true, message: "test" }
-            /* if (resp?.data?.body) {
+            if (resp?.data?.body) {
                 // Refresh the data after updating
-                await fetchSeguimiento()
+                /* await fetchSeguimiento() */
+              
                 return { success: true, message: resp.data.body.message }
-            } */
+            }
         } catch (err) {
             return { success: false, message: err?.response?.data?.message || 'Error actualizando estado de cuota' }
         }
