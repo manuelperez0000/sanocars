@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ const verifyToken = require('../midelwares/verifyToken.js')
 // GET /api/v1/services/reservas_servicio - Get all service reservations
 router.get('/', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
 
         const [body] = await db.execute('SELECT * FROM reservas_servicio ORDER BY id DESC')
 
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
 // PUT /api/v1/services/reservas_servicio/:id - Update service reservation status
 router.put('/:id', verifyToken, async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
 
         var { id } = req.params
         var { status } = req.body
@@ -71,7 +72,7 @@ router.post('/', async (req, res) => {
             })
         }
 
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
 
         // Insert the reservation
         const query = `

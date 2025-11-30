@@ -2,12 +2,12 @@
 const express = require('express')
 const router = express.Router()
 const connect = require('../db/connect')
+const mysql = require('mysql2/promise')
 
 // GET /api/v1/categorias-servicio - Get all categories
 router.get('/', async (req, res) => {
     try {
-        var db = connect(req, res)
-        
+        const db = await mysql.createConnection(connect)
         const [rows] = await db.query('SELECT * FROM categorias_servicio ORDER BY fecha_creacion DESC')
         res.json({
             success: true,
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
 // GET /api/v1/categorias-servicio/:id - Get category by ID
 router.get('/:id', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { id } = req.params
         const [rows] = await db.query('SELECT * FROM categorias_servicio WHERE id = ?', [id])
 
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/v1/categorias-servicio - Create new category
 router.post('/', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { titulo, imagen } = req.body
 
         if (!titulo || !imagen) {
@@ -86,7 +86,7 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/categorias-servicio/:id - Update category
 router.put('/:id', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { id } = req.params
         const { titulo, imagen } = req.body
 
@@ -129,7 +129,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
 
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { id } = req.params
 
         const [result] = await db.query('DELETE FROM categorias_servicio WHERE id = ?', [id])
@@ -157,7 +157,7 @@ router.delete('/:id', async (req, res) => {
 // GET /api/v1/categorias-servicio/:categoriaId/items - Get items for a category
 router.get('/:categoriaId/items', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { categoriaId } = req.params
 
         const [rows] = await db.query('SELECT * FROM item_servicio WHERE idCategoria = ? ORDER BY fecha_creacion DESC', [categoriaId])
@@ -177,7 +177,7 @@ router.get('/:categoriaId/items', async (req, res) => {
 // POST /api/v1/categorias-servicio/:categoriaId/items - Create new item
 router.post('/:categoriaId/items', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { categoriaId } = req.params
         const { titulo } = req.body
 
@@ -212,7 +212,7 @@ router.post('/:categoriaId/items', async (req, res) => {
 // DELETE /api/v1/categorias-servicio/items/:itemId - Delete item
 router.delete('/items/:itemId', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { itemId } = req.params
 
         const [result] = await db.query('DELETE FROM item_servicio WHERE id = ?', [itemId])

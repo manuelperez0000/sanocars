@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/dashboard - Get dashboard statistics
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Get vehicles sold this month

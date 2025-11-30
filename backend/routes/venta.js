@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+var mysql = require('mysql2/promise')
 var connect = require('../db/connect.js')
 var express = require('express')
 var router = express.Router()
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/venta - Get all sales
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var [rows] = await db.execute('SELECT * FROM venta ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 // GET /api/v1/venta/:id - Get sale by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute('SELECT * FROM venta WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/v1/venta - Create a new sale
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Extract fields from request body
@@ -129,7 +130,7 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/venta/:id - Update sale
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     // Allowed fields to update
@@ -187,7 +188,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/venta/:id - Delete sale
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     var [result] = await db.execute('DELETE FROM venta WHERE id = ?', [id])

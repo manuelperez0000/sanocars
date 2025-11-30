@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/visits - Get and increment visit count
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+  const db = await mysql.createConnection(connect)
 
     // First, check if there's any record in the table
     var [existing] = await db.execute('SELECT COUNT(*) as count FROM vicitas')

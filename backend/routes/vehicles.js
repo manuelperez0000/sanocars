@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/vehicles - Get all vehicles
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var [rows] = await db.execute('SELECT * FROM vehiculos_venta ORDER BY id DESC')
+  const db = await mysql.createConnection(connect)
+  var [rows] = await db.execute('SELECT * FROM vehiculos_venta ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching vehicles:', error)
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/vehicles - Create a new vehicle
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var fecha_ingreso = req.body.fecha_ingreso || null
@@ -73,7 +74,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/vehicles/:id - Get vehicle by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -89,7 +90,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/vehicles/:id - Update vehicle
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     // Allowed fields to update

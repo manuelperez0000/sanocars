@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/servicios - Get all servicios
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var [rows] = await db.execute('SELECT * FROM servicios ORDER BY id DESC')
+  const db = await mysql.createConnection(connect)
+  var [rows] = await db.execute('SELECT * FROM servicios ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching servicios:', error)
@@ -19,9 +20,9 @@ router.get('/', async (req, res) => {
 // GET /api/v1/servicios/:id - Get servicio by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var { id } = req.params
-    var [rows] = await db.execute('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
+  const db = await mysql.createConnection(connect)
+  var { id } = req.params
+  var [rows] = await db.execute('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Servicio no encontrado', status: 404 })
     }
@@ -35,8 +36,8 @@ router.get('/:id', async (req, res) => {
 // POST /api/v1/servicios - Create a new servicio
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
+  const db = await mysql.createConnection(connect)
+  if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Extract fields from request body
     var nombre_cliente = req.body.nombre_cliente || null
@@ -102,8 +103,8 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/servicios/:id - Update servicio
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var { id } = req.params
+  const db = await mysql.createConnection(connect)
+  var { id } = req.params
 
     // Allowed fields to update
     var fields = [
@@ -153,7 +154,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/servicios/:id - Delete servicio
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     var [result] = await db.execute('DELETE FROM servicios WHERE id = ?', [id])

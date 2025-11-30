@@ -3,6 +3,7 @@ var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser')
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var multer = require('multer')
 var path = require('path')
 var fs = require('fs')
@@ -50,7 +51,7 @@ router.post('/', upload.fields([
 
   console.log("Entrando en la ruta de financiamiento...");
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Get form data
@@ -167,7 +168,7 @@ router.post('/', upload.fields([
 // GET /api/v1/financing - Get all financing requests
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var [rows] = await db.execute('SELECT * FROM financiamiento ORDER BY fecha_creacion DESC')
     responser.success({ res, body: rows })
   } catch (error) {
@@ -179,7 +180,7 @@ router.get('/', async (req, res) => {
 // GET /api/v1/financing/:id - Get financing request by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -195,7 +196,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/financing/:id/status - Update financing request status
 router.put('/:id/status', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var { status } = req.body
 

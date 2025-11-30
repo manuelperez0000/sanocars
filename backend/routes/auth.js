@@ -4,12 +4,14 @@ var router = express.Router()
 var jwt = require('jsonwebtoken')
 
 var bcrypt = require('bcryptjs')
+var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 
 // POST /api/v1/auth/login
 router.post('/login', async function (req, res) {
   try {
-    var db = req.app.locals.db
-    if (!db) return res.status(500).json({ success: false, error: 'Database not connected' })
+  const db = await mysql.createConnection(connect)
+  if (!db) return res.status(500).json({ success: false, error: 'Database not connected' })
 
     var email = req.body.email
     var password = req.body.password

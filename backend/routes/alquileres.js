@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/alquileres - Get all rentals
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var [rows] = await db.execute(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM alquileres a
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/alquileres - Create a new rental
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var vehiculo_id = req.body.vehiculo_id || null
@@ -72,7 +73,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/alquileres/:id - Get rental by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
@@ -93,7 +94,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/alquileres/:id - Update rental
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     // Allowed fields to update
@@ -139,7 +140,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/alquileres/:id - Delete rental
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [result] = await db.execute('DELETE FROM alquileres WHERE id = ?', [id])
     if (result.affectedRows === 0) {

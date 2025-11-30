@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/inventory - Get all inventory items
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var [rows] = await db.execute('SELECT * FROM inventario ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/inventory - Create a new inventory item
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var nombre = req.body.nombre || null
@@ -55,7 +56,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/inventory/:id - Get inventory item by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute('SELECT * FROM inventario WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -71,7 +72,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/inventory/:id - Update inventory item
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     // Allowed fields to update
@@ -112,7 +113,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/inventory/:id - Delete inventory item
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     var [result] = await db.execute('DELETE FROM inventario WHERE id = ?', [id])

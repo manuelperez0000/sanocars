@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+const mysql = require('mysql2/promise')
 const express = require('express')
 const router = express.Router()
 const connect = require('../db/connect')
@@ -6,7 +7,7 @@ const connect = require('../db/connect')
 // GET /api/v1/configuracion - Get all configurations
 router.get('/', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
 
         const [rows] = await db.query('SELECT * FROM configuracion ORDER BY fecha_creacion DESC')
         res.json({
@@ -25,7 +26,7 @@ router.get('/', async (req, res) => {
 // GET /api/v1/configuracion/:tipo - Get configurations by type
 router.get('/:tipo', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { tipo } = req.params
 
         const [rows] = await db.query('SELECT * FROM configuracion WHERE tipo = ? ORDER BY fecha_creacion DESC', [tipo])
@@ -45,7 +46,7 @@ router.get('/:tipo', async (req, res) => {
 // POST /api/v1/configuracion - Create new configuration
 router.post('/', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { tipo, texto, whatsapp } = req.body
 
         if (!tipo || !['phone', 'email', 'schedule'].includes(tipo)) {
@@ -86,7 +87,7 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/configuracion/:id - Update configuration
 router.put('/:id', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { id } = req.params
         const { tipo, texto, whatsapp } = req.body
 
@@ -135,7 +136,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/configuracion/:id - Delete configuration
 router.delete('/:id', async (req, res) => {
     try {
-        var db = connect(req, res)
+        const db = await mysql.createConnection(connect)
         const { id } = req.params
 
         const [result] = await db.query('DELETE FROM configuracion WHERE id = ?', [id])

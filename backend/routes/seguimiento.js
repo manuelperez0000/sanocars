@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/seguimiento - Get vehicles with installment payments
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+  const db = await mysql.createConnection(connect)
 
     // Query to get vehicles that have installment sales
     var query = `
@@ -53,12 +54,12 @@ router.get('/', async (req, res) => {
 router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
 
   try {
-    const { status } = req.body
-    const { vehicleId, cuotaIndex } = req.params
-    console.log(vehicleId, " ", cuotaIndex, " ", status)
-    var db = connect(req, res)
-    const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
-    var [result] = await db.execute(queryPagos)
+  const { status } = req.body
+  const { vehicleId, cuotaIndex } = req.params
+  console.log(vehicleId, " ", cuotaIndex, " ", status)
+  const db = await mysql.createConnection(connect)
+  const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
+  var [result] = await db.execute(queryPagos)
 
 
     const pagos = JSON.parse(result[0].siguientes_pagos)

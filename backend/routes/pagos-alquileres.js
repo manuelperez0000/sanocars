@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 var connect = require('../db/connect.js')
+var mysql = require('mysql2/promise')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/pagos-alquileres - Get all rental payments
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var [rows] = await db.execute(`
       SELECT pa.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM pagos_alquileres pa
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/pagos-alquileres - Create a new rental payment record
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var vehiculo_id = req.body.vehiculo_id || null
@@ -82,7 +83,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/pagos-alquileres/:id - Get rental payment by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [rows] = await db.execute(`
       SELECT pa.*, v.marca, v.modelo, v.numero_placa, v.anio
@@ -110,7 +111,7 @@ router.get('/:id', async (req, res) => {
 // GET /api/v1/pagos-alquileres/vehiculo/:vehiculo_id - Get rental payment by vehicle id
 router.get('/vehiculo/:vehiculo_id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { vehiculo_id } = req.params
     var [rows] = await db.execute(`
       SELECT pa.*, v.marca, v.modelo, v.numero_placa, v.anio
@@ -138,9 +139,8 @@ router.get('/vehiculo/:vehiculo_id', async (req, res) => {
 // PUT /api/v1/pagos-alquileres/:id - Update rental payment
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
-
     // Allowed fields to update
     var fields = [
       'vehiculo_id', 'pagos_realizados', 'fecha_proximo_pago'
@@ -196,7 +196,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/pagos-alquileres/:id - Delete rental payment
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
     var { id } = req.params
     var [result] = await db.execute('DELETE FROM pagos_alquileres WHERE id = ?', [id])
     if (result.affectedRows === 0) {

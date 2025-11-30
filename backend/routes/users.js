@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 var connect = require("../db/connect.js")
+var mysql = require("mysql2/promise")
 var express = require("express")
 var router = express.Router()
 var responser = require("../network/responser.js")
-
 // GET /api/v1/users - Get all users
+
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+
+    const db = await mysql.createConnection(connect) 
 
     var [body] = await db.execute('SELECT * FROM users ORDER BY id DESC')
 
@@ -21,7 +23,8 @@ router.get('/', async (req, res) => {
 // POST /api/v1/users - Create a new user (limited fields)
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
+    if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var name = req.body.name || null
@@ -85,7 +88,7 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/users/:id/restore - Restore a soft-deleted user
 router.put('/:id/restore', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
 
     var { id } = req.params
 
@@ -116,7 +119,7 @@ router.put('/:id/restore', async (req, res) => {
 // DELETE /api/v1/users/:id - Soft delete a user
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
 
     var { id } = req.params
 
@@ -148,7 +151,7 @@ router.delete('/:id', async (req, res) => {
 // GET /api/v1/users/:id - Get single user by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
 
     var { id } = req.params
     var [rows] = await db.execute('SELECT * FROM users WHERE id = ? LIMIT 1', [id])
@@ -166,7 +169,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/users/:id - Update user fields
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    const db = await mysql.createConnection(connect)
 
     var { id } = req.params
     var { name, lastname, nationality, address, email, mobile_no, role } = req.body
