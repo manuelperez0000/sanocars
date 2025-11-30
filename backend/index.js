@@ -4,9 +4,9 @@ var cors = require("cors");
 var router = require("./router.js");
 var initDb = require("./db/dbConection.js")
 var dotenv = require("dotenv");
-var morgan = require("morgan")
-var app = express()
-dotenv.config()
+var morgan = require("morgan");
+var app = express();
+dotenv.config();
 
 
 // Middlewares
@@ -28,7 +28,7 @@ async function connectDb() {
   var db = await initDb();
   var PORT = process.env.PORT || 3000
   if (!db) {
-    console.error('⚠️ El servidor arrancó en modo degradado (sin DB)');
+    console.error('El servidor arrancó en modo degradado (sin DB)');
   } else {
     app.locals.db = db;
   }
