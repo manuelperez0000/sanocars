@@ -2,8 +2,8 @@
 // Falls back to localhost defaults when env vars are not set.
 /* export const apiurl = import.meta.env.VITE_API_URL 
 export const topurl = import.meta.env.VITE_TOP_URL  */
-export const apiurl = "http://app.sanocars.com/api/v1"
-export const topurl = "http://app.sanocars.com"
+export const apiurl = "https://app.sanocars.com/api/v1"
+export const topurl = "https://app.sanocars.com"
 
 export function formatNumber(numStr) {
     var part1 = numStr.substring(0, 3);
