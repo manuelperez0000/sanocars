@@ -32,6 +32,7 @@ import Configuracion from "./pages/admin/configuracion"
 import Reservas from "./pages/admin/reservas"
 import Calendario from "./pages/admin/calendario"
 import Alquilados from "./pages/admin/alquilados"
+import Test from "./pages/test"
 
 const Router = () => {
     return <>
@@ -45,6 +46,7 @@ const Router = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/services" element={<PageLayout><Services /></PageLayout>} />
             <Route path="/service/:id" element={<PageLayout><Service /></PageLayout>} />
+            <Route path="/test" element={<Test />}/>
             
             {/* Admin */}
             

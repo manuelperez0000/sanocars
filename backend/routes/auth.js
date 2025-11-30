@@ -2,10 +2,12 @@
 var express = require('express')
 var router = express.Router()
 var jwt = require('jsonwebtoken')
-
+var dotenv = require('dotenv')
 var bcrypt = require('bcryptjs')
 var connect = require('../db/connect.js')
 var mysql = require('mysql2/promise')
+dotenv.config();
+
 
 // POST /api/v1/auth/login
 router.post('/login', async function (req, res) {
@@ -43,10 +45,12 @@ router.post('/login', async function (req, res) {
     delete user.pass
     delete user.password_hash
 
-    res.json({ success: true, data: { user: user, token: token } })
+    db.end();
+
+    return res.json({ success: true, data: { user: user, token: token } })
   } catch (err) {
     console.error('Auth login error:', err)
-    res.status(500).json({ success: false, error: 'Error interno del servidor' })
+    res.status(500).json({ success: false, error: err })
   }
 })
 
