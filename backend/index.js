@@ -4,17 +4,20 @@ var cors = require("cors");
 var router = require("./router.js");
 var initDb = require("./db/dbConection.js")
 var dotenv = require("dotenv");
-var morgan = require("morgan");
 var app = express();
 dotenv.config();
-
 
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cors())
 
-app.use(morgan("dev"))
+app.use(cors())
+/* app.use(cors({
+  origin: 'https://sanocars.com',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+})); */
 
 // Health
 app.get('/', (req, res) => {
