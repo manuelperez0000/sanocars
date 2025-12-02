@@ -2,9 +2,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
-import {  topurl } from '../../utils/globals'
-import carrito from '../../assets/carrito.svg'
+import { topurl } from '../../utils/globals'
+import useConfiguracion from '../../hooks/useConfiguracion'
 const InformeVehiculos = () => {
+    const {getPhones,getEmails} = useConfiguracion()
     const navigate = useNavigate()
     const { informes, loading, error, deleteInforme } = useInformeVehiculos()
     const [selectedInforme, setSelectedInforme] = useState(null)
@@ -76,10 +77,6 @@ const InformeVehiculos = () => {
                     .invoice-header {
                         display: flex;
                         justify-content: space-between;
-                        align-items: center;
-                        border-bottom: 2px solid #333;
-                        padding-bottom: 15px;
-                        margin-bottom: 20px;
                     }
 
                     .company-info {
@@ -110,7 +107,7 @@ const InformeVehiculos = () => {
 
                     .date-section {
                         text-align: right;
-                        margin-bottom: 20px;
+                        margin-bottom: 10px;
                         font-size: 14px;
                     }
 
@@ -119,33 +116,32 @@ const InformeVehiculos = () => {
                     }
 
                     .section {
-                        margin-bottom: 10px;
+                        margin-bottom: 5px;
                     }
 
                     .section-header {
                         background: #f8f9fa;
                         padding: 10px 15px;
-                        border-bottom: 1px solid #e0e0e0;
                         font-weight: bold;
                         font-size: 14px;
                         color: #333;
                     }
 
                     .section-content {
-                        padding: 15px;
+                        padding: 0px 10px;
                     }
 
                     .info-grid {
                         display: grid;
                         grid-template-columns: repeat(2, 1fr);
                         gap: 15px;
-                        margin-bottom: 15px;
+                        margin-bottom: 5px;
                     }
                     .info-grid-2 {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
                         gap: 15px;
-                        margin-bottom: 15px;
+                        margin-bottom: 5px;
                     }
 
                     .info-item {
@@ -154,8 +150,50 @@ const InformeVehiculos = () => {
                         align-items: center;
                         padding: 5px 5px;
                         border:1px solid black;
-                        justify-content: center;
+                        justify-content: start;
                     }
+                    .info-item-2{
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 5px 5px;
+                        border:1px solid black;
+                        justify-content: start;
+                        height:260px;
+                    }
+                        .company-info-section {
+                            display: flex;
+                            flex-direction: column;
+                            padding: 15px;
+                            border: 1px solid black;
+                            height: 260px;
+                            justify-content: center;
+                            align-items: center;
+                            text-align: center;
+                        }
+
+                        .company-info-header {
+                            font-weight: bold;
+                            font-size: 14px;
+                            color: #000000ff;
+                            text-transform: uppercase;
+                            margin-bottom: 10px;
+                            width: 100%;
+                            text-align: center;
+                        }
+
+                        .company-info-content h3 {
+                            font-size: 18px;
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                            color: #333;
+                        }
+
+                        .company-info-content p {
+                            margin: 5px 0;
+                            font-size: 12px;
+                            line-height: 1.4;
+                        }
 
                     .info-label {
                         font-weight: bold;
@@ -208,7 +246,7 @@ const InformeVehiculos = () => {
                     }
 
                     .footer {
-                        margin-top: 30px;
+                        margin-top: 10px;
                         text-align: center;
                         font-size: 10px;
                         color: #666;
@@ -240,17 +278,21 @@ const InformeVehiculos = () => {
                 <div class="invoice-container">
                     <!-- Invoice Header -->
                     <div class="invoice-header">
-                        <div class="company-info">
-                            <img src="/logo.png" alt="Sanocars Logo" class="company-logo">
-                            <div class="company-name">Sanocars</div>
+                        <div>
+                            <h2>Informe de Inspección de Vehículos</h2>
+                            <div>
+                                <div>${new Date().toLocaleDateString('es-VE')} - ${new Date().toLocaleTimeString('es-VE')}</div>
+                                <div>ID: #${reportData.id}</div>
+                            </div>
                         </div>
-                        <div class="document-title">Informe de Inspección de Vehículo</div>
+                        <div style="text-align: right;">
+                            <h1>SANOCARS</h1>
+                            Dirección: Numazu Shizuoka, Japón <br>
+                            Teléfono: ${getPhones()[0]?.texto || '080 9117 1993'}<br>
+                            Email: ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}
+                        </div>
                     </div>
 
-                    <!-- Date -->
-                    <div class="date-section">
-                        <strong>Fecha:</strong> ${formatDate(reportData.fecha_ingreso)}
-                    </div>
 
                     <!-- Client Information -->
                     <div class="">
@@ -354,11 +396,11 @@ const InformeVehiculos = () => {
                         <div class="section-header">Información Adicional</div>
                         <div class="section-content">
                             <div class="info-grid">
-                                <div class="info-item">
+                                <div class="info-item" style="height:200px">
                                     <div class="info-label">Observaciones</div>
                                     <div class="text-area">${reportData.vehiculo_observacion_general || 'N/A'}</div>
                                 </div>
-                                <div class="info-item">
+                                <div class="info-item" style="height:200px">
                                     <div class="info-label">Trabajos de Pintura</div>
                                     <div class="text-area">${reportData.vehiculo_trabajos_realizar || 'N/A'}</div>
                                 </div>
@@ -366,20 +408,20 @@ const InformeVehiculos = () => {
                         </div>
                     </div>
                         <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
-                            <div class="info-item">
-                                <img src="${carrito}" alt="Carrito" style="width: 130px; height: 130px; object-fit: cover;">
+                            <div class="company-info-section">
+                                <div class="company-info-header">Información de la Empresa</div>
+                                <div class="company-info-content">
+                                    <h3>SANOCARS</h3>
+                                    <p><strong>Dirección:</strong> Numazu Shizuoka, Japón</p>
+                                    <p><strong>Teléfono:</strong> ${getPhones()[0]?.texto || '080 9117 1993'}</p>
+                                    <p><strong>Email:</strong> ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}</p>
+                                </div>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item-2">
                                 <div class="info-label">Detalles de Pintura</div>
                                 <div class="text-area">${reportData.vehiculo_detalles_pintura || 'N/A'}</div>
                             </div>
                         </div>
-
-                    <!-- Footer -->
-                    <div class="footer">
-                        <div>Informe generado el ${new Date().toLocaleDateString('es-VE')} a las ${new Date().toLocaleTimeString('es-VE')}</div>
-                        <div>ID del Informe: #${reportData.id}</div>
-                    </div>
                 </div>
             </body>
             </html>

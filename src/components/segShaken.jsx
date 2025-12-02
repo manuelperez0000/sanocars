@@ -2,6 +2,104 @@ import React, { useEffect, useState } from 'react'
 import request from '../utils/request'
 import { apiurl } from '../utils/globals'
 
+const ViewModal = ({ show, onHide, item }) => {
+  if (!show || !item) return null
+
+  const renderField = (key, value) => {
+    if (value === null || value === undefined || value === '') return null
+
+    let displayValue = value
+    if (key.includes('fecha') && value) {
+      displayValue = new Date(value).toLocaleDateString()
+    }
+
+    return (
+      <div key={key} className="mb-2">
+        <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {displayValue}
+      </div>
+    )
+  }
+
+  return (
+    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog modal-lg">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Detalles del Registro</h5>
+            <button type="button" className="btn-close" onClick={onHide}></button>
+          </div>
+          <div className="modal-body">
+            {Object.entries(item).map(([key, value]) => renderField(key, value))}
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onHide}>Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ShakenTable = ({ data, marcaKey, modeloKey, anioKey, fechaKey, keyField, emptyMessage, onViewClick }) => {
+ 
+  const calcDays = (shaken) => {
+    const today = new Date();
+    const shakenDate = new Date(shaken);
+    const diffTime = shakenDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays
+  };
+
+  const textCalcDays = (days) => {
+    return days < 0 ? `Vencido hace ${days * -1} dias` : `${days} dias restantes`
+  }
+
+  const styles = (days) => {
+    if(days < 0){
+      return { backgroundColor: '#dc3545', color: '#fff' } 
+    }
+    if(days < 59){
+      return {backgroundColor: '#e9ac29ff', color: '#020202ff'}
+    }
+  }
+
+  return (
+    <div className="table-responsive">
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Año</th>
+            <th>Fecha Shaken</th>
+            <th>Dias restantes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data && data.length > 0 ? data.map(item => {
+            
+            return (
+              <tr key={item[keyField]}>
+                <td style={styles(calcDays(item[fechaKey]))}>{item[marcaKey] || '-'}</td>
+                <td style={styles(calcDays(item[fechaKey]))}>{item[modeloKey] || '-'}</td>
+                <td style={styles(calcDays(item[fechaKey]))}>{item[anioKey] || '-'}</td>
+                <td style={styles(calcDays(item[fechaKey]))}>{item[fechaKey] ? new Date(item[fechaKey]).toLocaleDateString() : '-'}</td>
+                <td style={styles(calcDays(item[fechaKey]))}> {textCalcDays(calcDays(item[fechaKey]))} </td>
+                <td> <button className='btn btn-success' onClick={() => onViewClick && onViewClick(item)}> Ver </button> </td>
+              </tr>
+            )
+          }) : (
+            <tr>
+              <td colSpan={4} className="text-center">{emptyMessage}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 const SegShaken = () => {
   const [vehicles, setVehicles] = useState([])
   const [loading, setLoading] = useState(false)
@@ -11,6 +109,8 @@ const SegShaken = () => {
   const [reports, setReports] = useState([])
   const [errorReports, setErrorReports] = useState(null)
   const [loadingReports, setLoadingReports] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
 
   useEffect(() => {
     fetch()
@@ -105,7 +205,17 @@ const SegShaken = () => {
     }
   }
 
-  function isShakenDueSoon(dateStr) {
+  const handleViewClick = (item) => {
+    setSelectedItem(item)
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedItem(null)
+  }
+
+  /* function isShakenDueSoon(dateStr) {
     if (!dateStr) return false
     try {
       var shaken = new Date(dateStr)
@@ -120,7 +230,7 @@ const SegShaken = () => {
     } catch {
       return false
     }
-  }
+  } */
 
   return (
     <div>
@@ -133,35 +243,16 @@ const SegShaken = () => {
         {error && <div className="alert alert-danger">{error}</div>}
 
         {!loading && !error && (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Marca</th>
-                  <th>Modelo</th>
-                  <th>Año</th>
-                  <th>Fecha Shaken</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vehicles && vehicles.length > 0 ? vehicles.map(v => {
-                  const dueSoon = isShakenDueSoon(v.fecha_shaken)
-                  return (
-                    <tr key={v.id} >
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined} >{v.marca || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined} >{v.modelo || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined} >{v.anio || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined} >{v.fecha_shaken ? new Date(v.fecha_shaken).toLocaleDateString() : '-'}</td>
-                    </tr>
-                  )
-                }) : (
-                  <tr>
-                    <td colSpan={4} className="text-center">No hay vehículos disponibles</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <ShakenTable
+            data={vehicles}
+            marcaKey="marca"
+            modeloKey="modelo"
+            anioKey="anio"
+            fechaKey="fecha_shaken"
+            keyField="id"
+            emptyMessage="No hay vehículos disponibles"
+            onViewClick={handleViewClick}
+          />
         )}
       </section>
       <section>
@@ -170,78 +261,39 @@ const SegShaken = () => {
         {errorInspections && <div className="alert alert-danger">{errorInspections}</div>}
 
         {!loading && !errorInspections && (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Marca</th>
-                  <th>Modelo</th>
-                  <th>Año</th>
-                  <th>Fecha Shaken</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inspections && inspections.length > 0 ? inspections.map(it => {
-                  const dueSoon = isShakenDueSoon(it.vehiculo_fecha_shaken)
-                  return (
-                    <tr key={it.id} >
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{it.vehiculo_marca || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{it.vehiculo_modelo || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{it.vehiculo_anio || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{it.vehiculo_fecha_shaken ? new Date(it.vehiculo_fecha_shaken).toLocaleDateString() : '-'}</td>
-                    </tr>
-                  )
-                }) : (
-                  <tr>
-                    <td colSpan={4} className="text-center">No hay inspecciones disponibles</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <ShakenTable
+            data={inspections}
+            marcaKey="vehiculo_marca"
+            modeloKey="vehiculo_modelo"
+            anioKey="vehiculo_anio"
+            fechaKey="vehiculo_fecha_shaken"
+            keyField="id"
+            emptyMessage="No hay inspecciones disponibles"
+            onViewClick={handleViewClick}
+          />
         )}
       </section>
 
-      <section>
-        <h5> Informe de vehiculos </h5>
-      </section>
       <section>
         <h5>Informes de Vehículos (Shaken)</h5>
         {loadingReports && <div>Cargando informes...</div>}
         {errorReports && <div className="alert alert-danger">{errorReports}</div>}
 
         {!loadingReports && !errorReports && (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Marca</th>
-                  <th>Modelo</th>
-                  <th>Año</th>
-                  <th>Fecha Shaken</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports && reports.length > 0 ? reports.map(r => {
-                  const dueSoon = isShakenDueSoon(r.vehiculo_fecha_shaken)
-                  return (
-                    <tr key={r.id} >
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{r.vehiculo_marca || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{r.vehiculo_modelo || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{r.vehiculo_anio || '-'}</td>
-                      <td style={dueSoon ? { backgroundColor: '#dc3545', color: '#fff' } : undefined}>{r.vehiculo_fecha_shaken ? new Date(r.vehiculo_fecha_shaken).toLocaleDateString() : '-'}</td>
-                    </tr>
-                  )
-                }) : (
-                  <tr>
-                    <td colSpan={4} className="text-center">No hay informes disponibles</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <ShakenTable
+            data={reports}
+            marcaKey="vehiculo_marca"
+            modeloKey="vehiculo_modelo"
+            anioKey="vehiculo_anio"
+            fechaKey="vehiculo_fecha_shaken"
+            keyField="id"
+            emptyMessage="No hay informes disponibles"
+            onViewClick={handleViewClick}
+          />
         )}
       </section>
+
+      <ViewModal show={showModal} onHide={handleCloseModal} item={selectedItem} />
     </div>
   )
 }

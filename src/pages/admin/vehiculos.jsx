@@ -39,7 +39,8 @@ const Vehiculos = () => {
         closeRentalModal,
         handleRentalChange,
         handleSaveRental,
-        getImages
+        getImages,
+        dateFormater
     } = useVehicles()
 
     return (
@@ -83,6 +84,7 @@ const Vehiculos = () => {
                                                     <th>Año</th>
                                                     <th>Kms</th>
                                                     <th>Color</th>
+                                                    <th>Precio</th>
                                                     <th>Fecha Shaken</th>
                                                     <th>Status</th>
                                                     <th>Acciones</th>
@@ -99,7 +101,8 @@ const Vehiculos = () => {
                                                             <td>{v.anio}</td>
                                                             <td>{v.kilometraje}</td>
                                                             <td>{v.color}</td>
-                                                            <td>{v.fecha_shaken || '-'}</td>
+                                                            <td>¥{parseFloat(v.precio || 0).toFixed(2)}</td>
+                                                            <td>{dateFormater(v.fecha_shaken) || '-'}</td>
                                                             <td>{v.status}</td>
                                                             <td>
                                                                 <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(v)}>Editar</button>
@@ -115,7 +118,7 @@ const Vehiculos = () => {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan={10} className="text-center p-4">No hay vehículos</td>
+                                                        <td colSpan={11} className="text-center p-4">No hay vehículos</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -161,6 +164,10 @@ const Vehiculos = () => {
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Color</label>
                                             <input name="color" value={form.color || ''} onChange={handleChange} className="form-control" />
+                                        </div>
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Precio</label>
+                                            <input name="precio" type="number" value={form.precio || ''} onChange={handleChange} className="form-control" step="0.01" min="0" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Número de placa</label>
@@ -385,7 +392,7 @@ const Vehiculos = () => {
                                                     <input
                                                         type="number"
                                                         name="monto_inicial"
-                                                        value={salesForm.monto_inicial || 0}
+                                                        value={salesForm.monto_inicial}
                                                         onChange={handleSalesChange}
                                                         className="form-control"
                                                         step="0.01"
@@ -397,7 +404,7 @@ const Vehiculos = () => {
                                                     <input
                                                         type="number"
                                                         name="tasa_interes"
-                                                        value={salesForm.tasa_interes || 0}
+                                                        value={salesForm.tasa_interes }
                                                         onChange={handleSalesChange}
                                                         className="form-control"
                                                         step="0.01"
@@ -417,7 +424,7 @@ const Vehiculos = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between mb-2">
                                                         <strong>Precio de Venta:</strong>
-                                                        <span>${parseFloat(salesForm.precio_venta || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(salesForm.precio_venta || 0).toFixed(2)}</span>
                                                     </div>
                                                     {salesForm.tipo_pago === 'cuotas' && (
                                                         <>
@@ -427,11 +434,11 @@ const Vehiculos = () => {
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Financiamiento:</strong>
-                                                                <span>${(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)).toFixed(2)}</span>
+                                                                <span>¥ {(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)).toFixed(2)}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Intereses ({salesForm.tasa_interes}%):</strong>
-                                                                <span>${((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100)).toFixed(2)}</span>
+                                                                <span>¥ {((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100)).toFixed(2)}</span>
                                                             </div>
                                                         </>
                                                     )}
@@ -529,7 +536,7 @@ const Vehiculos = () => {
                                                 />
                                             </div>
                                             <div className="col-md-6 mb-3">
-                                                <label className="form-label">Precio de Alquiler *</label>
+                                                <label className="form-label">Precio de Alquiler Mensual ¥</label>
                                                 <input
                                                     type="number"
                                                     name="precio_alquiler"

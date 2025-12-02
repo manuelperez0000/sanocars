@@ -123,7 +123,7 @@ const SegAlquileres = () => {
                   <div className="mb-3">
                     <strong className="text-muted">Precio Mensual:</strong>
                     <p className="mb-1 text-success fw-bold">
-                      ${parseFloat(rental.precio_alquiler).toFixed(2)}
+                      ¥{parseFloat(rental.precio_alquiler).toFixed(2)}
                     </p>
                   </div>
 
@@ -145,7 +145,7 @@ const SegAlquileres = () => {
                         ))}
                         <div className="mt-2 pt-2">
                           <small className="text-muted">
-                            Total pagado: ${(rental.payments.length * parseFloat(rental.precio_alquiler)).toFixed(2)}
+                            Total pagado: ¥{(rental.payments.length * parseFloat(rental.precio_alquiler)).toFixed(2)}
                           </small>
                         </div>
                       </div>

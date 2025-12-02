@@ -77,7 +77,7 @@ const Facturacion = () => {
                                                     <td>{product.id}</td>
                                                     <td>{product.nombre}</td>
                                                     <td>{product.fabricante}</td>
-                                                    <td>${product.precio?.toLocaleString() || 0}</td>
+                                                    <td>¥{product.precio?.toLocaleString() || 0}</td>
                                                     <td>{product.cantidad || 0}</td>
                                                     <td>
                                                         <input

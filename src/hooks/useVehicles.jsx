@@ -47,7 +47,7 @@ const useVehicles = () => {
     }
 
     function openNew() {
-        
+
         setEditing(null)
         const newForm = getEmptyForm()
         // Ensure at least one empty image input
@@ -58,8 +58,13 @@ const useVehicles = () => {
         setModalOpen(true)
     }
 
+    const dateFormater = (date) => {
+        const fecha_ingreso = new Date(date);
+        return fecha_ingreso.toISOString().split("T")[0];
+    }
+
     function openEdit(v) {
-        
+
         setEditing(v)
         // copy to avoid mutation
         const formData = Object.assign({}, v)
@@ -76,6 +81,12 @@ const useVehicles = () => {
             }
         }
         formData.imagenes = imagenes
+
+        // Ensure dates are in YYYY-MM-DD format for HTML date inputs
+        const fecha_ingreso = dateFormater(formData.fecha_ingreso)
+        formData.fecha_ingreso = fecha_ingreso
+        const fecha_shaken = dateFormater(formData.fecha_shaken)
+        formData.fecha_shaken = fecha_shaken
 
         setForm(formData)
         setModalOpen(true)
@@ -171,10 +182,10 @@ const useVehicles = () => {
             }
 
             if (editing && editing.id) {
-                
+
                 await request.put(apiurl + '/vehicles/' + editing.id, dataToSend)
             } else {
-                
+
                 await request.post(apiurl + '/vehicles', dataToSend)
             }
             setModalOpen(false)
@@ -370,7 +381,7 @@ const useVehicles = () => {
 
     async function handleSaveSale(e) {
         e.preventDefault()
-       
+
         try {
             const saleData = {
                 tipo: 'vehiculo',
@@ -423,10 +434,9 @@ const useVehicles = () => {
                         line-height: 1.4;
                     }
                     .invoice-header {
-                        text-align: center;
-                        border-bottom: 2px solid #333;
-                        padding-bottom: 20px;
-                        margin-bottom: 30px;
+                        display:flex;
+                        justify-content:space-between;
+                        border-bottom:1px solid black;
                     }
                     .invoice-title {
                         font-size: 28px;
@@ -535,8 +545,16 @@ const useVehicles = () => {
             </head>
             <body>
                 <div class="invoice-header">
-                    <h1 class="invoice-title">Factura de Venta</h1>
-                    <p class="invoice-subtitle">Vehículo: ${vehicle.marca} ${vehicle.modelo}</p>
+                    <div>
+                        <h3 class="invoice-title">Venta de vehiculo</h3>
+                        <p class="invoice-subtitle">Vehículo: ${vehicle.marca} ${vehicle.modelo}</p>
+                    </div>
+                    <div  style="text-align:end">
+                        <h2>SANOCARS</h2>
+                        <p><strong>Dirección:</strong> Numazu Shizuoka, Japón</p>
+                        <p><strong>Teléfono:</strong> 08091171993</p>
+                        <p><strong>Email:</strong> sanocars@hotmail.com</p>
+                    </div>
                 </div>
 
                 <div class="invoice-info">
@@ -589,9 +607,9 @@ const useVehicles = () => {
                     <div class="details-grid">
                         <div class="detail-item"><strong>Precio de Venta:</strong> $${parseFloat(saleData.precio_venta || 0).toFixed(2)}</div>
                         ${saleData.tipo_pago === 'cuotas' ? `
-                        <div class="detail-item"><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</div>
-                        <div class="detail-item"><strong>Financiamiento:</strong> $${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)).toFixed(2)}</div>
-                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> $${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Monto Inicial:</strong> ¥${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Financiamiento:</strong> ¥${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)).toFixed(2)}</div>
+                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</div>
                         <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
                         <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
                         <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</div>
@@ -618,21 +636,21 @@ const useVehicles = () => {
                         </thead>
                         <tbody>
                             ${(() => {
-                                try {
-                                    const pagos = typeof saleData.siguientes_pagos === 'string'
-                                        ? JSON.parse(saleData.siguientes_pagos)
-                                        : saleData.siguientes_pagos;
-                                    return pagos && pagos.length > 0 ? pagos.map(pago => `
+                    try {
+                        const pagos = typeof saleData.siguientes_pagos === 'string'
+                            ? JSON.parse(saleData.siguientes_pagos)
+                            : saleData.siguientes_pagos;
+                        return pagos && pagos.length > 0 ? pagos.map(pago => `
                                         <tr>
                                             <td style="border: 1px solid #ddd; padding: 8px;">${pago.numero_cuota}</td>
                                             <td style="border: 1px solid #ddd; padding: 8px;">${new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
                                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${pago.monto}</td>
                                         </tr>
                                     `).join('') : '';
-                                } catch {
-                                    return '';
-                                }
-                            })()}
+                    } catch {
+                        return '';
+                    }
+                })()}
                         </tbody>
                     </table>
                 </div>
@@ -642,21 +660,21 @@ const useVehicles = () => {
                     <div class="totals-box">
                         <div class="totals-row">
                             <span>Precio de Venta:</span>
-                            <span>$${parseFloat(saleData.precio_venta || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(saleData.precio_venta || 0).toFixed(2)}</span>
                         </div>
                         ${saleData.tipo_pago === 'cuotas' ? `
                         <div class="totals-row">
                             <span>Menos Inicial:</span>
-                            <span>-$${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</span>
+                            <span>-¥${parseFloat(saleData.monto_inicial || 0).toFixed(2)}</span>
                         </div>
                         <div class="totals-row">
                             <span>Más Intereses:</span>
-                            <span>+$${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</span>
+                            <span>+¥${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(2)}</span>
                         </div>
                         ` : ''}
                         <div class="totals-row total">
                             <span>Total a Pagar:</span>
-                            <span>$${parseFloat(saleData.total_con_intereses || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(saleData.total_con_intereses || 0).toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
@@ -879,7 +897,8 @@ const useVehicles = () => {
         handleRentalChange,
         handleSaveRental,
         getImages,
-        getArrayImages
+        getArrayImages,
+        dateFormater
     }
 }
 

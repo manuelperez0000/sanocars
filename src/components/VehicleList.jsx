@@ -6,7 +6,7 @@ export default function VehicleList({ vehicles, type }) {
 
   return (
     <div className="row">
-      {vehicles.map(v => (
+      {vehicles.map(v => v.status != 'eliminado' && (
 
         <div key={v.id} className="col-12 col-sm-6 col-md-4 mb-4">
           <VehicleCard type={type} v={v} />

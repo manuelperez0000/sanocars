@@ -38,6 +38,7 @@ router.post('/', async (req, res) => {
     var trabajos_realizar = req.body.trabajos_realizar || null
     var imagen1 = req.body.imagen1 || null
     var imagen2 = req.body.imagen2 || null
+    var precio = req.body.precio || null
     var status = req.body.status || 'En Venta'
 
     // Validate status
@@ -52,8 +53,8 @@ router.post('/', async (req, res) => {
     }
 
     // Use provided fecha_ingreso or current date
-    var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status]
+    var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, precio, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, precio, status]
 
     var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
@@ -93,7 +94,7 @@ router.put('/:id', async (req, res) => {
 
     // Allowed fields to update
     var fields = [
-      'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'observaciones', 'trabajos_realizar', 'imagen1', 'imagen2', 'status'
+      'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'observaciones', 'trabajos_realizar', 'imagen1', 'imagen2', 'precio', 'status'
     ]
 
     var updates = []

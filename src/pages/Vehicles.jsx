@@ -1,11 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaShoppingCart, FaCalendarAlt } from 'react-icons/fa'
 import VehicleList from '../components/VehicleList'
-import vehicles from '../data/vehicles'
-import PageLayout from '../components/PageLayout'
+import request from '../utils/request'
+import { apiurl } from '../utils/globals'
+/* import vehicles from '../data/vehicles' */
 
 const Vehicles = () => {
-    const [filterType, setFilterType] = useState('venta') // 'venta' or 'alquiler'
+    const [filterType, setFilterType] = useState('sold') // 'venta' or 'alquiler'
+    
+    const [vehiclesForSale, setVehiclesForSale] = useState([])
+    const [vehiclesForRent, setVehiclesForRent] = useState([])
+
+    const getVehicles = async () => {
+        const resp = await request.get(apiurl + '/vehicles')
+        if (resp?.data?.body) {
+            const allVehicles = resp.data.body
+            const sale = allVehicles.filter(v => v.status === 'En Venta')
+            const rent = allVehicles.filter(v => v.status === 'En alquiler')
+            setVehiclesForSale(sale)
+            setVehiclesForRent(rent)
+        }
+    }
+
+    useEffect(() => {
+        getVehicles()
+    }, [])
 
     const handleFilterChange = (event) => {
         setFilterType(event.target.value)
@@ -27,8 +46,8 @@ const Vehicles = () => {
                                     className="btn-check"
                                     name="vehicleType"
                                     id="venta"
-                                    value="venta"
-                                    checked={filterType === 'venta'}
+                                    value="sold"
+                                    checked={filterType === 'sold'}
                                     onChange={handleFilterChange}
                                 />
                                 <label className="btn btn-outline-dark flex-center gap-2" htmlFor="venta">
@@ -40,8 +59,8 @@ const Vehicles = () => {
                                     className="btn-check"
                                     name="vehicleType"
                                     id="alquiler"
-                                    value="alquiler"
-                                    checked={filterType === 'alquiler'}
+                                    value="rent"
+                                    checked={filterType === 'rent'}
                                     onChange={handleFilterChange}
                                 />
                                 <label className="btn btn-outline-dark flex-center gap-2" htmlFor="alquiler">
@@ -53,8 +72,8 @@ const Vehicles = () => {
 
                     {/* Vehicle List */}
                     <VehicleList
-                        vehicles={vehicles}
-                        type={filterType === 'alquiler' ? 'rent' : 'sale'}
+                        vehicles={filterType === 'rent' ? vehiclesForRent : vehiclesForSale}
+                        type={filterType}
                     />
                 </div>
             </div>

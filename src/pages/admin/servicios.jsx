@@ -254,8 +254,8 @@ const Servicios = () => {
                                 <tr>
                                     <td>${detail.descripcion || ''}</td>
                                     <td class="text-right">${detail.cantidad || 0}</td>
-                                    <td class="text-right">$${parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
-                                    <td class="text-right">$${parseFloat(detail.total || 0).toFixed(2)}</td>
+                                    <td class="text-right">¥${parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
+                                    <td class="text-right">¥${parseFloat(detail.total || 0).toFixed(2)}</td>
                                 </tr>
                             `).join('') : '<tr><td colspan="4" style="text-align: center;">No hay detalles disponibles</td></tr>'}
                         </tbody>
@@ -452,8 +452,8 @@ const Servicios = () => {
                                                             <tr key={index}>
                                                                 <td>{detail.descripcion}</td>
                                                                 <td>{detail.cantidad}</td>
-                                                                <td>${parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
-                                                                <td>${parseFloat(detail.total || 0).toFixed(2)}</td>
+                                                                <td>¥{parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
+                                                                <td>¥{parseFloat(detail.total || 0).toFixed(2)}</td>
                                                                 <td>
                                                                     <button type="button" className="btn btn-sm btn-warning me-1" onClick={() => openDetailsModal(detail, index)}>
                                                                         Editar
@@ -640,11 +640,11 @@ const Servicios = () => {
                                         />
                                     </div>
                                     <div className="col-md-6 mb-3">
-                                        <label className="form-label">Precio Unitario</label>
+                                        <label className="form-label">Precio Unitario en ¥</label>
                                         <input
                                             type="number"
                                             name="precio_unitario"
-                                            value={currentDetail.precio_unitario || 0}
+                                            value={currentDetail.precio_unitario}
                                             onChange={handleDetailChange}
                                             className="form-control"
                                             step="0.01"
@@ -653,7 +653,7 @@ const Servicios = () => {
                                     </div>
                                 </div>
                                 <div className="mb-3">
-                                    <strong>Total: ${((parseInt(currentDetail.cantidad) || 1) * (parseFloat(currentDetail.precio_unitario) || 0)).toFixed(2)}</strong>
+                                    <strong>Total: ¥{((parseInt(currentDetail.cantidad) || 1) * (parseFloat(currentDetail.precio_unitario) || 0)).toFixed(2)}</strong>
                                 </div>
                             </div>
                             <div className="modal-footer">

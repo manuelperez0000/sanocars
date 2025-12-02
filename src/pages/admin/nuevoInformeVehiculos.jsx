@@ -224,7 +224,7 @@ const NuevoInformeVehiculos = () => {
             </head>
             <body>
                 <div class="header">
-                    <h1>Informe de Inspección de Vehículo</h1>
+                    <h1>Informe de Inspección de Vehículo.</h1>
                     <p><strong>ID del Informe:</strong> ${reportData.id}</p>
                 </div>
 

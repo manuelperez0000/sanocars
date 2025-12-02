@@ -34,7 +34,7 @@ export default function VehicleCard({ v, type }) {
           </div>
           <hr className="mb-3 mt-2 p-0" />
           <div className="d-flex justify-content-between align-items-center">
-            <strong className="gray mb-0 price">${v?.precio?.toLocaleString() || 'Sin precio'}</strong>
+            <strong className="gray mb-0 price">¥{v?.precio?.toLocaleString() || 'Sin precio'}</strong>
             <span className="text-muted">{v?.kilometraje?.toLocaleString()} km</span>
           </div>
         </div>

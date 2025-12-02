@@ -5,7 +5,7 @@ import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, 
 import request from '../utils/request'
 import { apiurl, topurl } from '../utils/globals'
 
-function formatCurrency(n) { return `$${n.toLocaleString()}` }
+function formatCurrency(n) { return `¥${Number(n).toLocaleString()}` }
 
 export default function VehicleDetail() {
   const { id } = useParams()
@@ -285,12 +285,7 @@ export default function VehicleDetail() {
                             <strong>12 Meses</strong>
                           </div>
                         </div>
-                        <div className="col-6">
-                          <div className="p-2 border rounded">
-                            <small className="text-muted d-block">PLACA</small>
-                            <strong>{vehicle.numero_placa || 'N/A'}</strong>
-                          </div>
-                        </div>
+                        
                       </div>
                     </div>
 
