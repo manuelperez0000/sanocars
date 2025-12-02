@@ -6,6 +6,7 @@ import { apiurl } from '../utils/globals'
 const useHome = () => {
     const [vehiclesForSale, setVehiclesForSale] = useState([])
     const [vehiclesForRent, setVehiclesForRent] = useState([])
+    const [allVehicles,setAllVehicles] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
@@ -20,6 +21,7 @@ const useHome = () => {
             const resp = await request.get(apiurl + '/vehicles')
             if (resp?.data?.body) {
                 const allVehicles = resp.data.body
+                setAllVehicles(allVehicles)
                 const sale = allVehicles.filter(v => v.status === 'En Venta')
                 const rent = allVehicles.filter(v => v.status === 'En alquiler')
                 setVehiclesForSale(sale)
@@ -38,7 +40,8 @@ const useHome = () => {
         vehiclesForRent,
         loading,
         error,
-        refetch: fetchVehicles
+        refetch: fetchVehicles,
+        allVehicles
     }
 }
 

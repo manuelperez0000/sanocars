@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import useVehicles from '../hooks/useVehicles.jsx';
 import {  topurl } from "../utils/globals.js";
 
-export default function VehicleCard({ v, type }) {
+export default function VehicleCard({ v }) {
 
   const { getArrayImages } = useVehicles();
 
@@ -16,10 +16,17 @@ export default function VehicleCard({ v, type }) {
     return 'default-image.jpg';
   }
 
+  const getStatus = (status)=>{
+    if(status == "En alquiler") return  <><FaClock /> Renta </>
+    if(status == "En Venta") return  <><FaCreditCard /> Venta</>
+  }
+
   return (
     <Link to={`/vehiculo/${v.id}`} className="text-decoration-none text-reset">
       <div className="card mb-4 vehicle-card h-100">
-        <div className='badge27'> {type === "rent" ? <><FaClock /> Renta </> : <><FaCreditCard /> Venta</>} </div>
+        
+        <div className='badge27'> {getStatus(v.status)} </div>
+        
         <img src={v.imagen1 && getFirstImage(v.imagen1)} alt={v.modelo} className="card-img-top vehicle-card-img vehicle-image" />
         <div className="card-body pb-0 d-flex flex-column">
           <small className="texr-muted text-sm">{v.marca}</small>

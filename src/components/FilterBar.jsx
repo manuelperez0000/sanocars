@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function FilterBar({ sortOption, onChange, tittle }) {
   return (
     <div className="d-none d-md-flex align-items-center gap-3">

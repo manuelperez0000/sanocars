@@ -1,39 +1,46 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import objVehicles from '../utils/objVehicles.json'
+import useHome from '../hooks/useHome'
 
-const marcas = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW']
-const modelosPorMarca = {
-  Toyota: ['Corolla', 'Yaris', 'Camry'],
-  Honda: ['Civic', 'Accord', 'Fit'],
-  Ford: ['Focus', 'Fiesta', 'Mustang'],
-  Chevrolet: ['Spark', 'Cruze', 'Malibu'],
-  BMW: ['Serie 3', 'Serie 5']
-}
-
-export default function SearchBar({ onSearch }) {
+export default function SearchBar() {
+  const { allVehicles } = useHome()
   const [marca, setMarca] = useState('')
   const [modelo, setModelo] = useState('')
+  const navigate = useNavigate()
 
-  const modelos = marca ? modelosPorMarca[marca] || [] : []
+  // Get unique brands from allVehicles
+  const availableBrands = objVehicles.vehicles.filter(vehicle =>
+    allVehicles.some(v => v.marca === vehicle.name)
+  )
+
+  // Get unique models for the selected brand from allVehicles
+  const availableModels = marca ? marca.models.filter(model =>
+    allVehicles.some(v => v.marca === marca.name && v.modelo === model)
+  ) : []
 
   const handleSearch = (e) => {
     e.preventDefault()
-    onSearch?.({ marca, modelo })
+    if (marca && modelo) {
+      navigate(`/search?marca=${encodeURIComponent(marca.name)}&modelo=${encodeURIComponent(modelo)}`)
+    }
   }
 
   return (
     <div className='bg-search card p-4'>
+
       <h4 className='gray'>Buscar un vehiculo</h4>
       <form className="row gy-2 gx-2 align-items-center" onSubmit={handleSearch}>
         <div className="col-sm-5">
-          <select className="form-select form-select-lg" value={marca} onChange={e => { setMarca(e.target.value); setModelo('') }}>
+          <select className="form-select form-select-lg" value={marca ? JSON.stringify(marca) : ''} onChange={e => { setMarca(e.target.value ? JSON.parse(e.target.value) : ''); setModelo('') }}>
             <option value="">Marca</option>
-            {marcas.map(m => <option key={m} value={m}>{m}</option>)}
+            {availableBrands.map(m => <option key={m.name} value={JSON.stringify(m)}>{m.name}</option>)}
           </select>
         </div>
         <div className="col-sm-5">
           <select className="form-select form-select-lg" value={modelo} onChange={e => setModelo(e.target.value)}>
             <option value="">Modelo</option>
-            {modelos.map(m => <option key={m} value={m}>{m}</option>)}
+            {marca && availableModels.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
         </div>
         <div className="col-sm-2 d-grid">

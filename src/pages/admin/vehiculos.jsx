@@ -1,7 +1,8 @@
 import useVehicles from '../../hooks/useVehicles'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
-import { useNavigate } from 'react-router-dom' 
+import { useNavigate } from 'react-router-dom'
+import objVehicles from '../../utils/objVehicles.json'
 
 const Vehiculos = () => {
     const navigate = useNavigate()
@@ -42,6 +43,29 @@ const Vehiculos = () => {
         getImages,
         dateFormater
     } = useVehicles()
+
+    // Get models for selected brand
+    const getModelsForBrand = (brand) => {
+        const vehicle = objVehicles.vehicles.find(v => v.name === brand)
+        return vehicle ? vehicle.models : []
+    }
+
+    // Handle marca change - clear modelo if not in new brand's models
+    const handleMarcaChange = (e) => {
+        const newMarca = e.target.value
+        const currentModelo = form.modelo
+        const newModels = getModelsForBrand(newMarca)
+
+        // Update marca
+        handleChange(e)
+
+        // Clear modelo if it's not in the new brand's models
+        if (currentModelo && !newModels.includes(currentModelo)) {
+            setTimeout(() => {
+                handleChange({ target: { name: 'modelo', value: '' } })
+            }, 0)
+        }
+    }
 
     return (
         <div className="container-fluid py-4">
@@ -147,11 +171,21 @@ const Vehiculos = () => {
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Marca</label>
-                                            <input name="marca" value={form.marca || ''} onChange={handleChange} className="form-control" required />
+                                            <select name="marca" value={form.marca || ''} onChange={handleMarcaChange} className="form-control" required>
+                                                <option value="">Seleccionar marca</option>
+                                                {objVehicles.vehicles.map(vehicle => (
+                                                    <option key={vehicle.name} value={vehicle.name}>{vehicle.name}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Modelo</label>
-                                            <input name="modelo" value={form.modelo || ''} onChange={handleChange} className="form-control" required />
+                                            <select name="modelo" value={form.modelo || ''} onChange={handleChange} className="form-control" required>
+                                                <option value="">Seleccionar modelo</option>
+                                                {form.marca && getModelsForBrand(form.marca).map(model => (
+                                                    <option key={model} value={model}>{model}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Año</label>

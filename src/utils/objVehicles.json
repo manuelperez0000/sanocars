@@ -1,0 +1,84 @@
+{
+  "vehicles": [
+    {
+      "name": "Toyota",
+      "models": ["Corolla", "Camry", "Hilux", "RAV4", "Land Cruiser", "Prius"]
+    },
+    {
+      "name": "Volkswagen",
+      "models": ["Golf", "Passat", "Tiguan", "Polo", "Touareg", "ID.4"]
+    },
+    {
+      "name": "Mercedes-Benz",
+      "models": ["C-Class", "E-Class", "S-Class", "GLC", "GLE", "EQC"]
+    },
+    {
+      "name": "BMW",
+      "models": ["3 Series", "5 Series", "7 Series", "X5", "X3", "i4"]
+    },
+    {
+      "name": "Honda",
+      "models": ["Civic", "Accord", "CR-V", "HR-V", "Pilot", "Fit"]
+    },
+    {
+      "name": "Ford",
+      "models": ["Fiesta", "Focus", "Mustang", "F-150", "Explorer", "Bronco"]
+    },
+    {
+      "name": "Chevrolet",
+      "models": ["Spark", "Malibu", "Camaro", "Silverado", "Tahoe", "Trailblazer"]
+    },
+    {
+      "name": "Nissan",
+      "models": ["Altima", "Sentra", "Maxima", "Rogue", "Pathfinder", "GT-R"]
+    },
+    {
+      "name": "Hyundai",
+      "models": ["Elantra", "Sonata", "Tucson", "Santa Fe", "Kona", "Ioniq 5"]
+    },
+    {
+      "name": "Kia",
+      "models": ["Rio", "Sportage", "Sorento", "Seltos", "Telluride", "EV6"]
+    },
+    {
+      "name": "Audi",
+      "models": ["A3", "A4", "A6", "Q5", "Q7", "e-tron"]
+    },
+    {
+      "name": "Tesla",
+      "models": ["Model S", "Model 3", "Model X", "Model Y", "Cybertruck"]
+    },
+    {
+      "name": "Jaguar",
+      "models": ["XE", "XF", "F-Type", "E-Pace", "F-Pace", "I-Pace"]
+    },
+    {
+      "name": "Mazda",
+      "models": ["Mazda3", "Mazda6", "CX-5", "CX-30", "MX-5 Miata"]
+    },
+    {
+      "name": "Subaru",
+      "models": ["Impreza", "Legacy", "Outback", "Forester", "WRX"]
+    },
+    {
+      "name": "Peugeot",
+      "models": ["208", "308", "508", "2008", "3008", "5008"]
+    },
+    {
+      "name": "Renault",
+      "models": ["Clio", "Megane", "Captur", "Kadjar", "Duster", "Koleos"]
+    },
+    {
+      "name": "Volvo",
+      "models": ["XC40", "XC60", "XC90", "S60", "V60", "EX30"]
+    },
+    {
+      "name": "Jeep",
+      "models": ["Wrangler", "Cherokee", "Grand Cherokee", "Compass", "Renegade", "Gladiator"]
+    },
+    {
+      "name": "Suzuki",
+      "models": ["Swift", "Vitara", "Jimny", "Baleno", "S-Cross", "Celerio"]
+    }
+  ]
+}

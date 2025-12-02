@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+/* import { useState } from 'react' */
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -10,18 +10,18 @@ import { FaNewspaper } from "react-icons/fa6";
 import { CiPaperplane } from "react-icons/ci";
 import { FaWrench, FaPaintBrush, FaTruck, FaFileAlt, FaCar } from "react-icons/fa";
 import WhatsAppButton from '../components/WhatsAppButton'
-            
+
 const Home = () => {
     const { vehiclesForSale, vehiclesForRent } = useHome()
     const { visitCount } = useVisits()
-    const [filters, setFilters] = useState({ marca: '', modelo: '' })
-    const [sortOption, setSortOption] = useState('')
+    /* const [filters, setFilters] = useState({ marca: '', modelo: '' }) */
+    /* const [sortOption, setSortOption] = useState('') */
 
-    const handleSearch = ({ marca, modelo }) => {
+    /* const handleSearch = ({ marca, modelo }) => {
         setFilters({ marca, modelo })
-    }
+    } */
 
-    const filteredSale = useMemo(() => {
+    /* const filteredSale = useMemo(() => {
         let list = vehiclesForSale.slice()
         if (filters.marca) list = list.filter(v => v.brand === filters.marca)
         if (filters.modelo) list = list.filter(v => v.model === filters.modelo)
@@ -51,32 +51,36 @@ const Home = () => {
         }
 
         return list
-    }, [vehiclesForRent, filters, sortOption])
+    }, [vehiclesForRent, filters, sortOption]) */
 
     return (
         <div>
-            <Header onSearch={handleSearch} />
+            <Header />
             <main className="container my-5">
-                
+
                 <div className="mb-4">
                     <div className="d-flex align-items-center">
                         <div className="flex-grow-1 mb-3">
-                            <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en venta"} />
+                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en venta</h2>
+                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en venta"} /> */}
                         </div>
                     </div>
                 </div>
-                <VehicleList vehicles={filteredSale} type={"sold"} />
+                <VehicleList vehicles={vehiclesForSale} />
 
                 <hr className='mb-5' />
 
                 <div className="mb-4">
                     <div className="d-flex align-items-center">
                         <div className="flex-grow-1 mb-3">
-                            <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} />
+
+                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en alquiler</h2>
+                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
                         </div>
                     </div>
                 </div>
-                <VehicleList vehicles={filteredRent} type={"rent"} />
+                {console.log(vehiclesForRent)}
+                <VehicleList vehicles={vehiclesForRent} />
 
             </main>
 

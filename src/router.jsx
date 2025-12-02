@@ -33,6 +33,7 @@ import Reservas from "./pages/admin/reservas"
 import Calendario from "./pages/admin/calendario"
 import Alquilados from "./pages/admin/alquilados"
 import Test from "./pages/test"
+import SearchResults from "./pages/SearchResults"
 
 const Router = () => {
     return <>
@@ -47,7 +48,8 @@ const Router = () => {
             <Route path="/services" element={<PageLayout><Services /></PageLayout>} />
             <Route path="/service/:id" element={<PageLayout><Service /></PageLayout>} />
             <Route path="/test" element={<Test />}/>
-            
+            <Route path="/search" element={<PageLayout><SearchResults /></PageLayout>} />
+
             {/* Admin */}
             
             <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />

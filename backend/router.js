@@ -1,6 +1,11 @@
 /* eslint-disable no-undef */
 
 var express = require("express")
+var route = express.Router()
+var imagesUploader = require("./routes/imagesUploader.js")
+var path = require('path')
+var uploadsDir = path.join(__dirname, './uploads')
+
 var users = require("./routes/users.js")
 var auth = require("./routes/auth.js")
 var vehicles = require("./routes/vehicles.js")
@@ -19,16 +24,13 @@ var configuracion = require("./routes/configuracion.js")
 var seguimiento = require("./routes/seguimiento.js")
 var alquileres = require("./routes/alquileres.js")
 var pagosAlquileres = require("./routes/pagos-alquileres.js")
-var route = express.Router()
-var imagesUploader = require("./routes/imagesUploader.js")
-var path = require('path')
-var uploadsDir = path.join(__dirname, './uploads')
-
+var search = require("./routes/search.js")
 var router = (app) => {
     // Servir imágenes estáticamente
     app.use('/uploads', express.static(uploadsDir))
     app.use('/api/v1', route)
     route.use('/users', users)
+    route.use('/search', search)
     route.use('/auth', auth)
     route.use('/vehicles', vehicles)
     route.use('/visits', visits)
