@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
 import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
 import request from '../utils/request'
-import { apiurl } from '../utils/globals'
+import { apiurl, topurl } from '../utils/globals'
 
 function formatCurrency(n) { return `$${n.toLocaleString()}` }
 
@@ -47,7 +47,7 @@ export default function VehicleDetail() {
           passengers: dbVehicle.passengers,
           ac: dbVehicle.ac,
           numero_placa: dbVehicle.numero_placa,
-          images: dbVehicle.imagen1 ? dbVehicle.imagen1.split(',').map(img => img.trim().replace(/^'|'$/g, '')).map(img => `${apiurl}/uploads/${img}`) : []
+          images: dbVehicle.imagen1 ? dbVehicle.imagen1.split(',').map(img => img.trim().replace(/^'|'$/g, '')).map(img => `${topurl}/uploads/${img}`) : []
         }
         setVehicle(mappedVehicle)
       } else {

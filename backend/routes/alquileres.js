@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-var connect = require('../db/connect.js')
+ var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/alquileres - Get all rentals
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var [rows] = await db.execute(`
+    
+    var [rows] = await db.query(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM alquileres a
       LEFT JOIN vehiculos_venta v ON a.vehiculo_id = v.id
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/alquileres - Create a new rental
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var vehiculo_id = req.body.vehiculo_id || null
@@ -41,7 +42,7 @@ router.post('/', async (req, res) => {
     }
 
     // Check if vehicle exists and is available for rent
-    var [vehicleRows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? AND status = "En alquiler"', [vehiculo_id])
+    var [vehicleRows] = await db.query('SELECT * FROM vehiculos_venta WHERE id = ? AND status = "En alquiler"', [vehiculo_id])
     if (!vehicleRows || vehicleRows.length === 0) {
       return responser.error({ res, message: 'Vehículo no encontrado o no disponible para alquiler', status: 400 })
     }
@@ -49,13 +50,13 @@ router.post('/', async (req, res) => {
     var insertQuery = 'INSERT INTO alquileres (vehiculo_id, cliente_nombre, cliente_email, cliente_telefono, cliente_direccion, fecha_inicio, precio_alquiler) VALUES (?, ?, ?, ?, ?, ?, ?)'
     var params = [vehiculo_id, cliente_nombre, cliente_email, cliente_telefono, cliente_direccion, fecha_inicio, precio_alquiler]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear el alquiler', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute(`
+    var [rows] = await db.query(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM alquileres a
       LEFT JOIN vehiculos_venta v ON a.vehiculo_id = v.id
@@ -72,9 +73,9 @@ router.post('/', async (req, res) => {
 // GET /api/v1/alquileres/:id - Get rental by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
-    var [rows] = await db.execute(`
+    var [rows] = await db.query(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM alquileres a
       LEFT JOIN vehiculos_venta v ON a.vehiculo_id = v.id
@@ -93,7 +94,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/alquileres/:id - Update rental
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
 
     // Allowed fields to update
@@ -117,12 +118,12 @@ router.put('/:id', async (req, res) => {
 
     params.push(id)
     var sql = 'UPDATE alquileres SET ' + updates.join(', ') + ' WHERE id = ?'
-    var [result] = await db.execute(sql, params)
+    var [result] = await db.query(sql, params)
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Alquiler no encontrado', status: 404 })
     }
 
-    var [rows] = await db.execute(`
+    var [rows] = await db.query(`
       SELECT a.*, v.marca, v.modelo, v.numero_placa, v.anio
       FROM alquileres a
       LEFT JOIN vehiculos_venta v ON a.vehiculo_id = v.id
@@ -139,9 +140,9 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/alquileres/:id - Delete rental
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
-    var [result] = await db.execute('DELETE FROM alquileres WHERE id = ?', [id])
+    var [result] = await db.query('DELETE FROM alquileres WHERE id = ?', [id])
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Alquiler no encontrado', status: 404 })
     }

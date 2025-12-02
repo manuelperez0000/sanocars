@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import useCategoriasServicio from '../hooks/useCategoriasServicio'
-import { apiurl } from '../utils/globals'
+import { apiurl, topurl } from '../utils/globals'
 import { FaTools, FaCar, FaPaintBrush, FaFileAlt, FaTruck, FaCog } from 'react-icons/fa'
 import { FaLongArrowAltRight } from "react-icons/fa";
 
@@ -61,7 +61,7 @@ const Services = () => {
 
                                     <div className='mb-2'>
                                         <Link to={`/service/${categoria.id}`} className='text-decoration-none'>
-                                            <img src={`${apiurl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image' />
+                                            <img src={`${topurl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image' />
                                         </Link>
                                     </div>
                                     <div className='mt-auto'>

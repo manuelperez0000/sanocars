@@ -1,5 +1,6 @@
-/* eslint-disable no-undef */
-var connect = require('../db/connect.js')
+/* eslint-disable no-undef */ 
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/venta - Get all sales
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var [rows] = await db.execute('SELECT * FROM venta ORDER BY id DESC')
+    
+    var [rows] = await db.query('SELECT * FROM venta ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching sales:', error)
@@ -19,9 +20,9 @@ router.get('/', async (req, res) => {
 // GET /api/v1/venta/:id - Get sale by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
-    var [rows] = await db.execute('SELECT * FROM venta WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM venta WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Venta no encontrada', status: 404 })
     }
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/v1/venta - Create a new sale
 router.post('/', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Extract fields from request body
@@ -111,13 +112,13 @@ router.post('/', async (req, res) => {
       tasa_interes, total_con_intereses, fecha_inicial, siguientes_pagos, datos_pago
     ]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear la venta', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute('SELECT * FROM venta WHERE id = ? LIMIT 1', [newId])
+    var [rows] = await db.query('SELECT * FROM venta WHERE id = ? LIMIT 1', [newId])
     return responser.success({ res, body: rows[0], message: 'Venta creada', status: 201 })
 
   } catch (error) {
@@ -129,7 +130,7 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/venta/:id - Update sale
 router.put('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
 
     // Allowed fields to update
@@ -170,12 +171,12 @@ router.put('/:id', async (req, res) => {
 
     params.push(id)
     var sql = 'UPDATE venta SET ' + updates.join(', ') + ' WHERE id = ?'
-    var [result] = await db.execute(sql, params)
+    var [result] = await db.query(sql, params)
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Venta no encontrada', status: 404 })
     }
 
-    var [rows] = await db.execute('SELECT * FROM venta WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM venta WHERE id = ? LIMIT 1', [id])
     return responser.success({ res, body: rows[0], message: 'Venta actualizada' })
 
   } catch (error) {
@@ -187,10 +188,10 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/venta/:id - Delete sale
 router.delete('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
 
-    var [result] = await db.execute('DELETE FROM venta WHERE id = ?', [id])
+    var [result] = await db.query('DELETE FROM venta WHERE id = ?', [id])
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Venta no encontrada', status: 404 })
     }

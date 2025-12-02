@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-var connect = require('../db/connect.js')
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -7,9 +8,9 @@ const verifyToken = require('../midelwares/verifyToken.js')
 // GET /api/v1/services/reservas_servicio - Get all service reservations
 router.get('/', async (req, res) => {
     try {
-        var db = connect(req, res)
 
-        const [body] = await db.execute('SELECT * FROM reservas_servicio ORDER BY id DESC')
+
+        const [body] = await db.query('SELECT * FROM reservas_servicio ORDER BY id DESC')
 
         responser.success({ res, body })
 
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
 // PUT /api/v1/services/reservas_servicio/:id - Update service reservation status
 router.put('/:id', verifyToken, async (req, res) => {
     try {
-        var db = connect(req, res)
+
 
         var { id } = req.params
         var { status } = req.body
@@ -36,7 +37,7 @@ router.put('/:id', verifyToken, async (req, res) => {
             })
         }
 
-        var [result] = await db.execute(
+        var [result] = await db.query(
             'UPDATE reservas_servicio SET status = ? WHERE id = ?',
             [Number(status), id]
         )
@@ -71,14 +72,14 @@ router.post('/', async (req, res) => {
             })
         }
 
-        var db = connect(req, res)
+
 
         // Insert the reservation
         const query = `
       INSERT INTO reservas_servicio (nombre, email, telefono, servicio, fecha_reserva, hora_reserva)
       VALUES (?, ?, ?, ?, ?, ?)
     `
-        const [result] = await db.execute(query, [nombre, email, telefono, servicio, fecha_reserva, hora_reserva])
+        const [result] = await db.query(query, [nombre, email, telefono, servicio, fecha_reserva, hora_reserva])
 
         if (result.affectedRows === 0) {
             return responser.error({

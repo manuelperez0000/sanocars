@@ -1,8 +1,9 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef */ 
+var db = require('../db/dbConection.js')
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser')
-var connect = require('../db/connect.js')
+
 var multer = require('multer')
 var path = require('path')
 var fs = require('fs')
@@ -50,7 +51,7 @@ router.post('/', upload.fields([
 
   console.log("Entrando en la ruta de financiamiento...");
   try {
-    var db = connect(req, res)
+    
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Get form data
@@ -138,14 +139,14 @@ router.post('/', upload.fields([
       libretaBanco
     ]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
 
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear la solicitud de financiamiento', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [newId])
+    var [rows] = await db.query('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [newId])
 
     return responser.success({
       res,
@@ -167,8 +168,8 @@ router.post('/', upload.fields([
 // GET /api/v1/financing - Get all financing requests
 router.get('/', async (req, res) => {
   try {
-    var db = connect(req, res)
-    var [rows] = await db.execute('SELECT * FROM financiamiento ORDER BY fecha_creacion DESC')
+    
+    var [rows] = await db.query('SELECT * FROM financiamiento ORDER BY fecha_creacion DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching financing requests:', error)
@@ -179,9 +180,9 @@ router.get('/', async (req, res) => {
 // GET /api/v1/financing/:id - Get financing request by id
 router.get('/:id', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
-    var [rows] = await db.execute('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Solicitud de financiamiento no encontrada', status: 404 })
     }
@@ -195,7 +196,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/financing/:id/status - Update financing request status
 router.put('/:id/status', async (req, res) => {
   try {
-    var db = connect(req, res)
+    
     var { id } = req.params
     var { status } = req.body
 
@@ -206,16 +207,16 @@ router.put('/:id/status', async (req, res) => {
     }
 
     // Check if financing request exists
-    var [existing] = await db.execute('SELECT id FROM financiamiento WHERE id = ? LIMIT 1', [id])
+    var [existing] = await db.query('SELECT id FROM financiamiento WHERE id = ? LIMIT 1', [id])
     if (!existing || existing.length === 0) {
       return responser.error({ res, message: 'Solicitud de financiamiento no encontrada', status: 404 })
     }
 
     // Update status
-    await db.execute('UPDATE financiamiento SET status = ? WHERE id = ?', [status, id])
+    await db.query('UPDATE financiamiento SET status = ? WHERE id = ?', [status, id])
 
     // Get updated record
-    var [rows] = await db.execute('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM financiamiento WHERE id = ? LIMIT 1', [id])
 
     return responser.success({
       res,

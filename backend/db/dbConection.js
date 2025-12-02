@@ -1,41 +1,39 @@
-/* eslint-disable no-undef */
-// db.js
-var mysql = require('mysql2/promise');
-var automatics = require('./automatics.js');
+/* eslint-disable no-undef */ 
+var mysql = require('mysql2');
+/* var automatics = require('./automatics.js'); */
 require('dotenv').config();
 
-async function initDb() {
-  try {
-    var pool = mysql.createPool({
-      host: process.env.DB_HOST || '127.0.0.1',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'test',
-      port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-      charset: 'utf8mb4'
-    });
 
-    // Comprobación inmediata
-    var conn = await pool.getConnection();
-    await conn.ping();
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || '127.0.0.1',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'test',
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  charset: 'utf8mb4'
+});
 
-    // Crear tablas automaticamente si no existen
-    await automatics(conn)
 
-    conn.release();
+// Comprobación inmediata
+/* var conn = await pool.getConnection();
+await conn.ping(); */
 
-    console.log(`✅ Conectado a la base de datos ${process.env.DB_NAME}`);
-    return pool;
-  } catch (err) {
-    console.error('❌ Fallo al conectar a la base de datos:', err.message);
-    return null;
-  }
-}
+// Crear tablas automaticamente si no existen
+/* await automatics(conn) */
 
-module.exports = initDb;
+/* conn.release();
+if (pool) console.log(`Conectado a la base de datos ${process.env.DB_NAME}`);
+return pool; */
+/* } catch (err) {
+  console.error('❌ Fallo al conectar a la base de datos:', err.message);
+  return null;
+} 
+}*/
+
+module.exports = pool.promise();
 
 
 

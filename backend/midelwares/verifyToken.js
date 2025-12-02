@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef */ 
 var jwt = require('jsonwebtoken')
 
 // Middleware to verify JWT token in Authorization header (Bearer <token>)
