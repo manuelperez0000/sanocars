@@ -191,7 +191,7 @@ const Vehiculos = () => {
                                     <div className="row">
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Fecha de ingreso</label>
-                                            <input type="date" name="fecha_ingreso" value={form.fecha_ingreso || ''} onChange={handleChange} className="form-control" />
+                                            <input type="date" name="fecha_ingreso" value={form.fecha_ingreso || ''} onChange={handleChange} className="form-control" required/>
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Fecha de shaken</label>
