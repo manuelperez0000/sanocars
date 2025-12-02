@@ -58,6 +58,7 @@ router.post('/', async (req, res) => {
     var datos_pago = req?.body?.datos_pago || null
     var fecha_inicial = req?.body?.fecha_inicial || null
     var siguientes_pagos = req?.body?.siguientes_pagos || null
+    var informacion_garantia = req?.body?.informacion_garantia || null
 
     //add tatus to siguientes pagos 
     if (siguientes_pagos && Array.isArray(siguientes_pagos)) {
@@ -103,13 +104,13 @@ router.post('/', async (req, res) => {
     }
 
     // Insert query
-    var insertQuery = `INSERT INTO venta (tipo, vehiculo_id, producto_id, cliente_nombre, cliente_apellido,cliente_email, cliente_telefono, cliente_direccion, precio_venta,tipo_pago, numero_cuotas, frecuencia_cuotas, monto_inicial,tasa_interes, total_con_intereses, fecha_inicial, siguientes_pagos, datos_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    var insertQuery = `INSERT INTO venta (tipo, vehiculo_id, producto_id, cliente_nombre, cliente_apellido,cliente_email, cliente_telefono, cliente_direccion, precio_venta,tipo_pago, numero_cuotas, frecuencia_cuotas, monto_inicial,tasa_interes, total_con_intereses, fecha_inicial, siguientes_pagos, datos_pago, informacion_garantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
     var params = [
       tipo, vehiculo_id, producto_id, cliente_nombre, cliente_apellido,
       cliente_email, cliente_telefono, cliente_direccion, precio_venta,
       tipo_pago, numero_cuotas, frecuencia_cuotas, monto_inicial,
-      tasa_interes, total_con_intereses, fecha_inicial, siguientes_pagos, datos_pago
+      tasa_interes, total_con_intereses, fecha_inicial, siguientes_pagos, datos_pago, informacion_garantia
     ]
 
     var [result] = await db.query(insertQuery, params)
@@ -138,7 +139,7 @@ router.put('/:id', async (req, res) => {
       'tipo', 'vehiculo_id', 'producto_id', 'cliente_nombre', 'cliente_apellido',
       'cliente_email', 'cliente_telefono', 'cliente_direccion', 'precio_venta',
       'tipo_pago', 'numero_cuotas', 'frecuencia_cuotas', 'monto_inicial',
-      'tasa_interes', 'total_con_intereses', 'fecha_inicial', 'siguientes_pagos', 'datos_pago'
+      'tasa_interes', 'total_con_intereses', 'fecha_inicial', 'siguientes_pagos', 'datos_pago', 'informacion_garantia'
     ]
 
     var updates = []

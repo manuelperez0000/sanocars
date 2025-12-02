@@ -416,6 +416,24 @@ const Vehiculos = () => {
                                         )}
                                     </div>
 
+                                    {/* Warranty Information Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Información de Garantía</h6>
+                                        <div className="row">
+                                            <div className="col-12 mb-3">
+                                                <label className="form-label">Información de Garantía</label>
+                                                <textarea
+                                                    name="informacion_garantia"
+                                                    value={salesForm.informacion_garantia || ''}
+                                                    onChange={handleSalesChange}
+                                                    className="form-control"
+                                                    rows="4"
+                                                    placeholder="Ingrese la información de garantía del vehículo..."
+                                                ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Totals Section */}
                                     <div className="mb-4">
                                         <h6 className="text-primary mb-3">Resumen de la Venta</h6>

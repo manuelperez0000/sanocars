@@ -2,9 +2,9 @@
 const bcrypt = require('bcryptjs');
 
 async function automatics(conn) {
-    console.log("Asegurando tablas automáticas...");
+  console.log("Asegurando tablas automáticas...");
 
-    var users = `
+  var users = `
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -20,25 +20,25 @@ async function automatics(conn) {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(users);
-    console.log("Tabla 'users' asegurada.");
+  await conn.query(users);
+  console.log("Tabla 'users' asegurada.");
 
-     await conn.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS address VARCHAR(255) DEFAULT NULL AFTER nationality`);
+  await conn.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS address VARCHAR(255) DEFAULT NULL AFTER nationality`);
 
-    // Insert admin user if not exists
-    var [existingUser] = await conn.query('SELECT COUNT(*) as count FROM users WHERE email = ?', ['manuelperez.0000@gmail.com']);
-    if (existingUser[0].count === 0) {
-      const hashedPassword = await bcrypt.hash('123456', 10);
-      await conn.query(`
+  // Insert admin user if not exists
+  var [existingUser] = await conn.query('SELECT COUNT(*) as count FROM users WHERE email = ?', ['manuelperez.0000@gmail.com']);
+  if (existingUser[0].count === 0) {
+    const hashedPassword = await bcrypt.hash('123456', 10);
+    await conn.query(`
         INSERT INTO users (name, lastname, email, password, mobile_no, nationality, role)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `, ['manuel', 'Perez', 'manuelperez.0000@gmail.com', hashedPassword, '04141220527', 'venezolano', 'admin']);
-      console.log("Usuario administrador insertado.");
-    } else {
-      console.log("Usuario administrador ya existe.");
-    }
+    console.log("Usuario administrador insertado.");
+  } else {
+    console.log("Usuario administrador ya existe.");
+  }
 
-    var vehiculosVenta = `
+  var vehiculosVenta = `
       CREATE TABLE IF NOT EXISTS vehiculos_venta (
   id INT AUTO_INCREMENT PRIMARY KEY,
   fecha_ingreso date NOT NULL,
@@ -64,34 +64,34 @@ async function automatics(conn) {
   ac boolean NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(vehiculosVenta);
-    console.log("Tabla 'vehiculos_venta' asegurada.");
+  await conn.query(vehiculosVenta);
+  console.log("Tabla 'vehiculos_venta' asegurada.");
 
-    // Add fecha_shaken column to existing vehiculos_venta table
-    try {
-      await conn.query(`ALTER TABLE vehiculos_venta ADD COLUMN IF NOT EXISTS fecha_shaken DATE DEFAULT NULL AFTER fecha_ingreso`);
-      console.log("Columna 'fecha_shaken' agregada a tabla 'vehiculos_venta' si no existía.");
-    } catch (error) {
-      console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
-    }
+  // Add fecha_shaken column to existing vehiculos_venta table
+  try {
+    await conn.query(`ALTER TABLE vehiculos_venta ADD COLUMN IF NOT EXISTS fecha_shaken DATE DEFAULT NULL AFTER fecha_ingreso`);
+    console.log("Columna 'fecha_shaken' agregada a tabla 'vehiculos_venta' si no existía.");
+  } catch (error) {
+    console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
+  }
 
-    var vicitas = `
+  var vicitas = `
       CREATE TABLE IF NOT EXISTS vicitas (
         id INT AUTO_INCREMENT PRIMARY KEY,
         contador INT NOT NULL DEFAULT 0
       )
     `;
-    await conn.query(vicitas);
-    console.log("Tabla 'vicitas' asegurada.");
+  await conn.query(vicitas);
+  console.log("Tabla 'vicitas' asegurada.");
 
-    // Insert initial record if table is empty
-    var [existing] = await conn.query('SELECT COUNT(*) as count FROM vicitas');
-    if (existing[0].count === 0) {
-      await conn.query('INSERT INTO vicitas (contador) VALUES (0)');
-      console.log("Registro inicial de visitas insertado.");
-    }
+  // Insert initial record if table is empty
+  var [existing] = await conn.query('SELECT COUNT(*) as count FROM vicitas');
+  if (existing[0].count === 0) {
+    await conn.query('INSERT INTO vicitas (contador) VALUES (0)');
+    console.log("Registro inicial de visitas insertado.");
+  }
 
-    var reservasServicio = `
+  var reservasServicio = `
       CREATE TABLE IF NOT EXISTS reservas_servicio (
         id INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(255) NOT NULL,
@@ -104,18 +104,18 @@ async function automatics(conn) {
         status INT NOT NULL DEFAULT 0
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(reservasServicio);
-    console.log("Tabla 'reservas_servicio' asegurada.");
+  await conn.query(reservasServicio);
+  console.log("Tabla 'reservas_servicio' asegurada.");
 
-    // Add hora_reserva column to existing reservas_servicio table
-    try {
-      await conn.query(`ALTER TABLE reservas_servicio ADD COLUMN IF NOT EXISTS hora_reserva TIME NOT NULL DEFAULT '09:00:00'`);
-      console.log("Columna 'hora_reserva' agregada a tabla 'reservas_servicio' si no existía.");
-    } catch (error) {
-      console.log("Columna 'hora_reserva' ya existe o error al agregar:", error.message);
-    }
+  // Add hora_reserva column to existing reservas_servicio table
+  try {
+    await conn.query(`ALTER TABLE reservas_servicio ADD COLUMN IF NOT EXISTS hora_reserva TIME NOT NULL DEFAULT '09:00:00'`);
+    console.log("Columna 'hora_reserva' agregada a tabla 'reservas_servicio' si no existía.");
+  } catch (error) {
+    console.log("Columna 'hora_reserva' ya existe o error al agregar:", error.message);
+  }
 
-    var financiamiento = `
+  var financiamiento = `
       CREATE TABLE IF NOT EXISTS financiamiento (
         id INT AUTO_INCREMENT PRIMARY KEY,
         apellidos_katakana VARCHAR(255) NOT NULL,
@@ -156,10 +156,10 @@ async function automatics(conn) {
         status ENUM('pendiente', 'cancelado', 'en tramite', 'realizado') DEFAULT 'pendiente'
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(financiamiento);
-    console.log("Tabla 'financiamiento' asegurada.");
+  await conn.query(financiamiento);
+  console.log("Tabla 'financiamiento' asegurada.");
 
-    var inventario = `
+  var inventario = `
       CREATE TABLE IF NOT EXISTS inventario (
         id INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(255) NOT NULL,
@@ -171,10 +171,10 @@ async function automatics(conn) {
         fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(inventario);
-    console.log("Tabla 'inventario' asegurada.");
+  await conn.query(inventario);
+  console.log("Tabla 'inventario' asegurada.");
 
-    var inspeccionVehicular = `
+  var inspeccionVehicular = `
       CREATE TABLE IF NOT EXISTS inspeccion_vehicular (
         id INT AUTO_INCREMENT PRIMARY KEY,
         cliente_tipo ENUM('registrado', 'nuevo') NOT NULL,
@@ -202,18 +202,18 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(inspeccionVehicular);
-    console.log("Tabla 'inspeccion_vehicular' asegurada.");
+  await conn.query(inspeccionVehicular);
+  console.log("Tabla 'inspeccion_vehicular' asegurada.");
 
-    // Add new column vehiculo_trabajos_realizar if it doesn't exist
-    try {
-      await conn.query(`ALTER TABLE inspeccion_vehicular ADD COLUMN IF NOT EXISTS vehiculo_trabajos_realizar TEXT NULL AFTER vehiculo_estado_bateria`);
-      console.log("Columna 'vehiculo_trabajos_realizar' agregada a tabla 'inspeccion_vehicular' si no existía.");
-    } catch (error) {
-      console.log("Columna 'vehiculo_trabajos_realizar' ya existe o error al agregar:", error.message);
-    }
+  // Add new column vehiculo_trabajos_realizar if it doesn't exist
+  try {
+    await conn.query(`ALTER TABLE inspeccion_vehicular ADD COLUMN IF NOT EXISTS vehiculo_trabajos_realizar TEXT NULL AFTER vehiculo_estado_bateria`);
+    console.log("Columna 'vehiculo_trabajos_realizar' agregada a tabla 'inspeccion_vehicular' si no existía.");
+  } catch (error) {
+    console.log("Columna 'vehiculo_trabajos_realizar' ya existe o error al agregar:", error.message);
+  }
 
-    var facturas = `
+  var facturas = `
       CREATE TABLE IF NOT EXISTS facturas (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tipo ENUM('venta', 'alquiler', 'producto', 'servicio') NOT NULL,
@@ -232,10 +232,10 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(facturas);
-    console.log("Tabla 'facturas' asegurada.");
+  await conn.query(facturas);
+  console.log("Tabla 'facturas' asegurada.");
 
-    var informeVehiculos = `
+  var informeVehiculos = `
       CREATE TABLE IF NOT EXISTS informe_vehiculos (
         id INT AUTO_INCREMENT PRIMARY KEY,
         fecha_ingreso DATE NOT NULL,
@@ -264,33 +264,33 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(informeVehiculos);
-    console.log("Tabla 'informe_vehiculos' asegurada.");
+  await conn.query(informeVehiculos);
+  console.log("Tabla 'informe_vehiculos' asegurada.");
 
-    // Add motor column and modify neumaticos column if needed
-    try {
-      await conn.query(`ALTER TABLE informe_vehiculos ADD COLUMN IF NOT EXISTS vehiculo_motor VARCHAR(255)`);
-      console.log("Columna 'vehiculo_motor' agregada a tabla 'informe_vehiculos' si no existía.");
-    } catch (error) {
-      console.log("Columna 'vehiculo_motor' ya existe o error al agregar:", error.message);
-    }
+  // Add motor column and modify neumaticos column if needed
+  try {
+    await conn.query(`ALTER TABLE informe_vehiculos ADD COLUMN IF NOT EXISTS vehiculo_motor VARCHAR(255)`);
+    console.log("Columna 'vehiculo_motor' agregada a tabla 'informe_vehiculos' si no existía.");
+  } catch (error) {
+    console.log("Columna 'vehiculo_motor' ya existe o error al agregar:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE informe_vehiculos MODIFY COLUMN vehiculo_porcentaje_neumaticos VARCHAR(255) NOT NULL`);
-      console.log("Columna 'vehiculo_porcentaje_neumaticos' modificada a VARCHAR.");
-    } catch (error) {
-      console.log("Error al modificar columna 'vehiculo_porcentaje_neumaticos':", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE informe_vehiculos MODIFY COLUMN vehiculo_porcentaje_neumaticos VARCHAR(255) NOT NULL`);
+    console.log("Columna 'vehiculo_porcentaje_neumaticos' modificada a VARCHAR.");
+  } catch (error) {
+    console.log("Error al modificar columna 'vehiculo_porcentaje_neumaticos':", error.message);
+  }
 
-    // Drop vehiculo_vin column if exists
-    try {
-      await conn.query(`ALTER TABLE informe_vehiculos DROP COLUMN IF EXISTS vehiculo_vin`);
-      console.log("Columna 'vehiculo_vin' eliminada de tabla 'informe_vehiculos' si existía.");
-    } catch (error) {
-      console.log("Error al eliminar columna 'vehiculo_vin':", error.message);
-    }
+  // Drop vehiculo_vin column if exists
+  try {
+    await conn.query(`ALTER TABLE informe_vehiculos DROP COLUMN IF EXISTS vehiculo_vin`);
+    console.log("Columna 'vehiculo_vin' eliminada de tabla 'informe_vehiculos' si existía.");
+  } catch (error) {
+    console.log("Error al eliminar columna 'vehiculo_vin':", error.message);
+  }
 
-    var categoriasServicio = `
+  var categoriasServicio = `
       CREATE TABLE IF NOT EXISTS categorias_servicio (
         id INT AUTO_INCREMENT PRIMARY KEY,
         titulo VARCHAR(255) NOT NULL,
@@ -299,10 +299,10 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(categoriasServicio);
-    console.log("Tabla 'categorias_servicio' asegurada.");
+  await conn.query(categoriasServicio);
+  console.log("Tabla 'categorias_servicio' asegurada.");
 
-    var itemServicio = `
+  var itemServicio = `
       CREATE TABLE IF NOT EXISTS item_servicio (
         id INT AUTO_INCREMENT PRIMARY KEY,
         titulo VARCHAR(255) NOT NULL,
@@ -312,10 +312,10 @@ async function automatics(conn) {
         FOREIGN KEY (idCategoria) REFERENCES categorias_servicio(id) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(itemServicio);
-    console.log("Tabla 'item_servicio' asegurada.");
+  await conn.query(itemServicio);
+  console.log("Tabla 'item_servicio' asegurada.");
 
-    var configuracion = `
+  var configuracion = `
       CREATE TABLE IF NOT EXISTS configuracion (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tipo ENUM('phone', 'email', 'schedule') NOT NULL,
@@ -325,10 +325,10 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(configuracion);
-    console.log("Tabla 'configuracion' asegurada.");
+  await conn.query(configuracion);
+  console.log("Tabla 'configuracion' asegurada.");
 
-    var servicios = `
+  var servicios = `
       CREATE TABLE IF NOT EXISTS servicios (
         id INT AUTO_INCREMENT PRIMARY KEY,
         nombre_cliente VARCHAR(255) NOT NULL,
@@ -353,35 +353,36 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(servicios);
-    console.log("Tabla 'servicios' asegurada.");
+  await conn.query(servicios);
+  console.log("Tabla 'servicios' asegurada.");
 
-    // Update servicios table: remove cedula_cliente and add direccion_cliente
-    try {
-      await conn.query(`ALTER TABLE servicios DROP COLUMN IF EXISTS cedula_cliente`);
-      console.log("Columna 'cedula_cliente' eliminada de tabla 'servicios' si existía.");
-    } catch (error) {
-      console.log("Error al eliminar columna 'cedula_cliente' de servicios:", error.message);
-    }
+  // Update servicios table: remove cedula_cliente and add direccion_cliente
+  try {
+    await conn.query(`ALTER TABLE servicios DROP COLUMN IF EXISTS cedula_cliente`);
+    console.log("Columna 'cedula_cliente' eliminada de tabla 'servicios' si existía.");
+  } catch (error) {
+    console.log("Error al eliminar columna 'cedula_cliente' de servicios:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS direccion_cliente VARCHAR(500)`);
-      console.log("Columna 'direccion_cliente' agregada a tabla 'servicios' si no existía.");
-    } catch (error) {
-      console.log("Columna 'direccion_cliente' ya existe o error al agregar:", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS direccion_cliente VARCHAR(500)`);
+    console.log("Columna 'direccion_cliente' agregada a tabla 'servicios' si no existía.");
+  } catch (error) {
+    console.log("Columna 'direccion_cliente' ya existe o error al agregar:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS fecha_shaken DATE DEFAULT NULL`);
-      console.log("Columna 'fecha_shaken' agregada a tabla 'servicios' si no existía.");
-    } catch (error) {
-      console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS fecha_shaken DATE DEFAULT NULL`);
+    console.log("Columna 'fecha_shaken' agregada a tabla 'servicios' si no existía.");
+  } catch (error) {
+    console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
+  }
 
-    var venta = `
+  var venta = `
       CREATE TABLE IF NOT EXISTS venta (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tipo ENUM('vehiculo', 'producto') NOT NULL,
+        informacion_garantia TEXT DEFAULT NULL,
         vehiculo_id INT NULL,
         producto_id INT NULL,
         cliente_nombre VARCHAR(255) NOT NULL,
@@ -403,47 +404,53 @@ async function automatics(conn) {
         fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(venta);
-    console.log("Tabla 'venta' asegurada.");
+  await conn.query(venta);
+  console.log("Tabla 'venta' asegurada.");
 
-    // Update venta table: remove cliente_cedula and add cliente_direccion
-    try {
-      await conn.query(`ALTER TABLE venta DROP COLUMN IF EXISTS cliente_cedula`);
-      console.log("Columna 'cliente_cedula' eliminada de tabla 'venta' si existía.");
-    } catch (error) {
-      console.log("Error al eliminar columna 'cliente_cedula' de venta:", error.message);
-    }
+  // Update venta table: remove cliente_cedula and add cliente_direccion
+  try {
+    await conn.query(`ALTER TABLE venta DROP COLUMN IF EXISTS cliente_cedula`);
+    console.log("Columna 'cliente_cedula' eliminada de tabla 'venta' si existía.");
+  } catch (error) {
+    console.log("Error al eliminar columna 'cliente_cedula' de venta:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS cliente_direccion TEXT`);
-      console.log("Columna 'cliente_direccion' agregada a tabla 'venta' si no existía.");
-    } catch (error) {
-      console.log("Columna 'cliente_direccion' ya existe o error al agregar:", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS informacion_garantia TEXT`)
+  } catch (err) {
+    console.log("Error al agregar columna informacion_garantia de venta:", err.message);
+  }
 
-    // Add missing columns to existing venta table
-    try {
-      await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS fecha_inicial DATE NULL`);
-      console.log("Columna 'fecha_inicial' agregada a tabla 'venta' si no existía.");
-    } catch (error) {
-      console.log("Columna 'fecha_inicial' ya existe o error al agregar:", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS cliente_direccion TEXT`);
+    console.log("Columna 'cliente_direccion' agregada a tabla 'venta' si no existía.");
+  } catch (error) {
+    console.log("Columna 'cliente_direccion' ya existe o error al agregar:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS siguientes_pagos JSON`);
-      console.log("Columna 'siguientes_pagos' agregada a tabla 'venta' si no existía.");
-    } catch (error) {
-      console.log("Columna 'siguientes_pagos' ya existe o error al agregar:", error.message);
-    }
+  // Add missing columns to existing venta table
+  try {
+    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS fecha_inicial DATE NULL`);
+    console.log("Columna 'fecha_inicial' agregada a tabla 'venta' si no existía.");
+  } catch (error) {
+    console.log("Columna 'fecha_inicial' ya existe o error al agregar:", error.message);
+  }
 
-    try {
-      await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS datos_pago JSON`);
-      console.log("Columna 'datos_pago' agregada a tabla 'venta' si no existía.");
-    } catch (error) {
-      console.log("Columna 'datos_pago' ya existe o error al agregar:", error.message);
-    }
+  try {
+    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS siguientes_pagos JSON`);
+    console.log("Columna 'siguientes_pagos' agregada a tabla 'venta' si no existía.");
+  } catch (error) {
+    console.log("Columna 'siguientes_pagos' ya existe o error al agregar:", error.message);
+  }
 
-    var alquileres = `
+  try {
+    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS datos_pago JSON`);
+    console.log("Columna 'datos_pago' agregada a tabla 'venta' si no existía.");
+  } catch (error) {
+    console.log("Columna 'datos_pago' ya existe o error al agregar:", error.message);
+  }
+
+  var alquileres = `
       CREATE TABLE IF NOT EXISTS alquileres (
         id INT AUTO_INCREMENT PRIMARY KEY,
         vehiculo_id INT NOT NULL,
@@ -458,10 +465,10 @@ async function automatics(conn) {
         FOREIGN KEY (vehiculo_id) REFERENCES vehiculos_venta(id) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(alquileres);
-    console.log("Tabla 'alquileres' asegurada.");
+  await conn.query(alquileres);
+  console.log("Tabla 'alquileres' asegurada.");
 
-    var pagosAlquileres = `
+  var pagosAlquileres = `
       CREATE TABLE IF NOT EXISTS pagos_alquileres (
         id INT AUTO_INCREMENT PRIMARY KEY,
         vehiculo_id INT NOT NULL,
@@ -472,8 +479,8 @@ async function automatics(conn) {
         FOREIGN KEY (vehiculo_id) REFERENCES vehiculos_venta(id) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
-    await conn.query(pagosAlquileres);
-    console.log("Tabla 'pagos_alquileres' asegurada.");
+  await conn.query(pagosAlquileres);
+  console.log("Tabla 'pagos_alquileres' asegurada.");
 }
 
 

@@ -365,7 +365,8 @@ CREATE TABLE `venta` (
   `fecha_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `fecha_inicial` date DEFAULT NULL,
   `siguientes_pagos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`siguientes_pagos`)),
-  `cliente_direccion` text DEFAULT NULL
+  `cliente_direccion` text DEFAULT NULL,
+  `informacion_garantia` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 

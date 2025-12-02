@@ -237,7 +237,10 @@ const useVehicles = () => {
             tasa_interes: 0,
             total_con_intereses: 0,
             fecha_inicial: new Date().toISOString().split('T')[0], // Today's date
-            siguientes_pagos: []
+            siguientes_pagos: [],
+
+            // Warranty information
+            informacion_garantia: ''
         }
     }
 
@@ -678,6 +681,15 @@ const useVehicles = () => {
                         </div>
                     </div>
                 </div>
+
+                ${saleData.informacion_garantia ? `
+                <div class="warranty-info" style="margin-bottom: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Información de Garantía</h4>
+                    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; font-size: 14px; line-height: 1.4;">${saleData.informacion_garantia}</pre>
+                    </div>
+                </div>
+                ` : ''}
 
                 <div class="footer">
                     <p>Gracias por su compra. Venta realizada por Sanocars Taller.</p>
