@@ -47,6 +47,7 @@ const useVehicles = () => {
     }
 
     function openNew() {
+        alert("Nuevo vehiculo")
         setEditing(null)
         const newForm = getEmptyForm()
         // Ensure at least one empty image input
@@ -58,6 +59,7 @@ const useVehicles = () => {
     }
 
     function openEdit(v) {
+        alert("Editando")
         setEditing(v)
         // copy to avoid mutation
         const formData = Object.assign({}, v)
@@ -169,9 +171,11 @@ const useVehicles = () => {
             }
 
             if (editing && editing.id) {
-                await request.put(apiurl + '/vehicles/' + editing.id, dataToSend)
+                alert("enviando a editar")
+                //await request.put(apiurl + '/vehicles/' + editing.id, dataToSend)
             } else {
-                await request.post(apiurl + '/vehicles', dataToSend)
+                alert("enviando a guardar")
+                //await request.post(apiurl + '/vehicles', dataToSend)
             }
             setModalOpen(false)
             fetchVehicles()

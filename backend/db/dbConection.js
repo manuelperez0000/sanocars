@@ -1,6 +1,6 @@
-/* eslint-disable no-undef */ 
+/* eslint-disable no-undef */
 var mysql = require('mysql2');
-/* var automatics = require('./automatics.js'); */
+var automatics = require('./automatics.js');
 require('dotenv').config();
 
 
@@ -16,35 +16,8 @@ const pool = mysql.createPool({
   charset: 'utf8mb4'
 });
 
-
-// Comprobación inmediata
-/* var conn = await pool.getConnection();
-await conn.ping(); */
-
-// Crear tablas automaticamente si no existen
-/* await automatics(conn) */
-
-/* conn.release();
-if (pool) console.log(`Conectado a la base de datos ${process.env.DB_NAME}`);
-return pool; */
-/* } catch (err) {
-  console.error('❌ Fallo al conectar a la base de datos:', err.message);
-  return null;
-} 
-}*/
+const conection = pool.promise()
+automatics(conection)
 
 module.exports = pool.promise();
 
-
-
-
-/* const dbSaoanocars = {
-  host:"173.208.213.194",
-  dbName:"sanocars_taller",
-  user:"sanocars_taller123",
-  password:"B^nayBd%w~CTtfQ9",
-  port:3306,
-} */
-
-//para conexiones sin ip
-//192.68.0%

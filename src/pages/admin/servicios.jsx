@@ -198,8 +198,9 @@ const Servicios = () => {
                 <div class="invoice-header">
                     <div class="flex-between">
                         <div class="text-left">
-                            <h5 class="invoice-title">Factura de Servicio</h5>
-                            <p class="invoice-subtitle">Servicio #${servicio.id}</p>
+                            <h2>Factura de Servicio</h2>
+                            <p>Servicio #${servicio.id}</p>
+                            <div>${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</div>
                         </div>
                         <div style="text-align: right;">
                             <h1>SANOCARS</h1>
@@ -228,6 +229,12 @@ const Servicios = () => {
                     <div class="info-section">
                         <h4>Información del Servicio</h4>
                         <p><strong>Fecha:</strong> ${new Date(servicio.fecha_servicio).toLocaleDateString('es-ES')}</p>
+                        ${servicio.notas ? `
+                        <div class="notes-section">
+                            <h4>Notas</h4>
+                            <p>${servicio.notas}</p>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
 
@@ -271,18 +278,6 @@ const Servicios = () => {
                         </div>
                     </div>
                 </div>
-
-                ${servicio.notas ? `
-                <div class="notes-section">
-                    <h4>Notas</h4>
-                    <p>${servicio.notas}</p>
-                </div>
-                ` : ''}
-
-                <div class="footer">
-                    <p>Gracias por su preferencia. Servicio realizado por Sanocars Taller.</p>
-                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</p>
-                </div>
             </body>
             </html>
         `
@@ -321,6 +316,7 @@ const Servicios = () => {
                                                 <th>ID</th>
                                                 <th>Cliente</th>
                                                 <th>Vehículo</th>
+                                                <th>Fecha Shaken</th>
                                                 <th>Fecha</th>
                                                 <th>Total</th>
                                                 <th>Status</th>
@@ -334,6 +330,7 @@ const Servicios = () => {
                                                         <td>{s.id}</td>
                                                         <td>{s.nombre_cliente}</td>
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
+                                                        <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
                                                         <td>{new Date(s.fecha_servicio).toLocaleDateString()}</td>
                                                         <td>${parseFloat(s.total || 0).toFixed(2)}</td>
                                                         <td>
@@ -350,7 +347,7 @@ const Servicios = () => {
                                                 ))
                                             ) : (
                                                 <tr>
-                                                    <td colSpan={7} className="text-center p-4">No hay servicios registrados</td>
+                                                    <td colSpan={8} className="text-center p-4">No hay servicios registrados</td>
                                                 </tr>
                                             )}
                                         </tbody>
@@ -422,6 +419,10 @@ const Servicios = () => {
                                             <div className="col-md-4 mb-3">
                                                 <label className="form-label">Kilometraje</label>
                                                 <input name="kilometraje_vehiculo" value={form.kilometraje_vehiculo || ''} onChange={handleChange} className="form-control" />
+                                            </div>
+                                            <div className="col-md-4 mb-3">
+                                                <label className="form-label">Fecha Shaken</label>
+                                                <input type="date" name="fecha_shaken" value={form.fecha_shaken || ''} onChange={handleChange} className="form-control" />
                                             </div>
                                         </div>
                                     </div>

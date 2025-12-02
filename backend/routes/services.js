@@ -50,6 +50,7 @@ router.post('/', async (req, res) => {
     var placa_vehiculo = req.body.placa_vehiculo || null
     var color_vehiculo = req.body.color_vehiculo || null
     var kilometraje_vehiculo = req.body.kilometraje_vehiculo || null
+    var fecha_shaken = req.body.fecha_shaken || null
     var detalles = req.body.detalles || null
     var subtotal = req.body.subtotal || 0
     var iva = req.body.iva || 0
@@ -74,14 +75,14 @@ router.post('/', async (req, res) => {
     var insertQuery = `INSERT INTO servicios (
       nombre_cliente, telefono_cliente, email_cliente, direccion_cliente,
       marca_vehiculo, modelo_vehiculo, anio_vehiculo, placa_vehiculo,
-      color_vehiculo, kilometraje_vehiculo, detalles, subtotal, iva, total,
+      color_vehiculo, kilometraje_vehiculo, fecha_shaken, detalles, subtotal, iva, total,
       fecha_servicio, notas, fotos, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
     var params = [
       nombre_cliente, telefono_cliente, email_cliente, direccion_cliente,
       marca_vehiculo, modelo_vehiculo, anio_vehiculo, placa_vehiculo,
-      color_vehiculo, kilometraje_vehiculo, detalles, subtotal, iva, total,
+      color_vehiculo, kilometraje_vehiculo, fecha_shaken, detalles, subtotal, iva, total,
       fecha_servicio, notas, fotos, status
     ]
 
@@ -110,7 +111,7 @@ router.put('/:id', async (req, res) => {
     var fields = [
       'nombre_cliente', 'telefono_cliente', 'email_cliente', 'direccion_cliente',
       'marca_vehiculo', 'modelo_vehiculo', 'anio_vehiculo', 'placa_vehiculo',
-      'color_vehiculo', 'kilometraje_vehiculo', 'detalles', 'subtotal', 'iva', 'total',
+      'color_vehiculo', 'kilometraje_vehiculo', 'fecha_shaken', 'detalles', 'subtotal', 'iva', 'total',
       'fecha_servicio', 'notas', 'fotos', 'status'
     ]
 

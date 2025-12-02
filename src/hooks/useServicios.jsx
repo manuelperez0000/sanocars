@@ -57,6 +57,7 @@ const useServicios = () => {
             placa_vehiculo: '',
             color_vehiculo: '',
             kilometraje_vehiculo: '',
+            fecha_shaken: '',
 
             // Service details (JSON array)
             detalles: [],

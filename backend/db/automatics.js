@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const bcrypt = require('bcryptjs');
 
-module.exports = async  function automatics(conn) {
+async function automatics(conn) {
     console.log("Asegurando tablas automáticas...");
 
     var users = `
@@ -371,6 +371,13 @@ module.exports = async  function automatics(conn) {
       console.log("Columna 'direccion_cliente' ya existe o error al agregar:", error.message);
     }
 
+    try {
+      await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS fecha_shaken DATE DEFAULT NULL`);
+      console.log("Columna 'fecha_shaken' agregada a tabla 'servicios' si no existía.");
+    } catch (error) {
+      console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
+    }
+
     var venta = `
       CREATE TABLE IF NOT EXISTS venta (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -468,3 +475,6 @@ module.exports = async  function automatics(conn) {
     await conn.query(pagosAlquileres);
     console.log("Tabla 'pagos_alquileres' asegurada.");
 }
+
+
+module.exports = automatics

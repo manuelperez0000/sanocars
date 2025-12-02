@@ -54,22 +54,10 @@ router.post('/login', async function (req, res) {
     delete user.pass
     delete user.password_hash
 
-    db.end();
-
     return res.json({ success: true, data: { user: user, token: token } })
   } catch (err) {
     console.error('Auth login error:', err)
     res.status(500).json({ success: false, error: err?.message || 'Error interno del servidor' })
-  } finally {
-    // Close fallback direct connection to avoid leaking connections
-    try {
-      if (usedFallback && db && typeof db.end === 'function') {
-        await db.end()
-        console.warn('Auth: closed fallback DB connection')
-      }
-    } catch (closeErr) {
-      console.warn('Auth: error closing fallback DB connection', closeErr)
-    }
   }
 })
 

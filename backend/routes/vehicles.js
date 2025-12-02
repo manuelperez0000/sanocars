@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
 
     var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
+      console.log(result)
       return responser.error({ res, message: 'No se pudo crear el vehículo', status: 500 })
     }
 
