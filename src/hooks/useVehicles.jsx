@@ -172,10 +172,10 @@ const useVehicles = () => {
 
             if (editing && editing.id) {
                 alert("enviando a editar")
-                //await request.put(apiurl + '/vehicles/' + editing.id, dataToSend)
+                await request.put(apiurl + '/vehicles/' + editing.id, dataToSend)
             } else {
                 alert("enviando a guardar")
-                //await request.post(apiurl + '/vehicles', dataToSend)
+                await request.post(apiurl + '/vehicles', dataToSend)
             }
             setModalOpen(false)
             fetchVehicles()
