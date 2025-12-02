@@ -63,8 +63,8 @@ router.post('/', async (req, res) => {
     if (cliente_tipo === 'registrado' && !cliente_id) {
       return responser.error({ res, message: 'ID de cliente requerido para cliente registrado', status: 400 })
     }
-    if (cliente_tipo === 'nuevo' && (!cliente_nombre || !cliente_email)) {
-      return responser.error({ res, message: 'Nombre y email requeridos para cliente nuevo', status: 400 })
+    if (cliente_tipo === 'nuevo' && (!cliente_nombre)) {
+      return responser.error({ res, message: 'Nombre requerido para cliente nuevo', status: 400 })
     }
 
     var insertQuery = `INSERT INTO inspeccion_vehicular (

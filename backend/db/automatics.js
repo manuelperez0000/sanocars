@@ -40,7 +40,7 @@ async function automatics(conn) {
 
     var vehiculosVenta = `
       CREATE TABLE IF NOT EXISTS vehiculos_venta (
-  id int(11) NOT NULL,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   fecha_ingreso date NOT NULL,
   fecha_shaken date DEFAULT NULL,
   origen varchar(255) NOT NULL,
