@@ -1,9 +1,9 @@
 // Read values from Vite env variables (must start with VITE_)
 // Falls back to localhost defaults when env vars are not set.
-export const apiurl = "http://localhost:3000/api/v1" 
-export const topurl = "http://localhost:3000"
-/* export const apiurl = "https://app.sanocars.com/api/v1"
-export const topurl = "https://app.sanocars.com" */
+/* export const apiurl = "http://localhost:3000/api/v1" 
+export const topurl = "http://localhost:3000" */
+export const apiurl = "https://app.sanocars.com/api/v1"
+export const topurl = "https://app.sanocars.com"
 
 export function formatNumber(numStr) {
     var part1 = numStr.substring(0, 3);
