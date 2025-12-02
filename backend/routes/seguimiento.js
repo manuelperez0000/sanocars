@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-var connect = require('../db/connect.js')
-var mysql = require('mysql2/promise')
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -8,7 +8,6 @@ var responser = require('../network/responser.js')
 // GET /api/v1/seguimiento - Get vehicles with installment payments
 router.get('/', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
 
     // Query to get vehicles that have installment sales
     var query = `
@@ -20,7 +19,7 @@ router.get('/', async (req, res) => {
       AND v.numero_cuotas > 1
     ORDER BY v.id DESC`
 
-    var [rows] = await db.execute(query)
+    var [rows] = await db.query(query)
 
     // Process the siguientes_pagos JSON for each vehicle
     var processedRows = rows.map(row => {
@@ -54,23 +53,23 @@ router.get('/', async (req, res) => {
 router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
 
   try {
-  const { status } = req.body
-  const { vehicleId, cuotaIndex } = req.params
-  console.log(vehicleId, " ", cuotaIndex, " ", status)
-  const db = await mysql.createConnection(connect)
-  const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
-  var [result] = await db.execute(queryPagos)
+    const { status } = req.body
+    const { vehicleId, cuotaIndex } = req.params
+    console.log(vehicleId, " ", cuotaIndex, " ", status)
+
+    const queryPagos = `SELECT v.siguientes_pagos FROM venta v WHERE vehiculo_id = ${vehicleId}`
+    var [result] = await db.query(queryPagos)
 
 
     const pagos = JSON.parse(result[0].siguientes_pagos)
     const cuota = pagos.find(p => Number(p.numero_cuota) === Number(cuotaIndex))
-   
+
     cuota.status = status
-   /*  console.log(cuota) */
+    /*  console.log(cuota) */
     //modifico la cuota
     pagos[cuotaIndex - 1] = cuota
     const queryVentas = `UPDATE venta SET siguientes_pagos = ? WHERE vehiculo_id = ?`;
-    /* const resultUpdate =  */await db.execute(queryVentas, [JSON.stringify(pagos), vehicleId])
+    /* const resultUpdate =  */await db.query(queryVentas, [JSON.stringify(pagos), vehicleId])
     /* console.log(resultUpdate) */
     responser.success({ res, body: { message: 'Estado de cuota actualizado correctamente' } })
 
@@ -84,7 +83,7 @@ router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
    const { cuotaIndex } = req.params
    //get siguientes_pagos from id cuotaindex
    const queryGet = `SELECT v.siguientes_pagos FROM venta v WHERE id = ${cuotaIndex}`
-   var [rows] = await db.execute(queryGet)
+   var [rows] = await db.query(queryGet)
  
    console.log(JSON.parse(rows[0].siguientes_pagos)) */
 
@@ -101,12 +100,12 @@ router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
   } */
 
   /* try {
-    var db = connect(req, res)
+    
     const { status } = req.body
 
     // firss get cuota for index
     var queryCuota = `SELECT v.siguientes_pagos FROM venta v WHERE id = "cuotas"`
-    var [rows] = await db.execute(queryCuota)
+    var [rows] = await db.query(queryCuota)
 
     // Update the specific quota status
     const cuotaIndexNum = parseInt(cuotaIndex)
@@ -122,7 +121,7 @@ router.put('/:vehicleId/:cuotaIndex', async (req, res) => {
     SET siguientes_pagos = ?
     WHERE id = ?`
 
-    await db.execute(updateQuery, [JSON.stringify(siguientes_pagos), vehicleId])
+    await db.query(updateQuery, [JSON.stringify(siguientes_pagos), vehicleId])
 
     responser.success({ res, body: { message: 'Estado de cuota actualizado correctamente' } })
   } catch (error) {

@@ -1,6 +1,6 @@
-/* eslint-disable no-undef */
-var connect = require('../db/connect.js')
-var mysql = require('mysql2/promise')
+/* eslint-disable no-undef */ 
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -8,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/facturas - Get all invoices
 router.get('/', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
-    var [rows] = await db.execute('SELECT * FROM facturas ORDER BY id DESC')
+    
+    var [rows] = await db.query('SELECT * FROM facturas ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching invoices:', error)
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/facturas - Create a new invoice
 router.post('/', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
+    
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var tipo = req.body.tipo || null
@@ -43,13 +43,13 @@ router.post('/', async (req, res) => {
     var insertQuery = 'INSERT INTO facturas (tipo, cliente_nombre, cliente_apellido, cliente_genero, cliente_email, cliente_telefono, cliente_direccion, items, total, datos_pago, cuotas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     var params = [tipo, cliente_nombre, cliente_apellido, cliente_genero, cliente_email, cliente_telefono, cliente_direccion, JSON.stringify(items), total, JSON.stringify(datos_pago), JSON.stringify(cuotas)]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear la factura', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute('SELECT * FROM facturas WHERE id = ? LIMIT 1', [newId])
+    var [rows] = await db.query('SELECT * FROM facturas WHERE id = ? LIMIT 1', [newId])
     return responser.success({ res, body: rows[0], message: 'Factura creada', status: 201 })
 
   } catch (error) {
@@ -61,9 +61,9 @@ router.post('/', async (req, res) => {
 // GET /api/v1/facturas/:id - Get invoice by id
 router.get('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
+    
     var { id } = req.params
-    var [rows] = await db.execute('SELECT * FROM facturas WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM facturas WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Factura no encontrada', status: 404 })
     }
@@ -84,7 +84,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/facturas/:id - Update invoice
 router.put('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
+    
     var { id } = req.params
 
     // Allowed fields to update
@@ -114,12 +114,12 @@ router.put('/:id', async (req, res) => {
 
     params.push(id)
     var sql = 'UPDATE facturas SET ' + updates.join(', ') + ' WHERE id = ?'
-    var [result] = await db.execute(sql, params)
+    var [result] = await db.query(sql, params)
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Factura no encontrada', status: 404 })
     }
 
-    var [rows] = await db.execute('SELECT * FROM facturas WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM facturas WHERE id = ? LIMIT 1', [id])
     var invoice = rows[0]
     invoice.items = JSON.parse(invoice.items || '[]')
     invoice.datos_pago = JSON.parse(invoice.datos_pago || 'null')
@@ -136,10 +136,10 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/facturas/:id - Delete invoice
 router.delete('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
+    
     var { id } = req.params
 
-    var [result] = await db.execute('DELETE FROM facturas WHERE id = ?', [id])
+    var [result] = await db.query('DELETE FROM facturas WHERE id = ?', [id])
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Factura no encontrada', status: 404 })
     }

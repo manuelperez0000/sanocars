@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-var connect = require('../db/connect.js')
-var mysql = require('mysql2/promise')
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -8,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/vehicles - Get all vehicles
 router.get('/', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
-  var [rows] = await db.execute('SELECT * FROM vehiculos_venta ORDER BY id DESC')
+
+    var [rows] = await db.query('SELECT * FROM vehiculos_venta ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching vehicles:', error)
@@ -20,7 +20,6 @@ router.get('/', async (req, res) => {
 // POST /api/v1/vehicles - Create a new vehicle
 router.post('/', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var fecha_ingreso = req.body.fecha_ingreso || null
@@ -56,13 +55,13 @@ router.post('/', async (req, res) => {
     var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, status]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear el vehículo', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [newId])
+    var [rows] = await db.query('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [newId])
     return responser.success({ res, body: rows[0], message: 'Vehículo creado', status: 201 })
 
   } catch (error) {
@@ -74,9 +73,8 @@ router.post('/', async (req, res) => {
 // GET /api/v1/vehicles/:id - Get vehicle by id
 router.get('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
     var { id } = req.params
-    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Vehículo no encontrado', status: 404 })
     }
@@ -90,7 +88,6 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/vehicles/:id - Update vehicle
 router.put('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
     var { id } = req.params
 
     // Allowed fields to update
@@ -105,7 +102,7 @@ router.put('/:id', async (req, res) => {
       if (req.body[f] !== undefined) {
         // Validate status if being updated
         if (f === 'status') {
-          const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido','alquilado']
+          const validStatuses = ['En Venta', 'En alquiler', 'eliminado', 'vendido', 'alquilado']
           if (!validStatuses.includes(req.body[f])) {
             return responser.error({ res, message: 'Status no válido', status: 400 })
           }
@@ -121,12 +118,12 @@ router.put('/:id', async (req, res) => {
 
     params.push(id)
     var sql = 'UPDATE vehiculos_venta SET ' + updates.join(', ') + ' WHERE id = ?'
-    var [result] = await db.execute(sql, params)
+    var [result] = await db.query(sql, params)
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Vehículo no encontrado', status: 404 })
     }
 
-    var [rows] = await db.execute('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM vehiculos_venta WHERE id = ? LIMIT 1', [id])
     return responser.success({ res, body: rows[0], message: 'Vehículo actualizado' })
 
   } catch (error) {

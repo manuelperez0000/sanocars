@@ -1,6 +1,6 @@
-/* eslint-disable no-undef */
-var connect = require('../db/connect.js')
-var mysql = require('mysql2/promise')
+/* eslint-disable no-undef */ 
+var db = require('../db/dbConection.js')
+
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
@@ -8,8 +8,8 @@ var responser = require('../network/responser.js')
 // GET /api/v1/servicios - Get all servicios
 router.get('/', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
-  var [rows] = await db.execute('SELECT * FROM servicios ORDER BY id DESC')
+    
+    var [rows] = await db.query('SELECT * FROM servicios ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching servicios:', error)
@@ -20,9 +20,9 @@ router.get('/', async (req, res) => {
 // GET /api/v1/servicios/:id - Get servicio by id
 router.get('/:id', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
-  var { id } = req.params
-  var [rows] = await db.execute('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
+    
+    var { id } = req.params
+    var [rows] = await db.query('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
       return responser.error({ res, message: 'Servicio no encontrado', status: 404 })
     }
@@ -36,8 +36,8 @@ router.get('/:id', async (req, res) => {
 // POST /api/v1/servicios - Create a new servicio
 router.post('/', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
-  if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
+    
+    if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     // Extract fields from request body
     var nombre_cliente = req.body.nombre_cliente || null
@@ -85,13 +85,13 @@ router.post('/', async (req, res) => {
       fecha_servicio, notas, fotos, status
     ]
 
-    var [result] = await db.execute(insertQuery, params)
+    var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
       return responser.error({ res, message: 'No se pudo crear el servicio', status: 500 })
     }
 
     var newId = result.insertId
-    var [rows] = await db.execute('SELECT * FROM servicios WHERE id = ? LIMIT 1', [newId])
+    var [rows] = await db.query('SELECT * FROM servicios WHERE id = ? LIMIT 1', [newId])
     return responser.success({ res, body: rows[0], message: 'Servicio creado', status: 201 })
 
   } catch (error) {
@@ -103,8 +103,8 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/servicios/:id - Update servicio
 router.put('/:id', async (req, res) => {
   try {
-  const db = await mysql.createConnection(connect)
-  var { id } = req.params
+    
+    var { id } = req.params
 
     // Allowed fields to update
     var fields = [
@@ -137,12 +137,12 @@ router.put('/:id', async (req, res) => {
 
     params.push(id)
     var sql = 'UPDATE servicios SET ' + updates.join(', ') + ' WHERE id = ?'
-    var [result] = await db.execute(sql, params)
+    var [result] = await db.query(sql, params)
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Servicio no encontrado', status: 404 })
     }
 
-    var [rows] = await db.execute('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
+    var [rows] = await db.query('SELECT * FROM servicios WHERE id = ? LIMIT 1', [id])
     return responser.success({ res, body: rows[0], message: 'Servicio actualizado' })
 
   } catch (error) {
@@ -154,10 +154,10 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/servicios/:id - Delete servicio
 router.delete('/:id', async (req, res) => {
   try {
-    const db = await mysql.createConnection(connect)
+    
     var { id } = req.params
 
-    var [result] = await db.execute('DELETE FROM servicios WHERE id = ?', [id])
+    var [result] = await db.query('DELETE FROM servicios WHERE id = ?', [id])
     if (result.affectedRows === 0) {
       return responser.error({ res, message: 'Servicio no encontrado', status: 404 })
     }

@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { FaWhatsapp, FaCalendarAlt } from 'react-icons/fa'
 import request from '../utils/request.js'
-import { apiurl } from '../utils/globals.js'
+import { apiurl, topurl } from '../utils/globals.js'
 import useItemsServicio from '../hooks/useItemsServicio'
 
 const Service = () => {
@@ -28,7 +28,7 @@ const Service = () => {
         const fetchCategoria = async () => {
             try {
                 setLoading(true)
-                const response = await request.get(apiurl + '/categorias-servicio/' + id)
+                const response = await request.get(topurl + '/categorias-servicio/' + id)
                 if (response.data.body) {
                     setCategoria(response.data.body)
                 }
