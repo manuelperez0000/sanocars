@@ -6,6 +6,7 @@ import { apiurl, topurl } from '../utils/globals.js'
 import useItemsServicio from '../hooks/useItemsServicio'
 
 const Service = () => {
+
     const { id } = useParams()
     const [categoria, setCategoria] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -28,7 +29,7 @@ const Service = () => {
         const fetchCategoria = async () => {
             try {
                 setLoading(true)
-                const response = await request.get(topurl + '/categorias-servicio/' + id)
+                const response = await request.get(apiurl + '/categorias-servicio/' + id)
                 if (response.data.body) {
                     setCategoria(response.data.body)
                 }
@@ -138,7 +139,7 @@ const Service = () => {
             <h1 className='momo mb-4'>{categoria.titulo}</h1>
             <div className='row'>
                 <div className='col-md-6'>
-                    <img src={`${apiurl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image-detail' />
+                    <img src={`${topurl}/uploads/${categoria.imagen}`} alt={categoria.titulo} className='img-fluid rounded service-image-detail' />
                 </div>
                 <div className='col-md-6'>
                     <h3>Servicios incluidos:</h3>

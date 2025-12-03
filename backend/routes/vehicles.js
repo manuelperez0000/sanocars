@@ -34,6 +34,9 @@ router.post('/', async (req, res) => {
     var tipo_vehiculo = req.body.tipo_vehiculo || null
     var tamano_motor = req.body.tamano_motor || null
     var numero_chasis = req.body.numero_chasis || null
+    var transmission = req.body.transmission || null
+    var passengers = req.body.passengers || null
+    var ac = req.body.ac || null
     var observaciones = req.body.observaciones || null
     var trabajos_realizar = req.body.trabajos_realizar || null
     var imagen1 = req.body.imagen1 || null
@@ -53,8 +56,8 @@ router.post('/', async (req, res) => {
     }
 
     // Use provided fecha_ingreso or current date
-    var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, precio, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, observaciones, trabajos_realizar, imagen1, imagen2, precio, status]
+    var insertQuery = 'INSERT INTO vehiculos_venta (fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, transmission, passengers, ac, observaciones, trabajos_realizar, imagen1, imagen2, precio, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    var params = [fecha_ingreso, fecha_shaken, origen, marca, modelo, numero_placa, anio, kilometraje, color, tipo_vehiculo, tamano_motor, numero_chasis, transmission, passengers, ac, observaciones, trabajos_realizar, imagen1, imagen2, precio, status]
 
     var [result] = await db.query(insertQuery, params)
     if (!result || !result.insertId) {
@@ -94,7 +97,7 @@ router.put('/:id', async (req, res) => {
 
     // Allowed fields to update
     var fields = [
-      'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'observaciones', 'trabajos_realizar', 'imagen1', 'imagen2', 'precio', 'status'
+      'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'transmission', 'passengers', 'ac', 'observaciones', 'trabajos_realizar', 'imagen1', 'imagen2', 'precio', 'status'
     ]
 
     var updates = []

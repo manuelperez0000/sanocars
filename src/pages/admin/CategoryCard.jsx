@@ -63,7 +63,7 @@ const CategoryCard = ({ categoria, onEdit, onDelete }) => {
                         />
                     </div>
                     <div className="card-body d-flex flex-column">
-                        <h5 className="card-title">{categoria.titulo}</h5>
+                        <h5 className="card-title">[ {categoria.id} ] {categoria.titulo}</h5>
 
                         {/* Items list */}
                         <div className="mb-3">

@@ -266,15 +266,15 @@ const Servicios = () => {
                     <div class="totals-box">
                         <div class="totals-row">
                             <span>Subtotal:</span>
-                            <span>$${parseFloat(servicio.subtotal || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.subtotal || 0).toFixed(2)}</span>
                         </div>
                         <div class="totals-row">
                             <span>IVA (${ivaPercentage}%):</span>
-                            <span>$${parseFloat(servicio.iva || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.iva || 0).toFixed(2)}</span>
                         </div>
                         <div class="totals-row total">
                             <span>Total:</span>
-                            <span>$${parseFloat(servicio.total || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.total || 0).toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
@@ -332,7 +332,7 @@ const Servicios = () => {
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
                                                         <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
                                                         <td>{new Date(s.fecha_servicio).toLocaleDateString()}</td>
-                                                        <td>${parseFloat(s.total || 0).toFixed(2)}</td>
+                                                        <td>¥{parseFloat(s.total || 0).toFixed(2)}</td>
                                                         <td>
                                                             <span className={`badge ${s.status === 'Completado' ? 'bg-success' : s.status === 'En Progreso' ? 'bg-warning' : 'bg-secondary'}`}>
                                                                 {s.status}
@@ -487,11 +487,11 @@ const Servicios = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Subtotal:</strong>
-                                                        <span>${parseFloat(form.subtotal || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(form.subtotal || 0).toFixed(2)}</span>
                                                     </div>
                                                     <div className="d-flex justify-content-between">
                                                         <strong>IVA ({ivaPercentage}%):</strong>
-                                                        <span>${parseFloat(form.iva || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(form.iva || 0).toFixed(2)}</span>
                                                     </div>
                                                     <hr />
                                                     <div className="d-flex justify-content-between">

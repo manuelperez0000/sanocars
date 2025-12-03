@@ -17,10 +17,8 @@ const Factura = () => {
     }, [facturas, id])
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('es-VE', {
-            style: 'currency',
-            currency: 'VES'
-        }).format(amount)
+
+        return `¥ ${amount}`
     }
 
     const formatDate = (dateString) => {
@@ -134,19 +132,19 @@ const Factura = () => {
                             <div className="border-bottom pb-1 mb-1">
                                 <h6>Información del Cliente</h6>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body container-fluid">
                                 <div className="row">
-                                    <div className="col-md-3">
+                                    <div className="col-6 col-md-3">
                                         <p><strong>Nombre:</strong> <br /> {factura.cliente_nombre}</p>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-6 col-md-3">
                                         <p><strong>Teléfono:</strong> <br /> {factura.cliente_telefono || 'N/A'}</p>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-6 col-md-3">
                                         <p><strong>Email:</strong> <br /> {factura.cliente_email || 'N/A'}</p>
                                     </div>
                                     
-                                    <div className="col-md-3">
+                                    <div className="col-6 col-md-3">
                                         <p><strong>Dirección:</strong> <br /> {factura.cliente_direccion || 'N/A'}</p>
                                     </div>
                                 </div>

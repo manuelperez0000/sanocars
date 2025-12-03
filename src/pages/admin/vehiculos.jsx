@@ -248,6 +248,22 @@ const Vehiculos = () => {
                                             <label className="form-label">Tamaño motor</label>
                                             <input name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
                                         </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Transmisión</label>
+                                            <input type='text' name="transmission" value={form.transmission || ''} onChange={handleChange} className="form-control" />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Pasajeros</label>
+                                            <input type='number' step={1} name="passengers" value={form.passengers || ''} onChange={handleChange} className="form-control" />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Aire acondicionado</label>
+                                            <select name="ac" value={form.ac || ''} onChange={handleChange} className="form-control">
+                                                <option value="">Seleccionar</option>
+                                                <option value="1">Sí</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-12 mb-3">
@@ -482,7 +498,7 @@ const Vehiculos = () => {
                                                         <>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Menos Inicial:</strong>
-                                                                <span>-${parseFloat(salesForm.monto_inicial || 0).toFixed(2)}</span>
+                                                                <span>-¥{parseFloat(salesForm.monto_inicial || 0).toFixed(2)}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Financiamiento:</strong>
@@ -519,7 +535,7 @@ const Vehiculos = () => {
                                                                         <tr key={index}>
                                                                             <td className="ps-0">{pago.numero_cuota}</td>
                                                                             <td>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
-                                                                            <td className="text-end pe-0">${pago.monto}</td>
+                                                                            <td className="text-end pe-0">¥{pago.monto}</td>
                                                                         </tr>
                                                                     ))}
                                                                 </tbody>

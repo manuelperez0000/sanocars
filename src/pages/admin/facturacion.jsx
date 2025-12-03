@@ -130,8 +130,8 @@ const Facturacion = () => {
                                                 <tr key={index}>
                                                     <td>{item.name}</td>
                                                     <td>{item.quantity}</td>
-                                                    <td>${item.price?.toLocaleString() || 0}</td>
-                                                    <td>${item.subtotal?.toLocaleString() || 0}</td>
+                                                    <td>¥{item.price?.toLocaleString() || 0}</td>
+                                                    <td>¥{item.subtotal?.toLocaleString() || 0}</td>
                                                     <td>
                                                         <button
                                                             className="btn btn-sm btn-danger"
@@ -146,7 +146,7 @@ const Facturacion = () => {
                                         <tfoot>
                                             <tr>
                                                 <td colSpan="3" className="text-end fw-bold">Total:</td>
-                                                <td className="fw-bold">${calculateTotal().toLocaleString()}</td>
+                                                <td className="fw-bold">¥{calculateTotal().toLocaleString()}</td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>

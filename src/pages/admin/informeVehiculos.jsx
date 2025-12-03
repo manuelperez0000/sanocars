@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
 import { topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
+import carrito from '../../assets/carrito.png'
 const InformeVehiculos = () => {
     const {getPhones,getEmails} = useConfiguracion()
     const navigate = useNavigate()
@@ -82,7 +83,7 @@ const InformeVehiculos = () => {
                     .company-info {
                         display: flex;
                         align-items: center;
-                        gap: 10px;
+                        gap: 0px;
                     }
 
                     .company-logo {
@@ -134,13 +135,13 @@ const InformeVehiculos = () => {
                     .info-grid {
                         display: grid;
                         grid-template-columns: repeat(2, 1fr);
-                        gap: 15px;
+                        gap: 0px;
                         margin-bottom: 5px;
                     }
                     .info-grid-2 {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 15px;
+                        gap: 0px;
                         margin-bottom: 5px;
                     }
 
@@ -163,9 +164,6 @@ const InformeVehiculos = () => {
                     }
                         .company-info-section {
                             display: flex;
-                            flex-direction: column;
-                            padding: 15px;
-                            border: 1px solid black;
                             height: 260px;
                             justify-content: center;
                             align-items: center;
@@ -236,13 +234,13 @@ const InformeVehiculos = () => {
                     .vehicle-grid {
                         display: grid;
                         grid-template-columns: repeat(7, 1fr);
-                        gap: 15px;
+                        gap: 0px;
                     }
 
                     .condition-grid {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 15px;
+                        gap: 0px;
                     }
 
                     .footer {
@@ -409,15 +407,9 @@ const InformeVehiculos = () => {
                     </div>
                         <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
                             <div class="company-info-section">
-                                <div class="company-info-header">Información de la Empresa</div>
-                                <div class="company-info-content">
-                                    <h3>SANOCARS</h3>
-                                    <p><strong>Dirección:</strong> Numazu Shizuoka, Japón</p>
-                                    <p><strong>Teléfono:</strong> ${getPhones()[0]?.texto || '080 9117 1993'}</p>
-                                    <p><strong>Email:</strong> ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}</p>
-                                </div>
+                                <img src="${carrito}" height="220px" />
                             </div>
-                            <div class="info-item-2">
+                            <div class="info-item">
                                 <div class="info-label">Detalles de Pintura</div>
                                 <div class="text-area">${reportData.vehiculo_detalles_pintura || 'N/A'}</div>
                             </div>

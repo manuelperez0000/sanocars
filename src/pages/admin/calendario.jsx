@@ -304,12 +304,12 @@ const Calendario = () => {
                           </div>
                           <div className="d-flex justify-content-between">
                             <strong>IVA (10%):</strong>
-                            <span>${parseFloat(form.iva || 0).toFixed(2)}</span>
+                            <span>¥{parseFloat(form.iva || 0).toFixed(2)}</span>
                           </div>
                           <hr />
                           <div className="d-flex justify-content-between">
                             <strong>Total:</strong>
-                            <span className="text-primary">${parseFloat(form.total || 0).toFixed(2)}</span>
+                            <span className="text-primary">¥{parseFloat(form.total || 0).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
