@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import request from '../utils/request'
 import { apiurl } from '../utils/globals'
 
+const amarillo = 90
+const rojo = 60
+
 const ViewModal = ({ show, onHide, item }) => {
   if (!show || !item) return null
 
@@ -55,11 +58,11 @@ const ShakenTable = ({ data, marcaKey, modeloKey, anioKey, fechaKey, keyField, e
   }
 
   const styles = (days) => {
-    if(days < 0){
+    if(days < rojo){
       return { backgroundColor: '#dc3545', color: '#fff' } 
     }
-    if(days < 59){
-      return {backgroundColor: '#e9ac29ff', color: '#020202ff'}
+    if(days < amarillo){
+      return {backgroundColor: '#ffd374ff', color: '#020202ff'}
     }
   }
 
