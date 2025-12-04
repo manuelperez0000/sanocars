@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import useClientes from '../../hooks/useClientes'
 
 const Clientes = () => {
     const { clientes, loading, error } = useClientes()
     const [selectedCliente, setSelectedCliente] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [originFilter, setOriginFilter] = useState('')
 
     const handleViewDetails = (cliente) => {
         setSelectedCliente(cliente)
@@ -32,6 +34,22 @@ const Clientes = () => {
         }
         return colors[tabla] || 'bg-secondary'
     }
+
+    // Filter and search logic
+    const filteredClientes = useMemo(() => {
+        return clientes.filter(cliente => {
+            // Search filter
+            const matchesSearch = searchTerm === '' ||
+                cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                cliente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                cliente.telefono.includes(searchTerm)
+
+            // Origin filter
+            const matchesOrigin = originFilter === '' || cliente.tabla_origen === originFilter
+
+            return matchesSearch && matchesOrigin
+        })
+    }, [clientes, searchTerm, originFilter])
 
     if (loading) {
         return (
@@ -77,7 +95,36 @@ const Clientes = () => {
                     ) : (
                         <div className="card">
                             <div className="card-header">
-                                <h5>Lista de Clientes ({clientes.length})</h5>
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <h5>Lista de Clientes ({filteredClientes.length} de {clientes.length})</h5>
+                                    <div className="d-flex gap-3">
+                                        <div className="input-group" style={{ width: '300px' }}>
+                                            <span className="input-group-text">
+                                                <i className="fas fa-search"></i>
+                                            </span>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Buscar por nombre, email o teléfono..."
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                            />
+                                        </div>
+                                        <select
+                                            className="form-select"
+                                            style={{ width: '200px' }}
+                                            value={originFilter}
+                                            onChange={(e) => setOriginFilter(e.target.value)}
+                                        >
+                                            <option value="">Todos los orígenes</option>
+                                            <option value="venta">Venta</option>
+                                            <option value="alquileres">Alquiler</option>
+                                            <option value="inspeccion_vehicular">Inspección</option>
+                                            <option value="financiamiento">Financiamiento</option>
+                                            <option value="servicios">Servicio</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
@@ -85,7 +132,6 @@ const Clientes = () => {
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
-                                                <th>Apellido</th>
                                                 <th>Email</th>
                                                 <th>Teléfono</th>
                                                 <th>Vehículo</th>
@@ -94,33 +140,43 @@ const Clientes = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {clientes.map(cliente => (
-                                                <tr key={cliente.id}>
-                                                    <td>{cliente.nombre}</td>
-                                                    <td>{cliente.apellido}</td>
-                                                    <td>{cliente.email || 'N/A'}</td>
-                                                    <td>{cliente.telefono || 'N/A'}</td>
-                                                    <td>
-                                                        {cliente.vehiculo_marca && cliente.vehiculo_modelo ?
-                                                            `${cliente.vehiculo_marca} ${cliente.vehiculo_modelo} ${cliente.vehiculo_anio} ${cliente.vehiculo_color}` :
-                                                            'N/A'
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        <span className={`badge ${getBadgeColor(cliente.tabla_origen)}`}>
-                                                            {getTablaLabel(cliente.tabla_origen)}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <button
-                                                            className="btn btn-sm btn-primary"
-                                                            onClick={() => handleViewDetails(cliente)}
-                                                        >
-                                                            Ver Detalles
-                                                        </button>
+                                            {filteredClientes.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="6" className="text-center py-4">
+                                                        <div className="text-muted">
+                                                            <i className="fas fa-search me-2"></i>
+                                                            No se encontraron clientes que coincidan con los filtros aplicados
+                                                        </div>
                                                     </td>
                                                 </tr>
-                                            ))}
+                                            ) : (
+                                                filteredClientes.map(cliente => (
+                                                    <tr key={cliente.id}>
+                                                        <td>{cliente.nombre}</td>
+                                                        <td>{cliente.email || 'N/A'}</td>
+                                                        <td>{cliente.telefono || 'N/A'}</td>
+                                                        <td>
+                                                            {cliente.vehiculo_marca && cliente.vehiculo_modelo ?
+                                                                `${cliente.vehiculo_marca} ${cliente.vehiculo_modelo} ${cliente.vehiculo_anio} ${cliente.vehiculo_color}` :
+                                                                'N/A'
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <span className={`badge ${getBadgeColor(cliente.tabla_origen)}`}>
+                                                                {getTablaLabel(cliente.tabla_origen)}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <button
+                                                                className="btn btn-sm btn-primary"
+                                                                onClick={() => handleViewDetails(cliente)}
+                                                            >
+                                                                Ver Detalles
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

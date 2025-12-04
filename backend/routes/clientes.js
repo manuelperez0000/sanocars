@@ -7,11 +7,11 @@ const db = require('../db/dbConection')
 router.get('/', async (req, res) => {
     try {
         const queries = {
-            ventas: 'SELECT * FROM venta WHERE cliente_nombre IS NOT NULL AND cliente_nombre != ""',
-            alquileres: 'SELECT * FROM alquileres WHERE cliente_nombre IS NOT NULL AND cliente_nombre != ""',
-            inspeccion_vehicular: 'SELECT * FROM inspeccion_vehicular WHERE cliente_nombre IS NOT NULL AND cliente_nombre != ""',
-            financiamiento: 'SELECT * FROM financing WHERE cliente_nombre IS NOT NULL AND cliente_nombre != ""',
-            servicios: 'SELECT * FROM servicios WHERE cliente_nombre IS NOT NULL AND cliente_nombre != ""'
+            ventas: 'SELECT * FROM venta',
+            alquileres: 'SELECT * FROM alquileres',
+            inspeccion_vehicular: 'SELECT * FROM inspeccion_vehicular',
+            financiamiento: 'SELECT * FROM financing',
+            servicios: 'SELECT * FROM servicios'
         }
 
         const results = {}
