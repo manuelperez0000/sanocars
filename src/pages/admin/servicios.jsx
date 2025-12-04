@@ -432,7 +432,7 @@ const Servicios = () => {
                                         <div className="d-flex justify-content-between align-items-center mb-3">
                                             <h6 className="text-primary mb-0">Detalles del Servicio</h6>
                                             <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => openDetailsModal()}>
-                                                Agregar Item
+                                                Agregar Detalles del servicio
                                             </button>
                                         </div>
                                         <div className="table-responsive">
@@ -496,7 +496,7 @@ const Servicios = () => {
                                                     <hr />
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Total:</strong>
-                                                        <span className="text-primary">${parseFloat(form.total || 0).toFixed(2)}</span>
+                                                        <span className="text-primary">¥{parseFloat(form.total || 0).toFixed(2)}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -640,7 +640,7 @@ const Servicios = () => {
                                         />
                                     </div>
                                     <div className="col-md-6 mb-3">
-                                        <label className="form-label">Precio Unitario en ¥</label>
+                                        <label className="form-label">Precio en ¥</label>
                                         <input
                                             type="number"
                                             name="precio_unitario"
