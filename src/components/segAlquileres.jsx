@@ -139,13 +139,13 @@ const SegAlquileres = () => {
                               {new Date(paymentDate).toLocaleDateString('es-ES')}
                             </small>
                             <small className="text-success fw-bold">
-                              ${parseFloat(rental.precio_alquiler)}
+                              {formatCurrency(rental.precio_alquiler)}
                             </small>
                           </div>
                         ))}
                         <div className="mt-2 pt-2">
                           <small className="text-muted">
-                            Total pagado: ¥{(rental.payments.length * parseFloat(rental.precio_alquiler))}
+                            Total pagado: {formatCurrency(rental.payments.length * parseInt(rental.precio_alquiler))}
                           </small>
                         </div>
                       </div>

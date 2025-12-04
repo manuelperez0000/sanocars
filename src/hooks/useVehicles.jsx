@@ -336,9 +336,9 @@ const useVehicles = () => {
 
     function calculateSalesTotal() {
         setSalesForm(prev => {
-            const precio_venta = parseFloat(prev.precio_venta) || 0
-            const monto_inicial = parseFloat(prev.monto_inicial) || 0
-            const tasa_interes = parseFloat(prev.tasa_interes) || 0
+            const precio_venta = parseInt(prev.precio_venta) || 0
+            const monto_inicial = parseInt(prev.monto_inicial) || 0
+            const tasa_interes = parseInt(prev.tasa_interes) || 0
             const numero_cuotas = parseInt(prev.numero_cuotas) || 1
             const frecuencia_cuotas = prev.frecuencia_cuotas || 'mensual'
             const fecha_inicial = prev.fecha_inicial || new Date().toISOString().split('T')[0]
@@ -584,7 +584,7 @@ const useVehicles = () => {
                         ${saleData.tipo_pago === 'cuotas' ? `
                         <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
                         <p><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</p>
-                        <p><strong>Monto Inicial:</strong> $${parseFloat(saleData.monto_inicial || 0)}</p>
+                        <p><strong>Monto Inicial:</strong> $${parseInt(saleData.monto_inicial || 0)}</p>
                         <p><strong>Tasa de Interés:</strong> ${saleData.tasa_interes}%</p>
                         ` : ''}
                     </div>
@@ -610,9 +610,9 @@ const useVehicles = () => {
                     <div class="details-grid">
                         <div class="detail-item"><strong>Precio de Venta:</strong> ${formatCurrency(saleData.precio_venta)}</div>
                         ${saleData.tipo_pago === 'cuotas' ? `
-                        <div class="detail-item"><strong>Monto Inicial:</strong> ${parseFloat(saleData.monto_inicial || 0)}</div>
-                        <div class="detail-item"><strong>Financiamiento:</strong> ${(parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0))}</div>
-                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
+                        <div class="detail-item"><strong>Monto Inicial:</strong> ${parseInt(saleData.monto_inicial || 0)}</div>
+                        <div class="detail-item"><strong>Financiamiento:</strong> ${(parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0))}</div>
+                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
                         <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
                         <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
                         <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</div>
@@ -663,21 +663,21 @@ const useVehicles = () => {
                     <div class="totals-box">
                         <div class="totals-row">
                             <span>Precio de Venta:</span>
-                            <span>¥${parseFloat(saleData.precio_venta || 0)}</span>
+                            <span>${formatCurrency(saleData.precio_venta || 0)}</span>
                         </div>
                         ${saleData.tipo_pago === 'cuotas' ? `
                         <div class="totals-row">
                             <span>Menos Inicial:</span>
-                            <span>-¥${parseFloat(saleData.monto_inicial || 0)}</span>
+                            <span>-${formatCurrency(saleData.monto_inicial || 0)}</span>
                         </div>
                         <div class="totals-row">
                             <span>Más Intereses:</span>
-                            <span>+¥${((parseFloat(saleData.precio_venta || 0) - parseFloat(saleData.monto_inicial || 0)) * (parseFloat(saleData.tasa_interes || 0) / 100))}</span>
+                            <span>+${formatCurrency((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100))}</span>
                         </div>
                         ` : ''}
                         <div class="totals-row total">
                             <span>Total a Pagar:</span>
-                            <span>¥${parseFloat(saleData.total_con_intereses || 0)}</span>
+                            <span>${formatCurrency(saleData.total_con_intereses || 0)}</span>
                         </div>
                     </div>
                 </div>

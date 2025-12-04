@@ -20,6 +20,16 @@ export const formatCurrency = (n,symbol)=> {
     maximumFractionDigits: 0 // por si vienen decimales largos
   });
   const num = Number(String(n).replace(',', '.'));
-  const newSymbol = symbol ? symbol : ''
+  const newSymbol = symbol ? symbol : '¥ '
   return `${newSymbol}${formatter.format(num)}`;
+}
+
+export const formatBigNumber = (n)=> {
+  const formatter = new Intl.NumberFormat('es-VE', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0 // por si vienen decimales largos
+  });
+  const num = Number(String(n).replace(',', '.'));
+  
+  return formatter.format(num)
 }

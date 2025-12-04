@@ -1,5 +1,5 @@
 import useVehicles from '../../hooks/useVehicles'
-import { topurl } from '../../utils/globals'
+import { formatBigNumber, formatCurrency, topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import { useNavigate } from 'react-router-dom'
 import objVehicles from '../../utils/objVehicles.json'
@@ -123,9 +123,9 @@ const Vehiculos = () => {
                                                             <td>{v.marca}</td>
                                                             <td>{v.modelo}</td>
                                                             <td>{v.anio}</td>
-                                                            <td>{v.kilometraje}</td>
+                                                            <td>{formatBigNumber(v.kilometraje)}</td>
                                                             <td>{v.color}</td>
-                                                            <td>¥{parseFloat(v.precio || 0)}</td>
+                                                            <td>{formatCurrency(v.precio)}</td>
                                                             <td>{dateFormater(v.fecha_shaken) || '-'}</td>
                                                             <td>{v.status}</td>
                                                             <td>
@@ -201,7 +201,7 @@ const Vehiculos = () => {
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Precio</label>
-                                            <input name="precio" type="number" value={form.precio || ''} onChange={handleChange} className="form-control" step="0.01" min="0" />
+                                            <input name="precio" type="number" value={form.precio || ''} onChange={handleChange} className="form-control" step="1" min="0" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Número de placa</label>
@@ -413,7 +413,7 @@ const Vehiculos = () => {
                                             <div className="col-md-6 mb-3">
                                                 <label className="form-label">Precio de Venta *</label>
                                                 <input
-                                                    type="number"
+                                                    type="text"
                                                     name="precio_venta"
                                                     value={salesForm.precio_venta || ''}
                                                     onChange={handleSalesChange}
@@ -443,7 +443,7 @@ const Vehiculos = () => {
                                                     <input
                                                         type="number"
                                                         name="numero_cuotas"
-                                                        value={salesForm.numero_cuotas || 1}
+                                                        value={salesForm.numero_cuotas}
                                                         onChange={handleSalesChange}
                                                         className="form-control"
                                                         min="1"
@@ -466,7 +466,7 @@ const Vehiculos = () => {
                                                         value={salesForm.monto_inicial}
                                                         onChange={handleSalesChange}
                                                         className="form-control"
-                                                        step="0.01"
+                                                        step="1"
                                                         min="0"
                                                     />
                                                 </div>
@@ -478,7 +478,7 @@ const Vehiculos = () => {
                                                         value={salesForm.tasa_interes }
                                                         onChange={handleSalesChange}
                                                         className="form-control"
-                                                        step="0.01"
+                                                        step="1"
                                                         min="0"
                                                         max="50"
                                                     />
@@ -513,28 +513,28 @@ const Vehiculos = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between mb-2">
                                                         <strong>Precio de Venta:</strong>
-                                                        <span>¥{parseFloat(salesForm.precio_venta || 0)}</span>
+                                                        <span>{formatCurrency(salesForm.precio_venta || 0)}</span>
                                                     </div>
                                                     {salesForm.tipo_pago === 'cuotas' && (
                                                         <>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Menos Inicial:</strong>
-                                                                <span>-¥{parseFloat(salesForm.monto_inicial || 0)}</span>
+                                                                <span>- {formatCurrency(salesForm.monto_inicial || 0)}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Financiamiento:</strong>
-                                                                <span>¥ {(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0))}</span>
+                                                                <span> {formatCurrency(parseInt(salesForm.precio_venta || 0) - parseInt(salesForm.monto_inicial || 0))}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Intereses ({salesForm.tasa_interes}%):</strong>
-                                                                <span>¥ {((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100))}</span>
+                                                                <span>{formatCurrency((parseInt(salesForm.precio_venta || 0) - parseInt(salesForm.monto_inicial || 0)) * (parseInt(salesForm.tasa_interes || 0) / 100))}</span>
                                                             </div>
                                                         </>
                                                     )}
                                                     <hr />
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Total a Pagar:</strong>
-                                                        <span className="text-primary">¥{parseFloat(salesForm.total_con_intereses || 0)}</span>
+                                                        <span className="text-primary">{formatCurrency(salesForm.total_con_intereses || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -556,7 +556,7 @@ const Vehiculos = () => {
                                                                         <tr key={index}>
                                                                             <td className="ps-0">{pago.numero_cuota}</td>
                                                                             <td>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
-                                                                            <td className="text-end pe-0">¥{pago.monto}</td>
+                                                                            <td className="text-end pe-0">{formatCurrency(pago.monto)}</td>
                                                                         </tr>
                                                                     ))}
                                                                 </tbody>
@@ -632,7 +632,7 @@ const Vehiculos = () => {
                                                     value={rentalForm.precio_alquiler || ''}
                                                     onChange={handleRentalChange}
                                                     className="form-control"
-                                                    step="0.01"
+                                                    step="1"
                                                     min="0"
                                                     required
                                                 />

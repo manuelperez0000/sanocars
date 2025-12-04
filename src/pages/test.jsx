@@ -4,6 +4,14 @@ import request from "../utils/request"
 const Test = () => {
 
     const [message, setMessage] = useState("")
+    const [value, setValue] = useState('')
+
+    const handleChange = e => {
+    const num = e.target.value.replace(/\D/g, ""); // solo dígitos
+    setValue(num ? parseInt(num, 10).toLocaleString("es-VE") : "");
+  };
+
+  const numericValue = parseInt(value.replace(/\./g, ""), 10) || 0;
 
     const test = async (url) => {
         try {
@@ -31,6 +39,11 @@ const Test = () => {
 
             <div>
                 {message || "Not fetched message"}
+            </div>
+
+            <div className="p-3">
+                <div className="mb-3 ">{numericValue}</div>
+                <input type="text" value={value} onChange={handleChange} />
             </div>
 
         </div>

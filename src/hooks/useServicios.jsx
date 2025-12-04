@@ -145,8 +145,8 @@ const useServicios = () => {
         const newDetail = {
             descripcion: descripcion.trim(),
             cantidad: parseInt(cantidad) || 1,
-            precio_unitario: parseFloat(precio_unitario) || 0,
-            total: (parseInt(cantidad) || 1) * (parseFloat(precio_unitario) || 0)
+            precio_unitario: parseInt(precio_unitario) || 0,
+            total: (parseInt(cantidad) || 1) * (parseInt(precio_unitario) || 0)
         }
 
         setForm(prev => {

@@ -1,5 +1,5 @@
 import useInventory from '../../hooks/useInventory'
-import { apiurl, topurl } from '../../utils/globals'
+import { topurl } from '../../utils/globals'
 
 const Inventario = () => {
     const {
@@ -109,7 +109,7 @@ const Inventario = () => {
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Precio ¥</label>
-                                            <input name="precio" type="number" step="0.01" value={form.precio || ''} onChange={handleChange} className="form-control" />
+                                            <input name="precio" type="number" step="1" value={form.precio || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Cantidad</label>

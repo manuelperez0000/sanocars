@@ -1,6 +1,7 @@
 
 import useFacturacion from '../../hooks/useFacturacion'
 import ClientInformation from '../../components/ClientInformation'
+import { formatBigNumber, formatCurrency } from '../../utils/globals'
 
 const Facturacion = () => {
     const { navigate, selectedItems, registerAndGenerateInvoice,
@@ -77,7 +78,7 @@ const Facturacion = () => {
                                                     <td>{product.id}</td>
                                                     <td>{product.nombre}</td>
                                                     <td>{product.fabricante}</td>
-                                                    <td>¥{product.precio?.toLocaleString() || 0}</td>
+                                                    <td>{formatCurrency(product.precio) }</td>
                                                     <td>{product.cantidad || 0}</td>
                                                     <td>
                                                         <input
@@ -129,9 +130,9 @@ const Facturacion = () => {
                                             {selectedItems.map((item, index) => (
                                                 <tr key={index}>
                                                     <td>{item.name}</td>
-                                                    <td>{item.quantity}</td>
-                                                    <td>¥{item.price?.toLocaleString() || 0}</td>
-                                                    <td>¥{item.subtotal?.toLocaleString() || 0}</td>
+                                                    <td>{formatBigNumber(item.quantity)}</td>
+                                                    <td>{formatCurrency(item.price)}</td>
+                                                    <td>{formatCurrency(item.subtotal)}</td>
                                                     <td>
                                                         <button
                                                             className="btn btn-sm btn-danger"
