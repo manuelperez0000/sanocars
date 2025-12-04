@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import request from '../../utils/request'
-import { apiurl } from '../../utils/globals'
+import { apiurl, topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
 
 const FinancingDetail = () => {
@@ -142,6 +142,50 @@ const FinancingDetail = () => {
             <span className={`badge bg-${statusColors[status] || 'secondary'}`}>
                 {status.charAt(0).toUpperCase() + status.slice(1)}
             </span>
+        )
+    }
+
+    const renderFinancingImages = (financiamiento) => {
+        const images = [
+            { filename: financiamiento.seiru_cado_frontal, label: 'Seiru Frontal' },
+            { filename: financiamiento.seiru_cado_trasero, label: 'Seiru Trasero' },
+            { filename: financiamiento.licencia_conducir_frontal, label: 'Licencia Frontal' },
+            { filename: financiamiento.licencia_conducir_trasero, label: 'Licencia Trasera' },
+            { filename: financiamiento.kokumin_shakai_hoken, label: 'Kokumin Hoken' },
+            { filename: financiamiento.libreta_banco, label: 'Libreta Banco' }
+        ].filter(img => img.filename)
+
+        if (images.length === 0) return <span className="text-muted">Sin documentos</span>
+
+        return (
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+                gap: '8px',
+                marginTop: '10px'
+            }}>
+                {images.map((img, index) => (
+                    <div key={index} style={{ textAlign: 'center' }}>
+                        <img
+                            src={`${topurl}/uploads/${img.filename}`}
+                            alt={img.label}
+                            style={{
+                                width: '100px',
+                                height: '100px',
+                                objectFit: 'cover',
+                                borderRadius: '4px',
+                                border: '1px solid #e0e0e0',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => window.open(`${topurl}/uploads/${img.filename}`, '_blank')}
+                            title={img.label}
+                        />
+                        <small className="text-muted d-block" style={{ fontSize: '11px', lineHeight: '1.2', marginTop: '4px' }}>
+                            {img.label}
+                        </small>
+                    </div>
+                ))}
+            </div>
         )
     }
 
@@ -288,93 +332,85 @@ const FinancingDetail = () => {
                             </div>
 
                             {/* Información Residencial */}
-                            <div className="col-lg-4 mb-2">
-                                <div className="card">
+                            <div className="col-12">
+                                <div className="card mb-2">
                                     <div className="card-header py-2">
                                         <h6 className="card-title mb-0">Información Residencial</h6>
                                     </div>
                                     <div className="card-body py-2">
-                                        <div className="mb-2">
-                                            <strong>Dirección:</strong><br />
-                                            <small>{financiamiento.direccion_actual}</small>
-                                        </div>
                                         <div className="row">
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3">
+                                                <strong>Dirección:</strong><br />
+                                                <small>{financiamiento.direccion_actual}</small>
+                                            </div>
+                                            <div className="col-3 mb-1">
                                                 <strong>Personas:</strong><br />
                                                 <small>{financiamiento.personas_viviendo}</small>
                                             </div>
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Tiempo:</strong><br />
                                                 <small>{financiamiento.tiempo_direccion}</small>
                                             </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Cabeza Fam.:</strong><br />
                                                 <small>{financiamiento.cabeza_familia}</small>
                                             </div>
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Pago Hip/Alq:</strong><br />
                                                 <small>{financiamiento.pago_hipoteca_alquiler}</small>
                                             </div>
-                                        </div>
-                                        {financiamiento.cantidad_hijos > 0 && (
-                                            <div className="mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Hijos:</strong><br />
                                                 <small>{financiamiento.cantidad_hijos}</small>
                                             </div>
-                                        )}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
 
                             {/* Información Laboral */}
-                            <div className="col-lg-4 mb-2">
+                            <div className="col-12 mb-2">
                                 <div className="card">
                                     <div className="card-header py-2">
                                         <h6 className="card-title mb-0">Información Laboral</h6>
                                     </div>
                                     <div className="card-body py-2">
                                         <div className="row">
-                                            <div className="col-12 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Empresa (Kanji):</strong><br />
                                                 <small>{financiamiento.nombre_empresa_kanji}</small>
                                             </div>
-                                            <div className="col-12 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Empresa (Katakana):</strong><br />
                                                 <small>{financiamiento.nombre_empresa_katakana}</small>
                                             </div>
-                                        </div>
-                                        <div className="mb-2">
-                                            <strong>Dirección Trabajo:</strong><br />
-                                            <small>{financiamiento.direccion_trabajo}</small>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-2">
+                                                <strong>Dirección Trabajo:</strong><br />
+                                                <small>{financiamiento.direccion_trabajo}</small>
+                                            </div>
+                                            <div className="col-3 mb-1">
                                                 <strong>Tel. Trabajo:</strong><br />
                                                 <small>{financiamiento.telefono_trabajo}</small>
                                             </div>
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Industria:</strong><br />
                                                 <small>{financiamiento.tipo_industria}</small>
                                             </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-6 mb-1">
+                                     
+                                            <div className="col-3 mb-1">
                                                 <strong>Tiempo Trab.:</strong><br />
                                                 <small>{financiamiento.tiempo_trabajando}</small>
                                             </div>
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Día Pago:</strong><br />
                                                 <small>{financiamiento.dia_pago}</small>
                                             </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Ingreso Mensual:</strong><br />
                                                 <small>{formatCurrency(financiamiento.ingreso_mensual)}</small>
                                             </div>
-                                            <div className="col-6 mb-1">
+                                            <div className="col-3 mb-1">
                                                 <strong>Ingreso Anual:</strong><br />
                                                 <small>{formatCurrency(financiamiento.ingreso_anual)}</small>
                                             </div>
@@ -400,18 +436,7 @@ const FinancingDetail = () => {
                                         </div>
                                         <div className="mt-2">
                                             <strong>Documentos Subidos:</strong>
-                                            <div className="row mt-1">
-                                                <div className="col-md-6">
-                                                    <small>✓ Seiru Card (Frontal)<br />
-                                                    ✓ Seiru Card (Trasera)<br />
-                                                    ✓ Licencia de Conducir (Frontal)</small>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <small>✓ Licencia de Conducir (Trasera)<br />
-                                                    ✓ Kokumin Shakai Hoken<br />
-                                                    ✓ Libreta de Banco</small>
-                                                </div>
-                                            </div>
+                                            {renderFinancingImages(financiamiento)}
                                         </div>
                                     </div>
                                 </div>

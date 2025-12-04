@@ -79,9 +79,9 @@ const useConfiguracion = () => {
     function getCompanyName() {
         return configuraciones.filter(config => config.tipo === 'company_name')
     }
-
+ 
     function getCompanyAddress() {
-        return configuraciones.filter(config => config.tipo === 'company_address')
+        return 'Fuji, Shizuoka, Japón'
     }
 
     const [editingItem, setEditingItem] = useState(null);

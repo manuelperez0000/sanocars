@@ -82,6 +82,50 @@ const Financiamiento = () => {
         )
     }
 
+    /* const getFinancingImages = (financiamiento) => {
+        const images = [
+            { filename: financiamiento.seiru_cado_frontal, label: 'Seiru Frontal' },
+            { filename: financiamiento.seiru_cado_trasero, label: 'Seiru Trasero' },
+            { filename: financiamiento.licencia_conducir_frontal, label: 'Licencia Frontal' },
+            { filename: financiamiento.licencia_conducir_trasero, label: 'Licencia Trasera' },
+            { filename: financiamiento.kokumin_shakai_hoken, label: 'Kokumin Hoken' },
+            { filename: financiamiento.libreta_banco, label: 'Libreta Banco' }
+        ].filter(img => img.filename)
+
+        if (images.length === 0) return <span className="text-muted">Sin documentos</span>
+
+        return (
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
+                gap: '4px',
+                maxWidth: '200px'
+            }}>
+                {images.map((img, index) => (
+                    <div key={index} style={{ textAlign: 'center' }}>
+                        <img
+                            src={`${topurl}/uploads/${img.filename}`}
+                            alt={img.label}
+                            style={{
+                                width: '60px',
+                                height: '60px',
+                                objectFit: 'cover',
+                                borderRadius: '4px',
+                                border: '1px solid #e0e0e0',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => window.open(`${topurl}/uploads/${img.filename}`, '_blank')}
+                            title={img.label}
+                        />
+                        <small className="text-muted d-block" style={{ fontSize: '10px', lineHeight: '1' }}>
+                            {img.label}
+                        </small>
+                    </div>
+                ))}
+            </div>
+        )
+    } */
+
     if (loading) {
         return (
             <div className="container-fluid py-4">
@@ -149,6 +193,7 @@ const Financiamiento = () => {
                                                 <th>Nombre</th>
                                                 <th>Teléfono</th>
                                                 <th>Fecha Creación</th>
+
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -166,6 +211,7 @@ const Financiamiento = () => {
                                                     </td>
                                                     <td>{financiamiento.telefono_movil}</td>
                                                     <td>{formatDate(financiamiento.fecha_creacion)}</td>
+                                                    {/* <td>{getFinancingImages(financiamiento)}</td> */}
                                                     <td>{getStatusBadge(financiamiento.status)}</td>
                                                     <td>
                                                         <div className="d-flex gap-2">

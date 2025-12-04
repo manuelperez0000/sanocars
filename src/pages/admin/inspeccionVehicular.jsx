@@ -53,21 +53,21 @@ const InspeccionVehicular = () => {
                 <head>
                     <title>Inspección Vehicular #${inspeccion.id}</title>
                     <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .header { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
-                        .header-left { text-align: left; }
-                        .header-right { text-align: right; }
-                        .company-name { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-                        .company-info { font-size: 14px; line-height: 1.5; }
-                        .inspection-title { text-align: center; font-size: 20px; font-weight: bold; margin: 30px 0; }
-                        .section { margin-bottom: 20px; }
-                        .section-title { font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-                        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-                        .info-item { margin-bottom: 5px; }
-                        .label { font-weight: bold; }
-                        .status-good { color: green; }
-                        .status-bad { color: red; }
-                        .status-regular { color: orange; }
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .header { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid #363636ff; padding-bottom: 20px; }
+                            .header-left { text-align: left; }
+                            .header-right { text-align: right; }
+                            .company-name { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+                            .company-info { font-size: 12px; line-height: 1.5; }
+                            .inspection-title { text-align: center; font-size: 14px; font-weight: bold; margin: 30px 0; }
+                            .section { margin-bottom: 20px; }
+                            .section-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #838383ff; padding-bottom: 5px; }
+                            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+                            .info-item { margin-bottom: 5px; }
+                            .label { font-weight: bold; font-size:12px; }
+                            .status-good { color: green; }
+                            .status-bad { color: red; }
+                            .status-regular { color: orange; }
                         @media print { body { margin: 0; } }
                     </style>
                 </head>

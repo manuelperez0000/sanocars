@@ -2,7 +2,7 @@ import useUsers from '../../hooks/useUsers'
 
 const Usuarios = () => {
     const {
-        users, loading, error, modalOpen, openEditModal, openNewModal,
+        users, filteredUsers, filter, setFilter, loading, error, modalOpen, openEditModal, openNewModal,
         closeModal, editingUser, formData, handleChange, handleSave, handleCreate,
         loadingUser, saving, handleRestoreUser, handleDeleteUser
     } = useUsers()
@@ -32,7 +32,23 @@ const Usuarios = () => {
                                 </div>
                             ) : (
                                 <div>
-                                    <h5 className="mb-3">Lista de Usuarios ({users.length})</h5>
+                                    {/* Filter */}
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 className="mb-0">Lista de Usuarios ({filteredUsers.length} de {users.length})</h5>
+                                        <div className="d-flex align-items-center gap-2">
+                                            <label className="form-label mb-0">Filtrar por rol:</label>
+                                            <select
+                                                className="form-select form-select-sm"
+                                                value={filter}
+                                                onChange={(e) => setFilter(e.target.value)}
+                                                style={{ width: 'auto' }}
+                                            >
+                                                <option value="todos">Todos</option>
+                                                <option value="Customer">Clientes</option>
+                                                <option value="employe">Empleados</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     {users.length > 0 ? (
                                         <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 30px)', overflowY: 'auto' }}>
                                             <table className="table table-striped">
@@ -49,7 +65,7 @@ const Usuarios = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {users.map((user) => (
+                                                    {filteredUsers.map((user) => (
                                                         <tr key={user.id} className={user.soft_delete === 0 ? 'table-danger' : ''}>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.id}</td>
                                                             <td style={user.soft_delete === 0 ? { color: 'red' } : {}}>{user.name || 'Sin nombre'}</td>

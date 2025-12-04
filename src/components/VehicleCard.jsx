@@ -36,7 +36,7 @@ export default function VehicleCard({ v }) {
           </div>
           <div className="details">
             <p className="mb-1"><PiEngineFill /> {v.tamano_motor} L</p>
-            <p className="mb-1"><FaMapMarkerAlt /> Fuji, Japon</p>
+            <p className="mb-1"><FaMapMarkerAlt /> Fuji, Shizuoka, Japón</p>
             <p className="mb-1"><FaCarSide /> {v.tipo_vehiculo}</p>
           </div>
           <hr className="mb-3 mt-2 p-0" />

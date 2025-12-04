@@ -4,6 +4,8 @@
 var express = require('express')
 var router = express.Router()
 var responser = require('../network/responser.js')
+const crypto = require('crypto')
+const bcrypt = require('bcryptjs')
 
 // GET /api/v1/informe-vehiculos - Get all vehicle inspection reports
 router.get('/', async (req, res) => {
@@ -61,6 +63,26 @@ router.post('/', async (req, res) => {
 
     var newId = result.insertId
     var [rows] = await db.query('SELECT * FROM informe_vehiculos WHERE id = ? LIMIT 1', [newId])
+
+    // Create user if email provided and not exists
+    if (cliente_email) {
+      try {
+        var [existing] = await db.query('SELECT id FROM users WHERE email = ? LIMIT 1', [cliente_email])
+        if (!existing || existing.length === 0) {
+          var randomPassword = crypto.randomBytes(8).toString('hex')
+          var hashedPassword = await bcrypt.hash(randomPassword, 10)
+          await db.query(
+            'INSERT INTO users (name, email, password, mobile_no, role, soft_delete, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 1, NOW(), NOW())',
+            [cliente_nombre, cliente_email, hashedPassword, cliente_telefono, 'customer']
+          )
+          console.log(`Usuario creado para ${cliente_email} con contraseña: ${randomPassword}`)
+        }
+      } catch (userError) {
+        console.error('Error creating user:', userError)
+        // Don't fail the vehicle report creation
+      }
+    }
+
     return responser.success({ res, body: rows[0], message: 'Informe de vehículo creado', status: 201 })
 
   } catch (error) {

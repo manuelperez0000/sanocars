@@ -1,5 +1,6 @@
-/* eslint-disable no-undef */ 
+/* eslint-disable no-undef */
 var db = require('../db/dbConection.js')
+const bcrypt = require('bcryptjs');
 
 var express = require('express')
 var router = express.Router()
@@ -8,7 +9,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/inspeccion-vehicular - Get all vehicle inspections
 router.get('/', async (req, res) => {
   try {
-    
+
     var [rows] = await db.query('SELECT * FROM inspeccion_vehicular ORDER BY fecha_creacion DESC')
     responser.success({ res, body: rows })
   } catch (error) {
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
 // POST /api/v1/inspeccion-vehicular - Create a new vehicle inspection
 router.post('/', async (req, res) => {
   try {
-    
+
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var {
@@ -49,8 +50,8 @@ router.post('/', async (req, res) => {
 
     // Basic required fields validation
     if (!cliente_tipo || !vehiculo_marca || !vehiculo_modelo || !vehiculo_anio ||
-        !vehiculo_color || !vehiculo_placa || !vehiculo_estado_aceite ||
-        vehiculo_pastillas_freno === undefined || !vehiculo_estado_bateria) {
+      !vehiculo_color || !vehiculo_placa || !vehiculo_estado_aceite ||
+      vehiculo_pastillas_freno === undefined || !vehiculo_estado_bateria) {
       return responser.error({ res, message: 'Campos requeridos faltantes', status: 400 })
     }
 
@@ -58,7 +59,7 @@ router.post('/', async (req, res) => {
     if (vehiculo_pastillas_freno < 1 || vehiculo_pastillas_freno > 100) {
       return responser.error({ res, message: 'Porcentaje de pastillas de freno debe estar entre 1 y 100', status: 400 })
     }
-    
+
     // Validate client type and required fields
     if (cliente_tipo === 'registrado' && !cliente_id) {
       return responser.error({ res, message: 'ID de cliente requerido para cliente registrado', status: 400 })
@@ -90,6 +91,44 @@ router.post('/', async (req, res) => {
     }
 
     var newId = result.insertId
+
+    // Create user for new clients
+    if (cliente_tipo === 'nuevo' && cliente_nombre && cliente_email) {
+      try {
+        // Split cliente_nombre into name and lastname
+        var nameParts = cliente_nombre.trim().split(' ')
+        var name = nameParts[0] || ''
+        var lastname = nameParts.slice(1).join(' ') || ''
+
+        // Generate default password (same as admin)
+        var defaultPassword = '123456'
+        var hashedPassword = await bcrypt.hash(defaultPassword, 10)
+
+        // Insert new user
+        var userInsertQuery = `
+          INSERT INTO users (name, lastname, email, password, mobile_no, address, role, soft_delete)
+          VALUES (?, ?, ?, ?, ?, ?, 'customer', 1)
+        `
+        var userParams = [
+          name,
+          lastname,
+          cliente_email,
+          hashedPassword,
+          cliente_telefono || null,
+          cliente_direccion || null
+        ]
+
+        var [userResult] = await db.query(userInsertQuery, userParams)
+        if (userResult && userResult.insertId) {
+          // Update inspection with the new user ID
+          await db.query('UPDATE inspeccion_vehicular SET cliente_id = ? WHERE id = ?', [userResult.insertId, newId])
+        }
+      } catch (userError) {
+        console.error('Error creating user for new client:', userError)
+        // Don't fail the inspection creation if user creation fails
+      }
+    }
+
     var [rows] = await db.query('SELECT * FROM inspeccion_vehicular WHERE id = ? LIMIT 1', [newId])
     return responser.success({ res, body: rows[0], message: 'Inspección creada exitosamente', status: 201 })
 
@@ -102,7 +141,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/inspeccion-vehicular/:id - Get vehicle inspection by id
 router.get('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
     var [rows] = await db.query('SELECT * FROM inspeccion_vehicular WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -118,7 +157,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/inspeccion-vehicular/:id - Update vehicle inspection
 router.put('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
 
     // Validate percentages if provided
@@ -169,7 +208,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/inspeccion-vehicular/:id - Delete vehicle inspection
 router.delete('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
 
     var [result] = await db.query('DELETE FROM inspeccion_vehicular WHERE id = ?', [id])

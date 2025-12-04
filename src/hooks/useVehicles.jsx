@@ -833,7 +833,7 @@ const useVehicles = () => {
                             </button>
 
                             <img
-                                src={`${apiurl}/uploads/${imagesArray[modalIndex]}`}
+                                src={`${topurl}/uploads/${imagesArray[modalIndex]}`}
                                 alt={`full-${modalIndex}`}
                                 className="img-fluid"
                                 onClick={(e) => e.stopPropagation()}
