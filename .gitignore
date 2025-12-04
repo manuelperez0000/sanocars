@@ -25,3 +25,4 @@ dist-ssr
 access.jpg
 backend/uploads
 .env
+backend/.env
