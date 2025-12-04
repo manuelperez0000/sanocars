@@ -6,7 +6,7 @@ const useUsers = () => {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [filter, setFilter] = useState('todos')
+    const [filter, setFilter] = useState('customer')
     // modal / edit states moved from page
     const [modalOpen, setModalOpen] = useState(false)
     const [editingUser, setEditingUser] = useState(null)
@@ -222,7 +222,8 @@ const useUsers = () => {
     // Filter users based on role
     const filteredUsers = users.filter(user => {
         if (filter === 'todos') return true
-        if (filter === 'Customer') return user.role === 'Customer'
+        if (filter === 'admin') return user.role === 'admin'
+        if (filter === 'customer') return user.role === 'customer' || user.role ==="Customer"
         if (filter === 'employe') return user.role === 'employe'
         return true
     })

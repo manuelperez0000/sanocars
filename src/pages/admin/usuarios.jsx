@@ -43,9 +43,10 @@ const Usuarios = () => {
                                                 onChange={(e) => setFilter(e.target.value)}
                                                 style={{ width: 'auto' }}
                                             >
+                                                <option value="customer">Clientes</option>
                                                 <option value="todos">Todos</option>
-                                                <option value="Customer">Clientes</option>
                                                 <option value="employe">Empleados</option>
+                                                <option value="admin">Admin</option>
                                             </select>
                                         </div>
                                     </div>
@@ -163,7 +164,7 @@ const Usuarios = () => {
                                             <label className="form-label">Rol</label>
                                             <select name="role" value={formData.role} onChange={handleChange} className="form-select">
                                                 <option value="">-- Seleccione rol --</option>
-                                                <option selected value="Customer">Cliente</option>
+                                                <option selected value="customer">Cliente</option>
                                                 <option value="employe">Empleado</option>
                                             </select>
                                         </div>
