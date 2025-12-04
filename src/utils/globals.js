@@ -13,3 +13,13 @@ export function formatNumber(numStr) {
     var part3 = numStr.substring(7);
     return part1 + '-' + part2 + '-' + part3;
 }
+
+export const formatCurrency = (n,symbol)=> {
+  const formatter = new Intl.NumberFormat('es-VE', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0 // por si vienen decimales largos
+  });
+  const num = Number(String(n).replace(',', '.'));
+  const newSymbol = symbol ? symbol : ''
+  return `${newSymbol}${formatter.format(num)}`;
+}

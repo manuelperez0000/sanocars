@@ -125,7 +125,7 @@ const Vehiculos = () => {
                                                             <td>{v.anio}</td>
                                                             <td>{v.kilometraje}</td>
                                                             <td>{v.color}</td>
-                                                            <td>¥{parseFloat(v.precio || 0).toFixed(2)}</td>
+                                                            <td>¥{parseFloat(v.precio || 0)}</td>
                                                             <td>{dateFormater(v.fecha_shaken) || '-'}</td>
                                                             <td>{v.status}</td>
                                                             <td>
@@ -244,6 +244,26 @@ const Vehiculos = () => {
                                         </div>
                                     </div>
                                     <div className="row">
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Cambio de aceite</label>
+                                            <input type="date" name="cambio_aceite" value={form.cambio_aceite || ''} onChange={handleChange} className="form-control" />
+                                        </div>
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Mantenimiento general</label>
+                                            <textarea name="mantenimiento_general" value={form.mantenimiento_general || ''} onChange={handleChange} className="form-control" rows="2"></textarea>
+                                        </div>
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Inspección vehicular</label>
+                                            <textarea name="inspeccion_vehicular" value={form.inspeccion_vehicular || ''} onChange={handleChange} className="form-control" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Garantía</label>
+                                            <input name="garantia" value={form.garantia || ''} onChange={handleChange} className="form-control" placeholder="Ej: 12 meses, 1 año, etc." />
+                                        </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Tamaño motor</label>
                                             <input name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
@@ -267,7 +287,7 @@ const Vehiculos = () => {
                                     </div>
                                     <div className="row">
                                         <div className="col-12 mb-3">
-                                            <label className="form-label">Observaciones</label>
+                                            <label className="form-label">Información Adicional</label>
                                             <textarea name="observaciones" value={form.observaciones || ''} onChange={handleChange} className="form-control" rows="3"></textarea>
                                         </div>
                                         <div className="col-12 mb-3">
@@ -386,7 +406,8 @@ const Vehiculos = () => {
                                                 <label className="form-label">Tipo de Pago *</label>
                                                 <select name="tipo_pago" value={salesForm.tipo_pago || 'contado'} onChange={handleSalesChange} className="form-control" required>
                                                     <option value="contado">De Contado</option>
-                                                    <option value="cuotas">A Cuotas</option>
+                                                    <option value="cuotas">Financiamiento propio</option>
+                                                    <option value="financiamiento japones">Financiamiento Japones</option>
                                                 </select>
                                             </div>
                                             <div className="col-md-6 mb-3">
@@ -397,7 +418,7 @@ const Vehiculos = () => {
                                                     value={salesForm.precio_venta || ''}
                                                     onChange={handleSalesChange}
                                                     className="form-control"
-                                                    step="0.01"
+                                                    step="1"
                                                     min="0"
                                                     required
                                                 />
@@ -492,28 +513,28 @@ const Vehiculos = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between mb-2">
                                                         <strong>Precio de Venta:</strong>
-                                                        <span>¥{parseFloat(salesForm.precio_venta || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(salesForm.precio_venta || 0)}</span>
                                                     </div>
                                                     {salesForm.tipo_pago === 'cuotas' && (
                                                         <>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Menos Inicial:</strong>
-                                                                <span>-¥{parseFloat(salesForm.monto_inicial || 0).toFixed(2)}</span>
+                                                                <span>-¥{parseFloat(salesForm.monto_inicial || 0)}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Financiamiento:</strong>
-                                                                <span>¥ {(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)).toFixed(2)}</span>
+                                                                <span>¥ {(parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0))}</span>
                                                             </div>
                                                             <div className="d-flex justify-content-between mb-2">
                                                                 <strong>Intereses ({salesForm.tasa_interes}%):</strong>
-                                                                <span>¥ {((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100)).toFixed(2)}</span>
+                                                                <span>¥ {((parseFloat(salesForm.precio_venta || 0) - parseFloat(salesForm.monto_inicial || 0)) * (parseFloat(salesForm.tasa_interes || 0) / 100))}</span>
                                                             </div>
                                                         </>
                                                     )}
                                                     <hr />
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Total a Pagar:</strong>
-                                                        <span className="text-primary">${parseFloat(salesForm.total_con_intereses || 0).toFixed(2)}</span>
+                                                        <span className="text-primary">¥{parseFloat(salesForm.total_con_intereses || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>

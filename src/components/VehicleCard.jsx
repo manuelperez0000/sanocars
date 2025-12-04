@@ -4,7 +4,7 @@ import { FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { Link } from 'react-router-dom'
 import useVehicles from '../hooks/useVehicles.jsx';
-import {  topurl } from "../utils/globals.js";
+import {  formatCurrency, topurl } from "../utils/globals.js";
 
 export default function VehicleCard({ v }) {
 
@@ -41,7 +41,7 @@ export default function VehicleCard({ v }) {
           </div>
           <hr className="mb-3 mt-2 p-0" />
           <div className="d-flex justify-content-between align-items-center">
-            <strong className="gray mb-0 price">¥{v?.precio?.toLocaleString() || 'Sin precio'}</strong>
+            <strong className="gray mb-0 price">{formatCurrency(v?.precio,'¥ ')}</strong>
             <span className="text-muted">{v?.kilometraje?.toLocaleString()} km</span>
           </div>
         </div>

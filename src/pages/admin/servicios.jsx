@@ -56,7 +56,7 @@ const Servicios = () => {
         // Calculate IVA percentage from the totals
         const subtotal = parseFloat(servicio.subtotal || 0)
         const iva = parseFloat(servicio.iva || 10)
-        const ivaPercentage = subtotal > 0 ? (iva / subtotal * 100).toFixed(2) : 0
+        const ivaPercentage = subtotal > 0 ? (iva / subtotal * 100) : 0
 
         const printWindow = window.open('', '_blank')
         const invoiceHTML = `
@@ -254,8 +254,8 @@ const Servicios = () => {
                                 <tr>
                                     <td>${detail.descripcion || ''}</td>
                                     <td class="text-right">${detail.cantidad || 0}</td>
-                                    <td class="text-right">¥${parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
-                                    <td class="text-right">¥${parseFloat(detail.total || 0).toFixed(2)}</td>
+                                    <td class="text-right">¥${parseFloat(detail.precio_unitario || 0)}</td>
+                                    <td class="text-right">¥${parseFloat(detail.total || 0)}</td>
                                 </tr>
                             `).join('') : '<tr><td colspan="4" style="text-align: center;">No hay detalles disponibles</td></tr>'}
                         </tbody>
@@ -266,15 +266,15 @@ const Servicios = () => {
                     <div class="totals-box">
                         <div class="totals-row">
                             <span>Subtotal:</span>
-                            <span>¥${parseFloat(servicio.subtotal || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.subtotal || 0)}</span>
                         </div>
                         <div class="totals-row">
                             <span>IVA (${ivaPercentage}%):</span>
-                            <span>¥${parseFloat(servicio.iva || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.iva || 0)}</span>
                         </div>
                         <div class="totals-row total">
                             <span>Total:</span>
-                            <span>¥${parseFloat(servicio.total || 0).toFixed(2)}</span>
+                            <span>¥${parseFloat(servicio.total || 0)}</span>
                         </div>
                     </div>
                 </div>
@@ -332,7 +332,7 @@ const Servicios = () => {
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
                                                         <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
                                                         <td>{new Date(s.fecha_servicio).toLocaleDateString()}</td>
-                                                        <td>¥{parseFloat(s.total || 0).toFixed(2)}</td>
+                                                        <td>¥{parseFloat(s.total || 0)}</td>
                                                         <td>
                                                             <span className={`badge ${s.status === 'Completado' ? 'bg-success' : s.status === 'En Progreso' ? 'bg-warning' : 'bg-secondary'}`}>
                                                                 {s.status}
@@ -452,8 +452,8 @@ const Servicios = () => {
                                                             <tr key={index}>
                                                                 <td>{detail.descripcion}</td>
                                                                 <td>{detail.cantidad}</td>
-                                                                <td>¥{parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
-                                                                <td>¥{parseFloat(detail.total || 0).toFixed(2)}</td>
+                                                                <td>¥{parseFloat(detail.precio_unitario || 0)}</td>
+                                                                <td>¥{parseFloat(detail.total || 0)}</td>
                                                                 <td>
                                                                     <button type="button" className="btn btn-sm btn-warning me-1" onClick={() => openDetailsModal(detail, index)}>
                                                                         Editar
@@ -487,16 +487,16 @@ const Servicios = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Subtotal:</strong>
-                                                        <span>¥{parseFloat(form.subtotal || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(form.subtotal || 0)}</span>
                                                     </div>
                                                     <div className="d-flex justify-content-between">
                                                         <strong>IVA ({ivaPercentage}%):</strong>
-                                                        <span>¥{parseFloat(form.iva || 0).toFixed(2)}</span>
+                                                        <span>¥{parseFloat(form.iva || 0)}</span>
                                                     </div>
                                                     <hr />
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Total:</strong>
-                                                        <span className="text-primary">¥{parseFloat(form.total || 0).toFixed(2)}</span>
+                                                        <span className="text-primary">¥{parseFloat(form.total || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -653,7 +653,7 @@ const Servicios = () => {
                                     </div>
                                 </div>
                                 <div className="mb-3">
-                                    <strong>Total: ¥{((parseInt(currentDetail.cantidad) || 1) * (parseFloat(currentDetail.precio_unitario) || 0)).toFixed(2)}</strong>
+                                    <strong>Total: ¥{((parseInt(currentDetail.cantidad) || 1) * (parseFloat(currentDetail.precio_unitario) || 0))}</strong>
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -690,7 +690,7 @@ const Servicios = () => {
                                         step="0.01"
                                     />
                                     <small className="form-text text-muted">
-                                        IVA actual: {ivaPercentage}% (${(parseFloat(form.subtotal || 0) * (ivaPercentage / 100)).toFixed(2)})
+                                        IVA actual: {ivaPercentage}% (${(parseFloat(form.subtotal || 0) * (ivaPercentage / 100))})
                                     </small>
                                 </div>
                             </div>

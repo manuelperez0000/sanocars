@@ -6,7 +6,8 @@ import { apiurl } from '../utils/globals'
 const useHome = () => {
     const [vehiclesForSale, setVehiclesForSale] = useState([])
     const [vehiclesForRent, setVehiclesForRent] = useState([])
-    const [allVehicles,setAllVehicles] = useState([])
+    const [vehiclesSold, setVehiclesSold] = useState([])
+    const [allVehicles, setAllVehicles] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
@@ -24,7 +25,9 @@ const useHome = () => {
                 setAllVehicles(allVehicles)
                 const sale = allVehicles.filter(v => v.status === 'En Venta')
                 const rent = allVehicles.filter(v => v.status === 'En alquiler')
+                const sold = allVehicles.filter(v => v.status === 'vendido')
                 setVehiclesForSale(sale)
+                setVehiclesSold(sold)
                 setVehiclesForRent(rent)
             }
         } catch (err) {
@@ -38,6 +41,7 @@ const useHome = () => {
     return {
         vehiclesForSale,
         vehiclesForRent,
+        vehiclesSold,
         loading,
         error,
         refetch: fetchVehicles,

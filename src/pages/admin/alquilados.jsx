@@ -239,7 +239,7 @@ const Alquilados = () => {
                     <div class="info-section">
                         <h4>Información del Alquiler</h4>
                         <p><strong>Fecha de Inicio:</strong> ${new Date(rental.fecha_inicio).toLocaleDateString('es-ES')}</p>
-                        <p><strong>Precio Mensual:</strong> ¥${parseFloat(rental.precio_alquiler).toFixed(2)}</p>
+                        <p><strong>Precio Mensual:</strong> ¥${parseFloat(rental.precio_alquiler)}</p>
                         <p><strong>Fecha del Alquiler:</strong> ${new Date(rental.fecha_alquiler).toLocaleDateString('es-ES')}</p>
                         <p><strong>ID Alquiler:</strong> ${rental.id}</p>
                     </div>
@@ -351,7 +351,7 @@ const Alquilados = () => {
                                                         <td>{rental.cliente_nombre}</td>
                                                         <td>{rental.cliente_telefono || '-'}</td>
                                                         {/* <td>{new Date(rental.fecha_inicio).toLocaleDateString('es-ES')}</td> */}
-                                                        <td>¥{parseFloat(rental.precio_alquiler).toFixed(2)}</td>
+                                                        <td>¥{parseFloat(rental.precio_alquiler)}</td>
                                                         <td>{new Date(rental.fecha_alquiler).toLocaleDateString('es-ES')}</td>
                                                         <td>
                                                             <button
@@ -420,7 +420,7 @@ const Alquilados = () => {
                                                     <strong>Cliente:</strong> {selectedRental?.cliente_nombre}
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <strong>Precio Mensual:</strong> ¥{parseFloat(selectedRental?.precio_alquiler).toFixed(2)}
+                                                    <strong>Precio Mensual:</strong> ¥{parseFloat(selectedRental?.precio_alquiler)}
                                                 </div>
                                                 <div className="col-md-6">
                                                     <strong>Fecha de Inicio:</strong> {new Date(selectedRental?.fecha_inicio).toLocaleDateString('es-ES')}
@@ -447,7 +447,7 @@ const Alquilados = () => {
                                                             {paymentRecord?.pagos_realizados.map((fecha, index) => (
                                                                 <tr key={index}>
                                                                     <td>{new Date(fecha).toLocaleDateString('es-ES')}</td>
-                                                                    <td>¥{parseFloat(selectedRental?.precio_alquiler).toFixed(2)}</td>
+                                                                    <td>¥{parseFloat(selectedRental?.precio_alquiler)}</td>
                                                                 </tr>
                                                             ))}
                                                         </tbody>
@@ -478,7 +478,7 @@ const Alquilados = () => {
                                                     <input
                                                         type="text"
                                                         className="form-control"
-                                                        value={`¥${parseFloat(selectedRental?.precio_alquiler).toFixed(2)}`}
+                                                        value={`¥${parseFloat(selectedRental?.precio_alquiler)}`}
                                                         readOnly
                                                     />
                                                 </div>

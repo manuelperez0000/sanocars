@@ -1,0 +1,58 @@
+/* eslint-disable no-undef */
+
+var express = require("express")
+var route = express.Router()
+var imagesUploader = require("./routes/imagesUploader.js")
+var path = require('path')
+var uploadsDir = path.join(__dirname, './uploads')
+
+var users = require("./routes/users.js")
+var auth = require("./routes/auth.js")
+var vehicles = require("./routes/vehicles.js")
+var visits = require("./routes/visits.js")
+var reservas = require("./routes/reservas.js")
+var financing = require("./routes/financing.js")
+var servicios = require("./routes/services.js")
+var venta = require("./routes/venta.js")
+var inventory = require("./routes/inventory.js")
+var inspeccionVehicular = require("./routes/inspeccionVehicular.js")
+var facturas = require("./routes/facturas.js")
+var dashboard = require("./routes/dashboard.js")
+var informeVehiculos = require("./routes/informeVehiculos.js")
+var categoriasServicio = require("./routes/categoriasServicio.js")
+var configuracion = require("./routes/configuracion.js")
+var seguimiento = require("./routes/seguimiento.js")
+var alquileres = require("./routes/alquileres.js")
+var pagosAlquileres = require("./routes/pagos-alquileres.js")
+var search = require("./routes/search.js")
+var router = (app) => {
+    // Servir imágenes estáticamente
+    app.use('/uploads', express.static(uploadsDir))
+    app.use('/api/v1', route)
+    route.use('/users', users)
+    route.use('/search', search)
+    route.use('/auth', auth)
+    route.use('/vehicles', vehicles)
+    route.use('/visits', visits)
+    route.use('/reservas_servicio', reservas)
+    route.use('/servicios', servicios)
+    route.use('/venta', venta)
+    route.use('/financing', financing)
+    route.use('/inventory', inventory)
+    route.use('/inspeccion-vehicular', inspeccionVehicular)
+    route.use('/facturas', facturas)
+    route.use('/dashboard', dashboard)
+    route.use('/informe-vehiculos', informeVehiculos)
+    route.use('/categorias-servicio', categoriasServicio)
+    route.use('/configuracion', configuracion)
+    route.use('/seguimiento', seguimiento)
+    route.use('/alquileres', alquileres)
+    route.use('/pagos-alquileres', pagosAlquileres)
+    route.use('/imagesUploader', imagesUploader)
+    // Ruta por defecto: 404 Not Found
+    app.use((req, res) => {
+        res.status(404).json({ error: 'Not Found', message: 'La ruta solicitada no existe' })
+    })
+}
+
+module.exports = router

@@ -179,9 +179,9 @@ const useServicios = () => {
 
             return {
                 ...prev,
-                subtotal: subtotal.toFixed(2),
-                iva: iva.toFixed(2),
-                total: total.toFixed(2)
+                subtotal: subtotal,
+                iva: iva,
+                total: total
             }
         })
     }

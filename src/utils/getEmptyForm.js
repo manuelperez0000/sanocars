@@ -17,6 +17,10 @@ export function getEmptyForm() {
         ac: '',
         observaciones: '',
         trabajos_realizar: '',
+        cambio_aceite: '',
+        mantenimiento_general: '',
+        inspeccion_vehicular: '',
+        garantia: '',
         imagenes: [],
         status: 'En Venta'
     }

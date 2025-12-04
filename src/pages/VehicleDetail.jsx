@@ -3,9 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
 import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
 import request from '../utils/request'
-import { apiurl, topurl } from '../utils/globals'
-
-function formatCurrency(n) { return `¥${Number(n).toLocaleString()}` }
+import { apiurl, topurl, formatCurrency } from '../utils/globals'
 
 export default function VehicleDetail() {
   const { id } = useParams()
@@ -33,6 +31,10 @@ export default function VehicleDetail() {
         const mappedVehicle = {
           observaciones: dbVehicle.observaciones,
           trabajos_realizar: dbVehicle.trabajos_realizar,
+          cambio_aceite: dbVehicle.cambio_aceite,
+          mantenimiento_general: dbVehicle.mantenimiento_general,
+          inspeccion_vehicular: dbVehicle.inspeccion_vehicular,
+          garantia: dbVehicle.garantia,
           id: dbVehicle.id,
           name: `${dbVehicle.marca} ${dbVehicle.modelo}`,
           brand: dbVehicle.marca,
@@ -41,7 +43,7 @@ export default function VehicleDetail() {
           engine: dbVehicle.tamano_motor,
           precio: dbVehicle.precio,
           km: dbVehicle.kilometraje,
-          condition: dbVehicle.status === 'En Venta' ? 'Disponible' : dbVehicle.status,
+          status: dbVehicle.status,
           color: dbVehicle.color,
           transmission: dbVehicle.transmission,
           passengers: dbVehicle.passengers,
@@ -129,8 +131,6 @@ export default function VehicleDetail() {
 
   // Installment calculation: show per-month for 24 months, both without interest and with sample interest (6% anual)
 
-  const price = vehicle.precio
-
   return (
     <PageLayout>
       <div className="container-fluid py-4">
@@ -161,7 +161,7 @@ export default function VehicleDetail() {
                       />
                       <div className="position-absolute top-0 end-0 m-3">
                         <span className="badge fs-6 px-3 py-2 bg-dark text-light">
-                          {vehicle.condition}
+                          {vehicle.status}
                         </span>
                       </div>
                     </div>
@@ -197,9 +197,9 @@ export default function VehicleDetail() {
                         <h3 className="momo">Información Adicional del Vehículo</h3>
 
                         <div className="mb-3">
-                          <label htmlFor="additionalDetails" className="form-label">
+                          {/* <label htmlFor="additionalDetails" className="form-label">
                             <small className='text-muted'>INFORMACIÓN ADICIONAL</small>
-                          </label>
+                          </label> */}
                           <p>
                             {vehicle.observaciones || 'No hay información adicional asignada.'}
                           </p>
@@ -218,12 +218,16 @@ export default function VehicleDetail() {
 
                     <h1 className="momo h2">{vehicle.name}</h1>
                     <p className="text-muted mb-2">{vehicle.brand} • {vehicle.model} • {vehicle.year}</p>
-
                     {/* Price Section */}
-                    <div className=''>
-                      <span className='text-muted'>  Precio </span>
-                      <h1 className="momo h1 price">{formatCurrency(price)}</h1>
-                    </div>
+                     
+                      <div className=''>
+                        <span className='text-muted'>  Precio </span>
+                        <h1 className="momo h1 price">
+                          {formatCurrency(vehicle.precio, '¥ ')} 
+                            {['En alquiler'].includes(vehicle.status) && " Mesuales"}
+                        </h1>
+                      </div>
+                    
 
                     <hr />
 
@@ -282,10 +286,10 @@ export default function VehicleDetail() {
                         <div className="col-6">
                           <div className="p-2 border rounded">
                             <small className="text-muted d-block">GARANTIA</small>
-                            <strong>12 Meses</strong>
+                            <strong>{vehicle.garantia || 'No especificada'}</strong>
                           </div>
                         </div>
-                        
+
                       </div>
                     </div>
 
@@ -294,15 +298,15 @@ export default function VehicleDetail() {
                       <h5 className="mb-3">HISTORIAL DE REPARACIONES</h5>
                       <div className="mb-3 flex-between p-2 border rounded">
                         <small className='text-muted d-block'>CAMBIO DE ACEITE Y FILTRO:</small>
-                        <strong>26/12/2025</strong>
+                        <strong>{vehicle.cambio_aceite ? new Date(vehicle.cambio_aceite).toLocaleDateString('es-ES') : 'No registrado'}</strong>
                       </div>
                       <div className="mb-3 p-2 border rounded">
                         <small className='text-muted d-block'>MANTENIMIENTO GENERAL:</small>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        <p className="mb-0">{vehicle.mantenimiento_general || 'No hay información de mantenimiento general registrada.'}</p>
                       </div>
                       <div className="mb-3 p-2 border rounded">
                         <small className='text-muted d-block'>INSPECCIÓN VEHICULAR:</small>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        <p className="mb-0">{vehicle.inspeccion_vehicular || 'No hay información de inspección vehicular registrada.'}</p>
                       </div>
                     </div>
 
@@ -346,11 +350,11 @@ export default function VehicleDetail() {
                       <h3 className="momo">Información Adicional del Vehículo</h3>
 
                       <div className="mb-3">
-                        <label htmlFor="additionalDetails" className="form-label">
+                        {/* <label htmlFor="additionalDetails" className="form-label">
                           <small className='text-muted'>INFORMACIÓN ADICIONAL</small>
-                        </label>
+                        </label> */}
                         <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, nulla sunt, eum voluptates numquam delectus, dolorem impedit rem porro temporibus placeat neque? Consectetur autem voluptatum ipsum laboriosam veniam deleniti nostrum.
+                          {vehicle.observaciones || 'No hay información adicional asignada.'}
                         </p>
                       </div>
                     </div>

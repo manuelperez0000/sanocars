@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useFacturas from '../../hooks/useFacturas'
 import useConfiguracion from '../../hooks/useConfiguracion'
+import { formatCurrency } from '../../utils/globals'
 const Factura = () => {
     const { getPhones, getEmails } = useConfiguracion()
 
@@ -15,11 +16,6 @@ const Factura = () => {
             setFactura(foundFactura)
         }
     }, [facturas, id])
-
-    const formatCurrency = (amount) => {
-
-        return `¥ ${amount}`
-    }
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-VE')
@@ -172,8 +168,8 @@ const Factura = () => {
                                                 <tr key={index}>
                                                     <td>{item.name}</td>
                                                     <td>{item.quantity}</td>
-                                                    <td>{formatCurrency(item.price)}</td>
-                                                    <td>{formatCurrency(item.subtotal)}</td>
+                                                    <td>{formatCurrency(item.price,'¥ ')}</td>
+                                                    <td>{formatCurrency(item.subtotal,'¥ ')}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

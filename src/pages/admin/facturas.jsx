@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import useFacturas from '../../hooks/useFacturas'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../utils/globals'
 
 const Facturas = () => {
     const { facturas, loading, error, deleteFactura } = useFacturas()
@@ -14,13 +15,6 @@ const Facturas = () => {
         } catch (err) {
             alert('Error eliminando factura: ' + err?.response?.data?.message)
         }
-    }
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('es-VE', {
-            style: 'currency',
-            currency: 'VES'
-        }).format(amount)
     }
 
     const formatDate = (dateString) => {
@@ -133,7 +127,7 @@ const Facturas = () => {
                                                         {factura.cliente_nombre}
                                                         {factura.cliente_apellido && ` ${factura.cliente_apellido}`}
                                                     </td>
-                                                    <td>{formatCurrency(factura.total)}</td>
+                                                    <td>{formatCurrency(factura.total,'¥ ')}</td>
                                                     <td>{formatDate(factura.fecha_creacion)}</td>
                                                     <td>
                                                         <Link

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import request from '../../utils/request'
-import { apiurl, topurl } from '../../utils/globals'
+import { apiurl, formatCurrency, topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
 
 const FinancingDetail = () => {
@@ -122,13 +122,6 @@ const FinancingDetail = () => {
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-ES')
-    }
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('es-ES', {
-            style: 'currency',
-            currency: 'JPY'
-        }).format(amount)
     }
 
     const getStatusBadge = (status) => {
@@ -408,11 +401,11 @@ const FinancingDetail = () => {
                                             </div>
                                             <div className="col-3 mb-1">
                                                 <strong>Ingreso Mensual:</strong><br />
-                                                <small>{formatCurrency(financiamiento.ingreso_mensual)}</small>
+                                                <small>{formatCurrency(financiamiento.ingreso_mensual,'¥ ')}</small>
                                             </div>
                                             <div className="col-3 mb-1">
                                                 <strong>Ingreso Anual:</strong><br />
-                                                <small>{formatCurrency(financiamiento.ingreso_anual)}</small>
+                                                <small>{formatCurrency(financiamiento.ingreso_anual,'¥ ')}</small>
                                             </div>
                                         </div>
                                     </div>

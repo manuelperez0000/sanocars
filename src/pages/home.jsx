@@ -2,7 +2,6 @@
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import FilterBar from '../components/FilterBar'
 import VehicleList from '../components/VehicleList'
 import useHome from '../hooks/useHome'
 import useVisits from '../hooks/useVisits'
@@ -10,9 +9,10 @@ import { FaNewspaper } from "react-icons/fa6";
 import { CiPaperplane } from "react-icons/ci";
 import { FaWrench, FaPaintBrush, FaTruck, FaFileAlt, FaCar } from "react-icons/fa";
 import WhatsAppButton from '../components/WhatsAppButton'
+/* import FilterBar from '../components/FilterBar' */
 
 const Home = () => {
-    const { vehiclesForSale, vehiclesForRent } = useHome()
+    const { vehiclesForSale, vehiclesForRent, vehiclesSold } = useHome()
     const { visitCount } = useVisits()
     /* const [filters, setFilters] = useState({ marca: '', modelo: '' }) */
     /* const [sortOption, setSortOption] = useState('') */
@@ -79,8 +79,20 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                {console.log(vehiclesForRent)}
                 <VehicleList vehicles={vehiclesForRent} />
+
+                <hr className='mb-5' />
+
+                <div className="mb-4">
+                    <div className="d-flex align-items-center">
+                        <div className="flex-grow-1 mb-3">
+
+                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos vendidos</h2>
+                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
+                        </div>
+                    </div>
+                </div>
+                <VehicleList vehicles={vehiclesSold} />
 
             </main>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import request from '../utils/request';
-import { apiurl } from '../utils/globals';
+import { apiurl, formatCurrency } from '../utils/globals';
 
 const SegAlquileres = () => {
   const [rentals, setRentals] = useState([]);
@@ -123,7 +123,7 @@ const SegAlquileres = () => {
                   <div className="mb-3">
                     <strong className="text-muted">Precio Mensual:</strong>
                     <p className="mb-1 text-success fw-bold">
-                      ¥{parseFloat(rental.precio_alquiler).toFixed(2)}
+                      {formatCurrency(rental.precio_alquiler,'¥ ')}
                     </p>
                   </div>
 
@@ -139,13 +139,13 @@ const SegAlquileres = () => {
                               {new Date(paymentDate).toLocaleDateString('es-ES')}
                             </small>
                             <small className="text-success fw-bold">
-                              ${parseFloat(rental.precio_alquiler).toFixed(2)}
+                              ${parseFloat(rental.precio_alquiler)}
                             </small>
                           </div>
                         ))}
                         <div className="mt-2 pt-2">
                           <small className="text-muted">
-                            Total pagado: ¥{(rental.payments.length * parseFloat(rental.precio_alquiler)).toFixed(2)}
+                            Total pagado: ¥{(rental.payments.length * parseFloat(rental.precio_alquiler))}
                           </small>
                         </div>
                       </div>

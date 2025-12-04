@@ -267,8 +267,8 @@ const Calendario = () => {
                               <tr key={index}>
                                 <td>{detail.descripcion}</td>
                                 <td>{detail.cantidad}</td>
-                                <td>${parseFloat(detail.precio_unitario || 0).toFixed(2)}</td>
-                                <td>${parseFloat(detail.total || 0).toFixed(2)}</td>
+                                <td>${parseFloat(detail.precio_unitario || 0)}</td>
+                                <td>${parseFloat(detail.total || 0)}</td>
                                 <td>
                                   <button type="button" className="btn btn-sm btn-warning me-1" onClick={() => {
                                     alert('Editar item próximamente')
@@ -300,16 +300,16 @@ const Calendario = () => {
                         <div className="border p-3 rounded">
                           <div className="d-flex justify-content-between">
                             <strong>Subtotal:</strong>
-                            <span>${parseFloat(form.subtotal || 0).toFixed(2)}</span>
+                            <span>${parseFloat(form.subtotal || 0)}</span>
                           </div>
                           <div className="d-flex justify-content-between">
                             <strong>IVA (10%):</strong>
-                            <span>¥{parseFloat(form.iva || 0).toFixed(2)}</span>
+                            <span>¥{parseFloat(form.iva || 0)}</span>
                           </div>
                           <hr />
                           <div className="d-flex justify-content-between">
                             <strong>Total:</strong>
-                            <span className="text-primary">¥{parseFloat(form.total || 0).toFixed(2)}</span>
+                            <span className="text-primary">¥{parseFloat(form.total || 0)}</span>
                           </div>
                         </div>
                       </div>

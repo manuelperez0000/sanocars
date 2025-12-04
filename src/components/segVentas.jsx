@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatCurrency } from '../utils/globals';
 
 const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
   const [updatingQuota, setUpdatingQuota] = useState(null);
@@ -90,7 +91,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                   <h6 className="card-title">{vehicle.marca} - {vehicle.modelo} - {vehicle.anio}</h6>
                   <h5>{vehicle.cliente_nombre}</h5>
                   <p className="card-text">
-                    <strong>Precio:</strong> ¥{vehicle.precio}<br />
+                    <strong>Precio:</strong>{formatCurrency(vehicle.precio,'¥ ')}<br />
                   </p>
                   {vehicle.siguientes_pagos && vehicle.siguientes_pagos.length > 0 && (
                     <div className="mt-3">
@@ -138,7 +139,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                     </div>
                     <div className="col-md-6">
                       <p><strong>Cliente:</strong> {selectedVehicle.cliente_nombre}</p>
-                      <p><strong>Precio:</strong> ¥{selectedVehicle.precio}</p>
+                      <p><strong>Precio:</strong> {formatCurrency(selectedVehicle.precio,'¥ ')}</p>
                       <p><strong>Cuotas Totales:</strong> {selectedVehicle.siguientes_pagos?.length || 0}</p>
                       <p><strong>Cuotas Pendientes:</strong> {selectedVehicle.siguientes_pagos?.filter(pago => !pago.status).length || 0}</p>
                     </div>
@@ -164,7 +165,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                           <tr key={index}>
                             <td className={bgStatus(pago.status, pago)}>{pago.numero_cuota}</td>
                             <td className={bgStatus(pago.status, pago)}>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
-                            <td className={bgStatus(pago.status, pago)}>¥{pago.monto}</td>
+                            <td className={bgStatus(pago.status, pago)}>{formatCurrency(pago.monto,'¥ ')}</td>
                             <td className={bgStatus(pago.status, pago)}>
                               {pago.status ? 'Pagada' : calcVencidas([pago]) > 0 ? "Vencida" : 'Pendiente'}
                             </td>
