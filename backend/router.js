@@ -25,6 +25,7 @@ var seguimiento = require("./routes/seguimiento.js")
 var alquileres = require("./routes/alquileres.js")
 var pagosAlquileres = require("./routes/pagos-alquileres.js")
 var search = require("./routes/search.js")
+var clientes = require("./routes/clientes.js")
 var router = (app) => {
     // Servir imágenes estáticamente
     app.use('/uploads', express.static(uploadsDir))
@@ -48,6 +49,7 @@ var router = (app) => {
     route.use('/seguimiento', seguimiento)
     route.use('/alquileres', alquileres)
     route.use('/pagos-alquileres', pagosAlquileres)
+    route.use('/clientes', clientes)
     route.use('/imagesUploader', imagesUploader)
     // Ruta por defecto: 404 Not Found
     app.use((req, res) => {

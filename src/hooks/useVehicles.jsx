@@ -579,7 +579,7 @@ const useVehicles = () => {
                     </div>
                     <div class="info-section">
                         <h4>Información de Venta</h4>
-                        <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
+                        <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-VE')}</p>
                         <p><strong>Tipo de Pago:</strong> ${saleData.tipo_pago}</p>
                         ${saleData.tipo_pago === 'cuotas' ? `
                         <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
@@ -615,7 +615,7 @@ const useVehicles = () => {
                         <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
                         <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
                         <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
-                        <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-ES') : 'N/A'}</div>
+                        <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-VE') : 'N/A'}</div>
                         ` : `
                         <div class="detail-item"></div>
                         <div class="detail-item"></div>
@@ -646,7 +646,7 @@ const useVehicles = () => {
                         return pagos && pagos.length > 0 ? pagos.map(pago => `
                                         <tr>
                                             <td style="border: 1px solid #ddd; padding: 8px;">${pago.numero_cuota}</td>
-                                            <td style="border: 1px solid #ddd; padding: 8px;">${new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">${new Date(pago.fecha_pago).toLocaleDateString('es-VE')}</td>
                                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${pago.monto}</td>
                                         </tr>
                                     `).join('') : '';
@@ -693,7 +693,7 @@ const useVehicles = () => {
 
                 <div class="footer">
                     <p>Gracias por su compra. Venta realizada por Sanocars Taller.</p>
-                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</p>
+                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</p>
                 </div>
             </body>
             </html>

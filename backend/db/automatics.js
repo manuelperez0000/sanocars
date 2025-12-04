@@ -197,7 +197,7 @@ async function automatics(conn) {
         id INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(255) NOT NULL,
         fabricante VARCHAR(255) NOT NULL,
-        precio DECIMAL(10,2),
+        precio INT,
         cantidad INT DEFAULT 0,
         detalle VARCHAR(500),
         imagenes VARCHAR(1000),
@@ -206,6 +206,14 @@ async function automatics(conn) {
     `;
   await conn.query(inventario);
   console.log("Tabla 'inventario' asegurada.");
+
+  // Modify precio column to INT if it exists with different type
+  try {
+    await conn.query(`ALTER TABLE inventario MODIFY COLUMN precio INT`);
+    console.log("Columna 'precio' modificada a INT en tabla 'inventario'.");
+  } catch (error) {
+    console.log("Error al modificar columna 'precio' en inventario:", error.message);
+  }
 
   var inspeccionVehicular = `
       CREATE TABLE IF NOT EXISTS inspeccion_vehicular (

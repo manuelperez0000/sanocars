@@ -125,7 +125,7 @@ const CategoryCard = ({ categoria, onEdit, onDelete }) => {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Agregar Item - {categoria.titulo}</h5>
+                                    <h5 className="modal-title">Agregar Servicio - {categoria.titulo}</h5>
                                     <button type="button" className="btn-close" onClick={() => setItemsModalOpen(false)}></button>
                                 </div>
                                 <form onSubmit={handleItemSubmit}>
@@ -156,7 +156,7 @@ const CategoryCard = ({ categoria, onEdit, onDelete }) => {
                                             className="btn btn-primary"
                                             disabled={savingItem}
                                         >
-                                            {savingItem ? 'Agregando...' : 'Agregar Item'}
+                                            {savingItem ? 'Agregando...' : 'Agregar Servicio'}
                                         </button>
                                     </div>
                                 </form>

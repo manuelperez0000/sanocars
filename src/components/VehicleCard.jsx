@@ -4,7 +4,7 @@ import { FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { Link } from 'react-router-dom'
 import useVehicles from '../hooks/useVehicles.jsx';
-import {  formatCurrency, topurl } from "../utils/globals.js";
+import { formatBigNumber, formatCurrency, topurl } from "../utils/globals.js";
 
 export default function VehicleCard({ v }) {
 
@@ -16,17 +16,17 @@ export default function VehicleCard({ v }) {
     return 'default-image.jpg';
   }
 
-  const getStatus = (status)=>{
-    if(status == "En alquiler") return  <><FaClock /> Renta </>
-    if(status == "En Venta") return  <><FaCreditCard /> Venta</>
+  const getStatus = (status) => {
+    if (status == "En alquiler") return <><FaClock /> Renta </>
+    if (status == "En Venta") return <><FaCreditCard /> Venta</>
   }
 
   return (
     <Link to={`/vehiculo/${v.id}`} className="text-decoration-none text-reset">
       <div className="card mb-4 vehicle-card h-100">
-        
+
         <div className='badge27'> {getStatus(v.status)} </div>
-        
+
         <img src={v.imagen1 && getFirstImage(v.imagen1)} alt={v.modelo} className="card-img-top vehicle-card-img vehicle-image" />
         <div className="card-body pb-0 d-flex flex-column">
           <small className="texr-muted text-sm">{v.marca}</small>
@@ -41,8 +41,8 @@ export default function VehicleCard({ v }) {
           </div>
           <hr className="mb-3 mt-2 p-0" />
           <div className="d-flex justify-content-between align-items-center">
-            <strong className="gray mb-0 price">{formatCurrency(v?.precio,'¥ ')}</strong>
-            <span className="text-muted">{v?.kilometraje?.toLocaleString()} km</span>
+            <strong className="gray mb-0 price">{formatCurrency(v?.precio, '¥ ')}</strong>
+            <span className="text-muted">{formatBigNumber(v?.kilometraje)} km</span>
           </div>
         </div>
       </div>

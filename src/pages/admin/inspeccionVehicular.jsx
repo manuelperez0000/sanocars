@@ -4,6 +4,7 @@ import useInspeccionVehicular from '../../hooks/useInspeccionVehicular'
 import useConfiguracion from '../../hooks/useConfiguracion'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
+import carrito from '../../assets/carrito.png'
 
 const InspeccionVehicular = () => {
     const {
@@ -21,8 +22,11 @@ const InspeccionVehicular = () => {
         handleChange,
         handleImageChange,
         handleSave,
-        handleDelete
+        handleDelete,
+        loadCar
     } = useInspeccionVehicular()
+
+
 
     // Adapt form data for ClientInformation component
     const invoiceData = {
@@ -41,7 +45,9 @@ const InspeccionVehicular = () => {
 
     const { getPhones, getEmails, getCompanyName, getCompanyAddress } = useConfiguracion()
 
-    const printInspection = (inspeccion) => {
+    const printInspection = async (inspeccion) => {
+
+
         const companyName = getCompanyName().length > 0 ? getCompanyName()[0].texto : 'SANOCARS'
         const companyAddress = getCompanyAddress().length > 0 ? getCompanyAddress()[0].texto : 'Dirección no configurada'
         const phone = getPhones().length > 0 ? getPhones()[0].texto : 'Teléfono no configurado'
@@ -49,105 +55,372 @@ const InspeccionVehicular = () => {
 
         const printWindow = window.open('', '_blank')
         printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Inspección Vehicular #${inspeccion.id}</title>
-                    <style>
-                            body { font-family: Arial, sans-serif; margin: 20px; }
-                            .header { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid #363636ff; padding-bottom: 20px; }
-                            .header-left { text-align: left; }
-                            .header-right { text-align: right; }
-                            .company-name { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
-                            .company-info { font-size: 12px; line-height: 1.5; }
-                            .inspection-title { text-align: center; font-size: 14px; font-weight: bold; margin: 30px 0; }
-                            .section { margin-bottom: 20px; }
-                            .section-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #838383ff; padding-bottom: 5px; }
-                            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-                            .info-item { margin-bottom: 5px; }
-                            .label { font-weight: bold; font-size:12px; }
-                            .status-good { color: green; }
-                            .status-bad { color: red; }
-                            .status-regular { color: orange; }
-                        @media print { body { margin: 0; } }
-                    </style>
-                </head>
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Inspección Vehicular #${inspeccion.id}</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        font-size: 12px;
+                        line-height: 1.4;
+                        color: #333;
+                        background: #fff;
+                    }
+
+                    .invoice-container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                        background: #fff;
+                    }
+
+                    .invoice-header {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .company-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 0px;
+                    }
+
+                    .company-logo {
+                        width: 60px;
+                        height: 60px;
+                        object-fit: contain;
+                    }
+
+                    .company-name {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #333;
+                        text-transform: uppercase;
+                    }
+
+                    .document-title {
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #666;
+                        text-align: right;
+                    }
+
+                    .date-section {
+                        text-align: right;
+                        margin-bottom: 10px;
+                        font-size: 14px;
+                    }
+
+                    .date-section strong {
+                        color: #333;
+                    }
+
+                    .section {
+                        margin-bottom: 5px;
+                    }
+
+                    .section-header {
+                        background: #f8f9fa;
+                        padding: 10px 15px;
+                        font-weight: bold;
+                        font-size: 14px;
+                        color: #333;
+                    }
+
+                    .section-content {
+                        padding: 0px 10px;
+                    }
+
+                    .info-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 0px;
+                        margin-bottom: 5px;
+                    }
+                    .info-grid-2 {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 0px;
+                        margin-bottom: 5px;
+                    }
+
+                    .info-item {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 5px 5px;
+                        border:1px solid black;
+                        justify-content: start;
+                    }
+                    .info-item-2{
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 5px 5px;
+                        border:1px solid black;
+                        justify-content: start;
+                        height:260px;
+                    }
+                        .company-info-section {
+                            display: flex;
+                            height: 260px;
+                            justify-content: center;
+                            align-items: center;
+                            text-align: center;
+                        }
+
+                        .company-info-header {
+                            font-weight: bold;
+                            font-size: 14px;
+                            color: #000000ff;
+                            text-transform: uppercase;
+                            margin-bottom: 10px;
+                            width: 100%;
+                            text-align: center;
+                        }
+
+                        .company-info-content h3 {
+                            font-size: 18px;
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                            color: #333;
+                        }
+
+                        .company-info-content p {
+                            margin: 5px 0;
+                            font-size: 12px;
+                            line-height: 1.4;
+                        }
+
+                    .info-label {
+                        font-weight: bold;
+                        font-size: 11px;
+                        color: #000000ff;
+                        text-transform: uppercase;
+                        margin-bottom: 3px;
+                        width: 100%;
+                        text-align: center;
+                    }
+
+                    .info-value {
+                        font-size: 13px;
+                        color: #000000ff;
+                        padding: 5px 0;
+                    }
+
+                    .status-badge {
+                        display: inline-block;
+                        padding: 3px 8px;
+                        border-radius: 12px;
+                        color: black;
+                        font-size: 10px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+
+                    .full-width {
+                        grid-column: 1 / -1;
+                    }
+
+                    .text-area {
+                        padding: 10px;
+                        border-radius: 4px;
+                        min-height: 60px;
+                        font-size: 12px;
+                        line-height: 1.4;
+                    }
+
+                    .vehicle-grid {
+                        display: grid;
+                        grid-template-columns: repeat(7, 1fr);
+                        gap: 0px;
+                    }
+
+                    .condition-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 0px;
+                    }
+
+                    .footer {
+                        margin-top: 10px;
+                        text-align: center;
+                        font-size: 10px;
+                        color: #666;
+                        border-top: 1px solid #e0e0e0;
+                        padding-top: 15px;
+                    }
+
+                    @media print {
+                        body {
+                            font-size: 11px;
+                        }
+                        .invoice-container {
+                            border: none;
+                            padding: 0;
+                            max-width: none;
+                        }
+                        .section {
+                            page-break-inside: avoid;
+                        }
+                    }
+
+                    @page {
+                        margin: 0.5in;
+                        size: A4;
+                    }
+                </style>
+            </head>
                 <body>
-                    <div class="header">
-                        <div class="header-left">
-                            <div class="company-name">${companyName}</div>
-                            <div class="company-info">
-                                ${companyAddress}<br>
-                                Tel: ${phone}<br>
+                    <div class="invoice-container">
+                        <!-- Invoice Header -->
+                        <div class="invoice-header">
+                            <div>
+                                <h2>Inspección de Vehículos</h2>
+                                <div>
+                                    <div>${new Date().toLocaleDateString('es-VE')} - ${new Date().toLocaleTimeString('es-VE')}</div>
+                                    <div>ID: #${inspeccion.id}</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <h1>${companyName}</h1>
+                                Dirección: ${companyAddress} <br>
+                                Teléfono: ${phone}<br>
                                 Email: ${email}
                             </div>
                         </div>
-                        <div class="header-right">
-                            <div class="company-info">
-                                Fecha: ${new Date().toLocaleDateString('es-ES')}<br>
-                                Inspección #${inspeccion.id}
+
+                        <!-- Client Information -->
+                        <div class="">
+                            <div class="section-header">Información del Cliente</div>
+                            <div class="section-content">
+                                <div class="info-grid-2">
+                                    <div class="info-item">
+                                        <div class="info-label">Nombre</div>
+                                        <div class="info-value">${inspeccion.cliente_nombre || 'N/A'}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Teléfono</div>
+                                        <div class="info-value">${inspeccion.cliente_telefono || 'N/A'}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Email</div>
+                                        <div class="info-value">${inspeccion.cliente_email || 'N/A'}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="inspection-title">REPORTE DE INSPECCIÓN VEHICULAR</div>
-
-                    <div class="section">
-                        <div class="section-title">INFORMACIÓN DEL CLIENTE</div>
-                        <div class="info-grid">
-                            <div class="info-item"><span class="label">Nombre:</span> ${inspeccion.cliente_nombre || 'N/A'}</div>
-                            <div class="info-item"><span class="label">Email:</span> ${inspeccion.cliente_email || 'N/A'}</div>
-                            <div class="info-item"><span class="label">Teléfono:</span> ${inspeccion.cliente_telefono || 'N/A'}</div>
-                            <div class="info-item"><span class="label">Dirección:</span> ${inspeccion.cliente_direccion || 'N/A'}</div>
+                        <!-- Vehicle Information -->
+                        <div class="section">
+                            <div class="section-header">Información del Vehículo</div>
+                            <div class="section-content">
+                                <div class="vehicle-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Marca</div>
+                                        <div class="info-value">${inspeccion.vehiculo_marca}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Modelo</div>
+                                        <div class="info-value">${inspeccion.vehiculo_modelo}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Año</div>
+                                        <div class="info-value">${inspeccion.vehiculo_anio}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Color</div>
+                                        <div class="info-value">${inspeccion.vehiculo_color}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Placa</div>
+                                        <div class="info-value">${inspeccion.vehiculo_placa}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Estado Aceite</div>
+                                        <div class="info-value">
+                                            <span class="status-badge" style="background-color: ${inspeccion.vehiculo_estado_aceite === 'Excelente' || inspeccion.vehiculo_estado_aceite === 'Bueno' ? '#d4edda' : inspeccion.vehiculo_estado_aceite === 'Regular' ? '#fff3cd' : '#f8d7da'}">${inspeccion.vehiculo_estado_aceite}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Fecha Shaken</div>
+                                        <div class="info-value">${inspeccion.vehiculo_fecha_shaken ? new Date(inspeccion.vehiculo_fecha_shaken).toLocaleDateString('es-VE') : 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="section">
-                        <div class="section-title">INFORMACIÓN DEL VEHÍCULO</div>
-                        <div class="info-grid">
-                            <div class="info-item"><span class="label">Marca:</span> ${inspeccion.vehiculo_marca}</div>
-                            <div class="info-item"><span class="label">Modelo:</span> ${inspeccion.vehiculo_modelo}</div>
-                            <div class="info-item"><span class="label">Año:</span> ${inspeccion.vehiculo_anio}</div>
-                            <div class="info-item"><span class="label">Color:</span> ${inspeccion.vehiculo_color}</div>
-                            <div class="info-item"><span class="label">Placa:</span> ${inspeccion.vehiculo_placa}</div>
-                            <div class="info-item"><span class="label">Fecha Shaken:</span> ${new Date(inspeccion.vehiculo_fecha_shaken).toLocaleDateString() || 'N/A'}</div>
+                        <!-- Vehicle Condition -->
+                        <div class="section">
+                            <div class="section-header">Estado del Vehículo</div>
+                            <div class="section-content">
+                                <div class="condition-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Estado de la Batería</div>
+                                        <div class="info-value">
+                                            <span class="status-badge" style="background-color: ${inspeccion.vehiculo_estado_bateria === 'Excelente' || inspeccion.vehiculo_estado_bateria === 'Bueno' ? '#d4edda' : inspeccion.vehiculo_estado_bateria === 'Regular' ? '#fff3cd' : '#f8d7da'}">${inspeccion.vehiculo_estado_bateria}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Pastillas de Freno</div>
+                                        <div class="info-value">${inspeccion.vehiculo_pastillas_freno}%</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Neumáticos</div>
+                                        <div class="info-value">${inspeccion.vehiculo_neumaticos || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="section">
-                        <div class="section-title">ESTADO DE COMPONENTES</div>
-                        <div class="info-grid">
-                            <div class="info-item"><span class="label">Estado del Aceite:</span> <span class="${inspeccion.vehiculo_estado_aceite === 'Excelente' ? 'status-good' : inspeccion.vehiculo_estado_aceite === 'Bueno' ? 'status-good' : inspeccion.vehiculo_estado_aceite === 'Regular' ? 'status-regular' : 'status-bad'}">${inspeccion.vehiculo_estado_aceite}</span></div>
-                            <div class="info-item"><span class="label">Pastillas de Freno:</span> ${inspeccion.vehiculo_pastillas_freno}% ${inspeccion.vehiculo_pastillas_freno > 50 ? '(Buen estado)' : inspeccion.vehiculo_pastillas_freno > 20 ? '(Regular)' : '(Requiere atención)'}</div>
-                            <div class="info-item"><span class="label">Neumáticos:</span> ${inspeccion.vehiculo_neumaticos || 'No especificado'}</div>
-                            <div class="info-item"><span class="label">Estado de la Batería:</span> <span class="${inspeccion.vehiculo_estado_bateria === 'Excelente' ? 'status-good' : inspeccion.vehiculo_estado_bateria === 'Bueno' ? 'status-good' : inspeccion.vehiculo_estado_bateria === 'Regular' ? 'status-regular' : 'status-bad'}">${inspeccion.vehiculo_estado_bateria}</span></div>
+                        <!-- Additional Information -->
+                        ${inspeccion.vehiculo_observaciones || inspeccion.vehiculo_trabajos_realizar || inspeccion.vehiculo_detalles_pintura ? `
+                        <div class="section">
+                            <div class="section-header">Información Adicional</div>
+                            <div class="section-content">
+                                <div class="info-grid">
+                                    ${inspeccion.vehiculo_observaciones ? `
+                                    <div class="info-item" style="height:200px">
+                                        <div class="info-label">Observaciones</div>
+                                        <div class="text-area">${inspeccion.vehiculo_observaciones}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${inspeccion.vehiculo_trabajos_realizar ? `
+                                    <div class="info-item" style="height:200px">
+                                        <div class="info-label">Trabajos a Realizar</div>
+                                        <div class="text-area">${inspeccion.vehiculo_trabajos_realizar}</div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="company-info-section">
+                                        <img src="${carrito}" height="220px" />
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Detalles de Pintura</div>
+                                        <div class="text-area">${inspeccion.vehiculo_detalles_pintura || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        ` : ''}
                     </div>
-
-                    ${inspeccion.vehiculo_observaciones ? `
-                    <div class="section">
-                        <div class="section-title">OBSERVACIONES</div>
-                        <p>${inspeccion.vehiculo_observaciones}</p>
-                    </div>
-                    ` : ''}
-
-                    ${inspeccion.vehiculo_trabajos_realizar ? `
-                    <div class="section">
-                        <div class="section-title">TRABAJOS A REALIZAR</div>
-                        <p>${inspeccion.vehiculo_trabajos_realizar}</p>
-                    </div>
-                    ` : ''}
-
-                    ${inspeccion.vehiculo_detalles_pintura ? `
-                    <div class="section">
-                        <div class="section-title">DETALLES DE PINTURA</div>
-                        <p>${inspeccion.vehiculo_detalles_pintura}</p>
-                    </div>
-                    ` : ''}
                 </body>
             </html>
         `)
         printWindow.document.close()
         printWindow.print()
+
     }
 
     return (
@@ -200,7 +473,13 @@ const InspeccionVehicular = () => {
                                                         <td>{new Date(inspeccion.vehiculo_fecha_shaken).toLocaleDateString()}</td>
                                                         <td>
                                                             <button className="btn btn-sm btn-info me-2" onClick={() => openEdit(inspeccion)}>Editar</button>
-                                                            <button className="btn btn-sm btn-success me-2" onClick={() => printInspection(inspeccion)}>Imprimir</button>
+                                                            <button
+                                                                className="btn btn-sm btn-primary me-2"
+                                                                onClick={() => printInspection(inspeccion)}
+                                                                disabled={!loadCar}
+                                                            ><span class="sr-only" role="status" aria-hidden="true">Imprimir </span>
+                                                                {!loadCar && <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+                                                            </button>
                                                             <button className="btn btn-sm btn-danger" onClick={() => handleDelete(inspeccion)}>Eliminar</button>
                                                         </td>
                                                     </tr>

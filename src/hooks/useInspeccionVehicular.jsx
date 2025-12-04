@@ -4,6 +4,7 @@ import { apiurl } from '../utils/globals'
 import imageCompression from 'browser-image-compression';
 
 const useInspeccionVehicular = () => {
+    const [loadCar, setLoadCar] = useState(false)
     const [inspecciones, setInspecciones] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -38,6 +39,9 @@ const useInspeccionVehicular = () => {
 
     useEffect(() => {
         fetchInspecciones()
+        setTimeout(()=>{
+            setLoadCar(true)
+        },2500)
     }, [])
 
     async function fetchInspecciones() {
@@ -269,7 +273,8 @@ const useInspeccionVehicular = () => {
         clientes,
         searchingClients,
         searchClients,
-        selectClient
+        selectClient,
+        loadCar
     }
 }
 

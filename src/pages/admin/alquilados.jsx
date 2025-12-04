@@ -238,9 +238,9 @@ const Alquilados = () => {
                     </div>
                     <div class="info-section">
                         <h4>Información del Alquiler</h4>
-                        <p><strong>Fecha de Inicio:</strong> ${new Date(rental.fecha_inicio).toLocaleDateString('es-ES')}</p>
+                        <p><strong>Fecha de Inicio:</strong> ${new Date(rental.fecha_inicio).toLocaleDateString('es-VE')}</p>
                         <p><strong>Precio Mensual:</strong> ¥${parseInt(rental.precio_alquiler)}</p>
-                        <p><strong>Fecha del Alquiler:</strong> ${new Date(rental.fecha_alquiler).toLocaleDateString('es-ES')}</p>
+                        <p><strong>Fecha del Alquiler:</strong> ${new Date(rental.fecha_alquiler).toLocaleDateString('es-VE')}</p>
                         <p><strong>ID Alquiler:</strong> ${rental.id}</p>
                     </div>
                 </div>
@@ -276,7 +276,7 @@ const Alquilados = () => {
                             <strong>Frecuencia de Pago:</strong> Mensual
                         </div>
                         <div class="detail-item">
-                            <strong>Próximo Pago:</strong> ${new Date(new Date(rental.fecha_inicio).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES')}
+                            <strong>Próximo Pago:</strong> ${new Date(new Date(rental.fecha_inicio).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('es-VE')}
                         </div>
                         <div class="detail-item">
                             <strong>Estado del Vehículo:</strong> Alquilado
@@ -289,7 +289,7 @@ const Alquilados = () => {
 
                 <div class="footer">
                     <p>Gracias por elegir nuestros servicios de alquiler. Alquiler realizado por Sanocars Taller.</p>
-                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</p>
+                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</p>
                 </div>
             </body>
             </html>
@@ -350,9 +350,9 @@ const Alquilados = () => {
                                                         </td>
                                                         <td>{rental.cliente_nombre}</td>
                                                         <td>{rental.cliente_telefono || '-'}</td>
-                                                        {/* <td>{new Date(rental.fecha_inicio).toLocaleDateString('es-ES')}</td> */}
+                                                        {/* <td>{new Date(rental.fecha_inicio).toLocaleDateString('es-VE')}</td> */}
                                                         <td>{formatCurrency(rental.precio_alquiler)}</td>
-                                                        <td>{new Date(rental.fecha_alquiler).toLocaleDateString('es-ES')}</td>
+                                                        <td>{new Date(rental.fecha_alquiler).toLocaleDateString('es-VE')}</td>
                                                         <td>
                                                             <button
                                                                 className="btn btn-sm btn-info me-1"
@@ -423,10 +423,10 @@ const Alquilados = () => {
                                                     <strong>Precio Mensual:</strong> {formatCurrency(selectedRental?.precio_alquiler)}
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <strong>Fecha de Inicio:</strong> {new Date(selectedRental?.fecha_inicio).toLocaleDateString('es-ES')}
+                                                    <strong>Fecha de Inicio:</strong> {new Date(selectedRental?.fecha_inicio).toLocaleDateString('es-VE')}
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <strong>Próximo Pago:</strong> {paymentRecord?.fecha_proximo_pago ? new Date(paymentRecord.fecha_proximo_pago).toLocaleDateString('es-ES') : 'No establecido'}
+                                                    <strong>Próximo Pago:</strong> {paymentRecord?.fecha_proximo_pago ? new Date(paymentRecord.fecha_proximo_pago).toLocaleDateString('es-VE') : 'No establecido'}
                                                 </div>
                                             </div>
                                         </div>
@@ -446,7 +446,7 @@ const Alquilados = () => {
                                                         <tbody>
                                                             {paymentRecord?.pagos_realizados.map((fecha, index) => (
                                                                 <tr key={index}>
-                                                                    <td>{new Date(fecha).toLocaleDateString('es-ES')}</td>
+                                                                    <td>{new Date(fecha).toLocaleDateString('es-VE')}</td>
                                                                     <td>{formatCurrency(selectedRental?.precio_alquiler)}</td>
                                                                 </tr>
                                                             ))}

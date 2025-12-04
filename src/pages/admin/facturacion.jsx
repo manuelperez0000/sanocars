@@ -36,7 +36,7 @@ const Facturacion = () => {
                             </div>
                         )}
                     </div>
-                    
+
                     {/* Client Information */}
                     <ClientInformation
                         invoiceData={invoiceData}
@@ -78,7 +78,7 @@ const Facturacion = () => {
                                                     <td>{product.id}</td>
                                                     <td>{product.nombre}</td>
                                                     <td>{product.fabricante}</td>
-                                                    <td>{formatCurrency(product.precio) }</td>
+                                                    <td>{formatCurrency(product.precio)}</td>
                                                     <td>{product.cantidad || 0}</td>
                                                     <td>
                                                         <input
@@ -147,7 +147,7 @@ const Facturacion = () => {
                                         <tfoot>
                                             <tr>
                                                 <td colSpan="3" className="text-end fw-bold">Total:</td>
-                                                <td className="fw-bold">¥{calculateTotal().toLocaleString()}</td>
+                                                <td className="fw-bold">{formatCurrency(calculateTotal())}</td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>

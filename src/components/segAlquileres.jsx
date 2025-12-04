@@ -106,7 +106,7 @@ const SegAlquileres = () => {
                   <div className="mb-3">
                     <strong className="text-muted">Fecha de Inicio:</strong>
                     <p className="mb-1">
-                      {new Date(rental.fecha_inicio).toLocaleDateString('es-ES')}
+                      {new Date(rental.fecha_inicio).toLocaleDateString('es-VE')}
                     </p>
                   </div>
 
@@ -114,7 +114,7 @@ const SegAlquileres = () => {
                     <strong className="text-muted">Próximo Pago:</strong>
                     <p className="mb-1">
                       {rental.nextPayment
-                        ? new Date(rental.nextPayment).toLocaleDateString('es-ES')
+                        ? new Date(rental.nextPayment).toLocaleDateString('es-VE')
                         : 'No establecido'
                       }
                     </p>
@@ -136,7 +136,7 @@ const SegAlquileres = () => {
                         {rental.payments.map((paymentDate, index) => (
                           <div key={index} className="d-flex justify-content-between align-items-center py-1 border-bottom">
                             <small>
-                              {new Date(paymentDate).toLocaleDateString('es-ES')}
+                              {new Date(paymentDate).toLocaleDateString('es-VE')}
                             </small>
                             <small className="text-success fw-bold">
                               {formatCurrency(rental.precio_alquiler)}

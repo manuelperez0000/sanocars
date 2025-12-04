@@ -1,6 +1,6 @@
 
 import useServicios from '../../hooks/useServicios'
-import { topurl } from '../../utils/globals'
+import { formatCurrency, topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
 import ClientInformation from '../../components/ClientInformation'
 
@@ -200,7 +200,7 @@ const Servicios = () => {
                         <div class="text-left">
                             <h2>Factura de Servicio</h2>
                             <p>Servicio #${servicio.id}</p>
-                            <div>${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}</div>
+                            <div>${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</div>
                         </div>
                         <div style="text-align: right;">
                             <h1>SANOCARS</h1>
@@ -228,7 +228,7 @@ const Servicios = () => {
                     </div>
                     <div class="info-section">
                         <h4>Información del Servicio</h4>
-                        <p><strong>Fecha:</strong> ${new Date(servicio.fecha_servicio).toLocaleDateString('es-ES')}</p>
+                        <p><strong>Fecha:</strong> ${new Date(servicio.fecha_servicio).toLocaleDateString('es-VE')}</p>
                         ${servicio.notas ? `
                         <div class="notes-section">
                             <h4>Notas</h4>
@@ -254,8 +254,8 @@ const Servicios = () => {
                                 <tr>
                                     <td>${detail.descripcion || ''}</td>
                                     <td class="text-right">${detail.cantidad || 0}</td>
-                                    <td class="text-right">¥${parseInt(detail.precio_unitario || 0)}</td>
-                                    <td class="text-right">¥${parseInt(detail.total || 0)}</td>
+                                    <td class="text-right">¥ ${parseInt(detail.precio_unitario || 0)}</td>
+                                    <td class="text-right">¥ ${parseInt(detail.total || 0)}</td>
                                 </tr>
                             `).join('') : '<tr><td colspan="4" style="text-align: center;">No hay detalles disponibles</td></tr>'}
                         </tbody>
@@ -266,15 +266,15 @@ const Servicios = () => {
                     <div class="totals-box">
                         <div class="totals-row">
                             <span>Subtotal:</span>
-                            <span>¥${parseInt(servicio.subtotal || 0)}</span>
+                            <span>${formatCurrency(servicio.subtotal || 0)}</span>
                         </div>
                         <div class="totals-row">
                             <span>IVA (${ivaPercentage}%):</span>
-                            <span>¥${parseInt(servicio.iva || 0)}</span>
+                            <span>${formatCurrency(servicio.iva || 0)}</span>
                         </div>
                         <div class="totals-row total">
                             <span>Total:</span>
-                            <span>¥${parseInt(servicio.total || 0)}</span>
+                            <span>${formatCurrency(servicio.total || 0)}</span>
                         </div>
                     </div>
                 </div>
@@ -332,7 +332,7 @@ const Servicios = () => {
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
                                                         <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
                                                         <td>{new Date(s.fecha_servicio).toLocaleDateString()}</td>
-                                                        <td>¥{parseInt(s.total || 0)}</td>
+                                                        <td>{formatCurrency(s.total || 0)}</td>
                                                         <td>
                                                             <span className={`badge ${s.status === 'Completado' ? 'bg-success' : s.status === 'En Progreso' ? 'bg-warning' : 'bg-secondary'}`}>
                                                                 {s.status}
@@ -452,8 +452,8 @@ const Servicios = () => {
                                                             <tr key={index}>
                                                                 <td>{detail.descripcion}</td>
                                                                 <td>{detail.cantidad}</td>
-                                                                <td>¥{parseInt(detail.precio_unitario || 0)}</td>
-                                                                <td>¥{parseInt(detail.total || 0)}</td>
+                                                                <td>{formatCurrency(detail.precio_unitario || 0)}</td>
+                                                                <td>{formatCurrency(detail.total || 0)}</td>
                                                                 <td>
                                                                     <button type="button" className="btn btn-sm btn-warning me-1" onClick={() => openDetailsModal(detail, index)}>
                                                                         Editar
@@ -487,16 +487,16 @@ const Servicios = () => {
                                                 <div className="border p-3 rounded">
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Subtotal:</strong>
-                                                        <span>¥{parseInt(form.subtotal || 0)}</span>
+                                                        <span>{formatCurrency(form.subtotal || 0)}</span>
                                                     </div>
                                                     <div className="d-flex justify-content-between">
                                                         <strong>IVA ({ivaPercentage}%):</strong>
-                                                        <span>¥{parseInt(form.iva || 0)}</span>
+                                                        <span>{formatCurrency(form.iva || 0)}</span>
                                                     </div>
                                                     <hr />
                                                     <div className="d-flex justify-content-between">
                                                         <strong>Total:</strong>
-                                                        <span className="text-primary">¥{parseInt(form.total || 0)}</span>
+                                                        <span className="text-primary">{formatCurrency(form.total || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -612,7 +612,7 @@ const Servicios = () => {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Agregar Item del Servicio</h5>
+                                <h5 className="modal-title">Agregar Servicio</h5>
                                 <button type="button" className="btn-close" aria-label="Close" onClick={closeDetailsModal}></button>
                             </div>
                             <div className="modal-body">
@@ -653,7 +653,7 @@ const Servicios = () => {
                                     </div>
                                 </div>
                                 <div className="mb-3">
-                                    <strong>Total: ¥{((parseInt(currentDetail.cantidad) || 1) * (parseInt(currentDetail.precio_unitario) || 0))}</strong>
+                                    <strong>Total: {formatCurrency((parseInt(currentDetail.cantidad) || 1) * (parseInt(currentDetail.precio_unitario) || 0))}</strong>
                                 </div>
                             </div>
                             <div className="modal-footer">

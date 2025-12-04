@@ -6,9 +6,13 @@ const useInformeVehiculos = () => {
     const [informes, setInformes] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [loadCar, setLoadCar] = useState(false)
 
     useEffect(() => {
         fetchInformes()
+        setTimeout(()=>{
+            setLoadCar(true)
+        },2500)
     }, [])
 
     async function fetchInformes() {
@@ -83,7 +87,8 @@ const useInformeVehiculos = () => {
         createInforme,
         updateInforme,
         deleteInforme,
-        getInforme
+        getInforme,
+        loadCar
     }
 }
 

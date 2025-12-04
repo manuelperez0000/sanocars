@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
 import { FaClock, FaAlignLeft, FaChevronLeft, FaChevronRight, FaTimes, FaPhone, FaCalculator } from 'react-icons/fa'
 import request from '../utils/request'
-import { apiurl, topurl, formatCurrency } from '../utils/globals'
+import { apiurl, topurl, formatCurrency, formatBigNumber } from '../utils/globals'
 
 export default function VehicleDetail() {
   const { id } = useParams()
@@ -274,7 +274,7 @@ export default function VehicleDetail() {
                         <div className="col-6">
                           <div className="p-2 border rounded">
                             <small className="text-muted d-block">KILOMETRAJE</small>
-                            <strong>{vehicle.km?.toLocaleString() || 'N/A'} km</strong>
+                            <strong>{formatBigNumber(vehicle?.km)} km</strong>
                           </div>
                         </div>
                         <div className="col-6">
@@ -298,7 +298,7 @@ export default function VehicleDetail() {
                       <h5 className="mb-3">HISTORIAL DE REPARACIONES</h5>
                       <div className="mb-3 flex-between p-2 border rounded">
                         <small className='text-muted d-block'>CAMBIO DE ACEITE Y FILTRO:</small>
-                        <strong>{vehicle.cambio_aceite ? new Date(vehicle.cambio_aceite).toLocaleDateString('es-ES') : 'No registrado'}</strong>
+                        <strong>{vehicle.cambio_aceite ? new Date(vehicle.cambio_aceite).toLocaleDateString('es-VE') : 'No registrado'}</strong>
                       </div>
                       <div className="mb-3 p-2 border rounded">
                         <small className='text-muted d-block'>MANTENIMIENTO GENERAL:</small>

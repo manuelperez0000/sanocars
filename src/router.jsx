@@ -34,6 +34,7 @@ import Calendario from "./pages/admin/calendario"
 import Alquilados from "./pages/admin/alquilados"
 import Test from "./pages/test"
 import SearchResults from "./pages/SearchResults"
+import Clientes from "./pages/admin/clientes"
 
 const Router = () => {
     return <>
@@ -64,6 +65,7 @@ const Router = () => {
             <Route path="/admin/vehiculos" element={<AdminLayout><AdminVehiculos /></AdminLayout>} />
             <Route path="/admin/servicios" element={<AdminLayout><AdminServicios /></AdminLayout>} />
             <Route path="/admin/imagenes" element={<AdminLayout><Imagenes /></AdminLayout>} />
+            <Route path="/admin/clientes" element={<AdminLayout><Clientes /></AdminLayout>} />
             
             <Route path="/admin/alquilados" element={<AdminLayout><Alquilados /></AdminLayout>} />
             <Route path="/admin/inventario" element={<AdminLayout><Inventario /></AdminLayout>} />

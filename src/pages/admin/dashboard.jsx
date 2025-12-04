@@ -78,7 +78,7 @@ const Dashboard = () => {
                         Dashboard Administrativo
                     </h3>
                     <div className="text-light">
-                        <small>Última actualización: {new Date().toLocaleDateString('es-ES')}</small>
+                        <small>Última actualización: {new Date().toLocaleDateString('es-VE')}</small>
                     </div>
                 </div>
 

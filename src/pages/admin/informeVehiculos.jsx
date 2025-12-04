@@ -6,9 +6,9 @@ import { topurl } from '../../utils/globals'
 import useConfiguracion from '../../hooks/useConfiguracion'
 import carrito from '../../assets/carrito.png'
 const InformeVehiculos = () => {
-    const {getPhones,getEmails} = useConfiguracion()
+    const { getPhones, getEmails } = useConfiguracion()
     const navigate = useNavigate()
-    const { informes, loading, error, deleteInforme } = useInformeVehiculos()
+    const { informes, loading, error, deleteInforme,loadCar } = useInformeVehiculos()
     const [selectedInforme, setSelectedInforme] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
 
@@ -516,9 +516,11 @@ const InformeVehiculos = () => {
                                                         <button
                                                             className="btn btn-sm btn-primary me-2"
                                                             onClick={() => printReport(informe)}
-                                                        >
-                                                            Imprimir
+                                                            disabled={!loadCar}
+                                                        ><span class="sr-only" role="status" aria-hidden="true">Imprimir </span>
+                                                            {!loadCar && <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
                                                         </button>
+
                                                         <button
                                                             className="btn btn-sm btn-danger"
                                                             onClick={() => handleDeleteInforme(informe.id)}

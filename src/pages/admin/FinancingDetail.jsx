@@ -121,7 +121,7 @@ const FinancingDetail = () => {
     }
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-ES')
+        return new Date(dateString).toLocaleDateString('es-VE')
     }
 
     const getStatusBadge = (status) => {

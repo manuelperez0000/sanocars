@@ -22,6 +22,7 @@ const Sidebar = () => {
         { title: 'Informe de Vehículos', path: '/admin/informe-vehiculos', icon: FaImages },
         { title: 'Inventario', path: '/admin/inventario', icon: FaImages },
         { title: 'Usuarios', path: '/admin/usuarios', icon: FaUsers },
+        { title: 'Clientes', path: '/admin/clientes', icon: FaUsers },
         { title: 'Imagenes', path: '/admin/imagenes', icon: FaImages },
         { title: 'Configuracion', path: '/admin/configuracion', icon: FaCog }
     ]

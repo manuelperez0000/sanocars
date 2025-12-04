@@ -164,7 +164,7 @@ const SegVentas = ({ vehicles, loading, error, updateQuotaStatus }) => {
                         {selectedVehicle.siguientes_pagos?.map((pago, index) => (
                           <tr key={index}>
                             <td className={bgStatus(pago.status, pago)}>{pago.numero_cuota}</td>
-                            <td className={bgStatus(pago.status, pago)}>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                            <td className={bgStatus(pago.status, pago)}>{new Date(pago.fecha_pago).toLocaleDateString('es-VE')}</td>
                             <td className={bgStatus(pago.status, pago)}>{formatCurrency(pago.monto,'¥ ')}</td>
                             <td className={bgStatus(pago.status, pago)}>
                               {pago.status ? 'Pagada' : calcVencidas([pago]) > 0 ? "Vencida" : 'Pendiente'}

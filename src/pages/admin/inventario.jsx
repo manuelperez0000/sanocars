@@ -1,5 +1,5 @@
 import useInventory from '../../hooks/useInventory'
-import { topurl } from '../../utils/globals'
+import { formatCurrency, topurl } from '../../utils/globals'
 
 const Inventario = () => {
     const {
@@ -61,7 +61,7 @@ const Inventario = () => {
                                                         <td>{getImages(item.imagenes)}</td>
                                                         <td>{item.nombre}</td>
                                                         <td>{item.fabricante}</td>
-                                                        <td>{item.precio ? `¥${item.precio}` : ''}</td>
+                                                        <td>{item.precio ? `${formatCurrency(item.precio)}` : ''}</td>
                                                         <td>{item.cantidad || 0}</td>
                                                         <td>{item.detalle}</td>
                                                         <td>
@@ -108,7 +108,7 @@ const Inventario = () => {
                                             <input name="fabricante" value={form.fabricante || ''} onChange={handleChange} className="form-control" required />
                                         </div>
                                         <div className="col-md-6 mb-3">
-                                            <label className="form-label">Precio ¥</label>
+                                            <label className="form-label">Precio en ¥</label>
                                             <input name="precio" type="number" step="1" value={form.precio || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">

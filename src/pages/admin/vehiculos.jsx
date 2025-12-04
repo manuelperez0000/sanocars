@@ -555,7 +555,7 @@ const Vehiculos = () => {
                                                                     {salesForm.siguientes_pagos.map((pago, index) => (
                                                                         <tr key={index}>
                                                                             <td className="ps-0">{pago.numero_cuota}</td>
-                                                                            <td>{new Date(pago.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                                                            <td>{new Date(pago.fecha_pago).toLocaleDateString('es-VE')}</td>
                                                                             <td className="text-end pe-0">{formatCurrency(pago.monto)}</td>
                                                                         </tr>
                                                                     ))}
