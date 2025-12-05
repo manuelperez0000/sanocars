@@ -1,4 +1,4 @@
-import { apiurl, topurl } from '../../utils/globals'
+import {  topurl } from '../../utils/globals'
 import { useImagenes } from '../../hooks/useImagenes'
 
 const Imagenes = () => {

@@ -103,7 +103,7 @@ export const useImagenes = () => {
         }
 
         try {
-            await request.delete(apiurl + `/upload/${imageName}`)
+            await request.delete(apiurl + `/imagesUploader/upload/${imageName}`)
             // Remove from local state
             setImages(prev => prev.filter(img => img !== imageName))
         } catch (err) {

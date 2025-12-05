@@ -9,7 +9,7 @@ var responser = require('../network/responser.js')
 router.get('/', async (req, res) => {
   try {
 
-    var [rows] = await db.query('SELECT * FROM vehiculos_venta ORDER BY id DESC')
+    var [rows] = await db.query('SELECT * FROM vehiculos_venta WHERE status != "eliminado" ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching vehicles:', error)

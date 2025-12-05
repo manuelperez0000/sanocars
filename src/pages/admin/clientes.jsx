@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import useClientes from '../../hooks/useClientes'
+import { topurl } from '../../utils/globals'
 
 const Clientes = () => {
     const { clientes, loading, error } = useClientes()
@@ -244,22 +245,34 @@ const Clientes = () => {
                                         </div>
                                     </div>
 
-                                    {/* Complete Data */}
+                                    {/* Imagenes */}
                                     <div className="card">
                                         <div className="card-header">
-                                            <h6>Datos Completos ({getTablaLabel(selectedCliente.tabla_origen)})</h6>
+                                            <h6>Imágenes del Vehículo</h6>
                                         </div>
+                                        {console.log(selectedCliente.vehiculo_imagenes)}
                                         <div className="card-body">
-                                            <pre className="bg-light p-3 rounded" style={{ fontSize: '12px', maxHeight: '300px', overflow: 'auto' }}>
-                                                {JSON.stringify(selectedCliente.datos_completos, null, 2)}
-                                            </pre>
+                                            {selectedCliente.vehiculo_imagenes && selectedCliente.vehiculo_imagenes.length > 0 ? (
+                                                <div className="row">
+                                                    {selectedCliente.vehiculo_imagenes.map((imagen, index) => (
+                                                        <div key={index} className="col-md-6 mb-3">
+                                                            <img
+                                                                src={`${topurl}/uploads/${imagen}`}
+                                                                alt={`Imagen ${index + 1} del vehículo`}
+                                                                className="img-fluid rounded"
+                                                                style={{ maxHeight: '200px', width: '100%', objectFit: 'cover' }}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-muted">No hay imágenes disponibles para este vehículo</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={() => setModalOpen(false)}>
-                                        Cerrar
-                                    </button>
+
                                 </div>
                             </div>
                         </div>

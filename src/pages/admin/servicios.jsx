@@ -74,12 +74,15 @@ const Servicios = () => {
                         color: #333;
                         line-height: 1.4;
                     }
+                    p{
+                      line-height:12px;
+                    }
                         .text-left { text-align: left; }
                     .invoice-header {
                         text-align: center;
-                        border-bottom: 2px solid #333;
-                        padding-bottom: 20px;
-                        margin-bottom: 30px;
+                        border-bottom: 1px solid #333;
+                        padding-bottom: 15px;
+                        margin-bottom: 15px;
                     }
                     .invoice-title {
                         font-size: 28px;
@@ -93,7 +96,7 @@ const Servicios = () => {
                     .invoice-info {
                         display: flex;
                         justify-content: space-between;
-                        margin-bottom: 30px;
+                        margin-bottom: 15px;
                     }
                     .info-section {
                         flex: 1;
@@ -110,26 +113,26 @@ const Servicios = () => {
                         font-size: 14px;
                     }
                     .service-details {
-                        margin-bottom: 30px;
+                        margin-bottom: 0px;
                     }
                     .service-details h4 {
-                        margin: 0 0 15px 0;
+                        margin: 0 0 10px 0;
                         color: #2c3e50;
                         font-size: 16px;
                     }
                     table {
                         width: 100%;
                         border-collapse: collapse;
-                        margin-bottom: 20px;
+                        margin-bottom: 0px;
                     }
                     th, td {
-                        border: 1px solid #ddd;
-                        padding: 12px;
+                        border: 1px solid #bbb;
+                        padding: 3px 5px;
                         text-align: left;
-                        font-size: 14px;
+                        font-size: 12px;
                     }
                     th {
-                        background-color: #f8f9fa;
+                        background-color: #ffffffff;
                         font-weight: bold;
                         color: #2c3e50;
                     }
@@ -139,7 +142,7 @@ const Servicios = () => {
                     .totals-section {
                         display: flex;
                         justify-content: flex-end;
-                        margin-bottom: 30px;
+                        margin-bottom: 0px;
                     }
                     .totals-box {
                         border: 1px solid #ddd;
