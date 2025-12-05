@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
                 try {
                     const placeholders = ventaVehiculoIds.map(() => '?').join(',')
                     const [vehicleRows] = await db.execute(
-                        `SELECT id, marca, modelo, anio, color, numero_placa FROM vehiculos_venta WHERE id IN (${placeholders})`,
+                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE id IN (${placeholders})`,
                         ventaVehiculoIds
                     )
                     vehicleData = vehicleRows.reduce((acc, vehicle) => {
@@ -70,6 +70,32 @@ router.get('/', async (req, res) => {
                         vehiculo_anio: vehicle?.anio || '',
                         vehiculo_color: vehicle?.color || '',
                         vehiculo_placa: vehicle?.numero_placa || '',
+                        vehiculo_imagenes: [
+                            ...(vehicle?.imagen1 ? (() => {
+                                try {
+                                    // Clean up extra quotes that might be in the data
+                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
+                                    const parsed = JSON.parse(cleaned);
+                                    return Array.isArray(parsed) ? parsed : [cleaned];
+                                } catch {
+                                    // If not valid JSON, clean up quotes and treat as single filename
+                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
+                                    return cleaned ? [cleaned] : [];
+                                }
+                            })() : []),
+                            ...(vehicle?.imagen2 ? (() => {
+                                try {
+                                    // Clean up extra quotes that might be in the data
+                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
+                                    const parsed = JSON.parse(cleaned);
+                                    return Array.isArray(parsed) ? parsed : [cleaned];
+                                } catch {
+                                    // If not valid JSON, clean up quotes and treat as single filename
+                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
+                                    return cleaned ? [cleaned] : [];
+                                }
+                            })() : [])
+                        ],
                         tabla_origen: 'venta',
                         datos_completos: venta
                     })
@@ -89,7 +115,7 @@ router.get('/', async (req, res) => {
                 try {
                     const placeholders = alquilerVehiculoIds.map(() => '?').join(',')
                     const [vehicleRows] = await db.execute(
-                        `SELECT id, marca, modelo, anio, color, numero_placa FROM vehiculos_venta WHERE id IN (${placeholders})`,
+                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE id IN (${placeholders})`,
                         alquilerVehiculoIds
                     )
                     vehicleDataAlquiler = vehicleRows.reduce((acc, vehicle) => {
@@ -115,6 +141,32 @@ router.get('/', async (req, res) => {
                         vehiculo_anio: vehicle?.anio || alquiler.vehiculo_anio || '',
                         vehiculo_color: vehicle?.color || alquiler.vehiculo_color || '',
                         vehiculo_placa: vehicle?.numero_placa || alquiler.vehiculo_placa || '',
+                        vehiculo_imagenes: [
+                            ...(vehicle?.imagen1 ? (() => {
+                                try {
+                                    // Clean up extra quotes that might be in the data
+                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
+                                    const parsed = JSON.parse(cleaned);
+                                    return Array.isArray(parsed) ? parsed : [cleaned];
+                                } catch {
+                                    // If not valid JSON, clean up quotes and treat as single filename
+                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
+                                    return cleaned ? [cleaned] : [];
+                                }
+                            })() : []),
+                            ...(vehicle?.imagen2 ? (() => {
+                                try {
+                                    // Clean up extra quotes that might be in the data
+                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
+                                    const parsed = JSON.parse(cleaned);
+                                    return Array.isArray(parsed) ? parsed : [cleaned];
+                                } catch {
+                                    // If not valid JSON, clean up quotes and treat as single filename
+                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
+                                    return cleaned ? [cleaned] : [];
+                                }
+                            })() : [])
+                        ],
                         tabla_origen: 'alquileres',
                         datos_completos: alquiler
                     })
