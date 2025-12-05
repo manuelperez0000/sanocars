@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import useClientes from '../../hooks/useClientes'
 import { topurl } from '../../utils/globals'
-
+import useVehicles from '../../hooks/useVehicles'
 const Clientes = () => {
     const { clientes, loading, error } = useClientes()
     const [selectedCliente, setSelectedCliente] = useState(null)
@@ -13,6 +13,8 @@ const Clientes = () => {
         setSelectedCliente(cliente)
         setModalOpen(true)
     }
+
+    const { getArrayImages } = useVehicles()
 
     const getTablaLabel = (tabla) => {
         const labels = {
@@ -218,7 +220,7 @@ const Clientes = () => {
                                                     <p><strong>Teléfono:</strong> {selectedCliente.telefono || 'N/A'}</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p><strong>ID en tabla:</strong> {selectedCliente.datos_completos.id}</p>
+                                                    <p><strong>ID en tabla:</strong> {selectedCliente.id}</p>
                                                     <p><strong>Tabla origen:</strong> {getTablaLabel(selectedCliente.tabla_origen)}</p>
                                                 </div>
                                             </div>
@@ -250,17 +252,16 @@ const Clientes = () => {
                                         <div className="card-header">
                                             <h6>Imágenes del Vehículo</h6>
                                         </div>
-                                        {console.log(selectedCliente.vehiculo_imagenes)}
                                         <div className="card-body">
                                             {selectedCliente.vehiculo_imagenes && selectedCliente.vehiculo_imagenes.length > 0 ? (
                                                 <div className="row">
-                                                    {selectedCliente.vehiculo_imagenes.map((imagen, index) => (
+                                                    {getArrayImages(selectedCliente.vehiculo_imagenes).map((imagen, index) => (
                                                         <div key={index} className="col-md-6 mb-3">
                                                             <img
                                                                 src={`${topurl}/uploads/${imagen}`}
                                                                 alt={`Imagen ${index + 1} del vehículo`}
                                                                 className="img-fluid rounded"
-                                                                style={{ maxHeight: '200px', width: '100%', objectFit: 'cover' }}
+                                                                style={{ height: '300px', width: '100%', objectFit: 'cover' }}
                                                             />
                                                         </div>
                                                     ))}

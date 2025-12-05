@@ -70,34 +70,8 @@ router.get('/', async (req, res) => {
                         vehiculo_anio: vehicle?.anio || '',
                         vehiculo_color: vehicle?.color || '',
                         vehiculo_placa: vehicle?.numero_placa || '',
-                        vehiculo_imagenes: [
-                            ...(vehicle?.imagen1 ? (() => {
-                                try {
-                                    // Clean up extra quotes that might be in the data
-                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
-                                    const parsed = JSON.parse(cleaned);
-                                    return Array.isArray(parsed) ? parsed : [cleaned];
-                                } catch {
-                                    // If not valid JSON, clean up quotes and treat as single filename
-                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
-                                    return cleaned ? [cleaned] : [];
-                                }
-                            })() : []),
-                            ...(vehicle?.imagen2 ? (() => {
-                                try {
-                                    // Clean up extra quotes that might be in the data
-                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
-                                    const parsed = JSON.parse(cleaned);
-                                    return Array.isArray(parsed) ? parsed : [cleaned];
-                                } catch {
-                                    // If not valid JSON, clean up quotes and treat as single filename
-                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
-                                    return cleaned ? [cleaned] : [];
-                                }
-                            })() : [])
-                        ],
-                        tabla_origen: 'venta',
-                        datos_completos: venta
+                        vehiculo_imagenes: vehicle?.imagen1,
+                        tabla_origen: 'venta'
                     })
                 }
             })
@@ -141,34 +115,8 @@ router.get('/', async (req, res) => {
                         vehiculo_anio: vehicle?.anio || alquiler.vehiculo_anio || '',
                         vehiculo_color: vehicle?.color || alquiler.vehiculo_color || '',
                         vehiculo_placa: vehicle?.numero_placa || alquiler.vehiculo_placa || '',
-                        vehiculo_imagenes: [
-                            ...(vehicle?.imagen1 ? (() => {
-                                try {
-                                    // Clean up extra quotes that might be in the data
-                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
-                                    const parsed = JSON.parse(cleaned);
-                                    return Array.isArray(parsed) ? parsed : [cleaned];
-                                } catch {
-                                    // If not valid JSON, clean up quotes and treat as single filename
-                                    const cleaned = vehicle.imagen1.replace(/^["']+|["']+$/g, '');
-                                    return cleaned ? [cleaned] : [];
-                                }
-                            })() : []),
-                            ...(vehicle?.imagen2 ? (() => {
-                                try {
-                                    // Clean up extra quotes that might be in the data
-                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
-                                    const parsed = JSON.parse(cleaned);
-                                    return Array.isArray(parsed) ? parsed : [cleaned];
-                                } catch {
-                                    // If not valid JSON, clean up quotes and treat as single filename
-                                    const cleaned = vehicle.imagen2.replace(/^["']+|["']+$/g, '');
-                                    return cleaned ? [cleaned] : [];
-                                }
-                            })() : [])
-                        ],
+                        vehiculo_imagenes: vehicle?.imagen1,
                         tabla_origen: 'alquileres',
-                        datos_completos: alquiler
                     })
                 }
             })
@@ -190,7 +138,7 @@ router.get('/', async (req, res) => {
                         vehiculo_color: inspeccion.vehiculo_color || '',
                         vehiculo_placa: inspeccion.vehiculo_placa || '',
                         tabla_origen: 'inspeccion_vehicular',
-                        datos_completos: inspeccion
+                        vehiculo_imagenes: `${inspeccion.foto_vehiculo},${inspeccion.foto_documento}`
                     })
                 }
             })
@@ -212,11 +160,15 @@ router.get('/', async (req, res) => {
                         vehiculo_color: financiamiento.vehiculo_color || '',
                         vehiculo_placa: financiamiento.vehiculo_placa || '',
                         tabla_origen: 'financiamiento',
-                        datos_completos: financiamiento
+                        datos_completos: financiamiento,
+                        vehiculo_imagenes: `${financiamiento.seiru_cado_frontal},${financiamiento.seiru_cado_trasero},${financiamiento.licencia_conducir_frontal},${financiamiento.licencia_conducir_trasero},${financiamiento.kokumin_shakai_hoken},${financiamiento.libreta_banco}`
                     })
                 }
             })
         }
+
+
+
 
         // Process servicios
         if (results.servicios) {
