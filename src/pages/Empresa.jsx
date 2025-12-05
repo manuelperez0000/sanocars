@@ -3,7 +3,7 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaUsers, FaAward, FaCar, 
 import { formatNumber } from '../utils/globals'
 
 const Empresa = () => {
-    
+
     const { emails, phones, schedules } = useApp()
 
     return (
@@ -12,7 +12,7 @@ const Empresa = () => {
                 {/* Hero Section */}
                 <div className="row mb-5">
                     <div className="col-12 text-center">
-                        <h1 className="display-4 momo mb-4">Sobre SanoCars</h1>
+                        <h1 className="display-4 momo mb-4">Sobre SanoCars LTD</h1>
                         <p className="lead">Tu taller de confianza en Shizuoka, Japón</p>
                     </div>
                 </div>
@@ -21,21 +21,27 @@ const Empresa = () => {
                 <div className="row mb-5">
                     <div className="col-lg-8 mx-auto">
                         <div className="card shadow">
-                            <div className="card-body p-4">
+                            <div className="card-bodys p-4">
                                 <h2 className="h3 mb-4 text-center">Nuestra Historia</h2>
-                                <p className="mb-4">
-                                    SanoCars es un taller automotriz especializado en el mantenimiento, reparación y pintura de vehículos.
+                                <div className="mb-4 text-justify" >
+                                    En SANOCARS LTD hemos construido nuestra historia sobre la honestidad, el compromiso y el respeto hacia cada cliente que confía en nosotros. Desde hace varios años nos dedicamos a la venta de autos, seleccionando cuidadosamente cada unidad para garantizar que quien nos elija reciba un vehículo seguro, confiable y adecuado para su día a día.
+                                    <br /><br />
+                                    Con el tiempo, ampliamos nuestra labor incorporando servicios mecánicos automotrices, ofreciendo mantenimiento, diagnósticos y reparaciones con profesionalismo y transparencia. Nuestro objetivo es acompañar a cada cliente durante todo el proceso: desde la compra de su vehículo hasta su cuidado y mantenimiento.
+                                    <br /><br />
+                                    A lo largo de estos años, han sido muchas las familias y personas que han cumplido el sueño de obtener su propio vehículo gracias a SANOCARS LTD. Ser parte de ese logro es uno de nuestros mayores orgullos y la motivación que nos impulsa a seguir creciendo.
+                                    <br /><br />
+                                    {/* SanoCars es un taller automotriz especializado en el mantenimiento, reparación y pintura de vehículos.
                                     Fundada en Shizuoka, Japón, nos dedicamos a proporcionar servicios de alta calidad con la experiencia
-                                    y profesionalismo que nuestros clientes merecen.
-                                </p>
-                                <p className="mb-4">
-                                    Nuestro equipo de mecánicos certificados y pintores expertos utiliza equipos de última tecnología
-                                    y técnicas avanzadas para garantizar que tu vehículo reciba el mejor cuidado posible.
-                                </p>
-                                <p>
-                                    Con años de experiencia en el sector automotriz, hemos construido una reputación basada en la
-                                    confianza, la calidad y el servicio al cliente excepcional.
-                                </p>
+                                    y profesionalismo que nuestros clientes merecen. */}
+                                    <p className="mb-4">
+                                        Nuestro equipo de mecánicos certificados y pintores expertos utiliza equipos de última tecnología
+                                        y técnicas avanzadas para garantizar que tu vehículo reciba el mejor cuidado posible.
+                                    </p>
+                                    <p>
+                                        Con años de experiencia en el sector automotriz, hemos construido una reputación basada en la
+                                        confianza, la calidad y el servicio al cliente excepcional.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -144,7 +150,7 @@ const Empresa = () => {
                         <div className="card shadow">
                             <div className="card-body">
                                 <h5 className="card-title mb-3">Horarios de Atención</h5>
-                                
+
                                 {schedules && schedules.map((item, index) => (
                                     <p key={index} className="mb-2">
                                         <FaClock className="me-2" />

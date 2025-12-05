@@ -11,6 +11,9 @@
   font-style: normal;
 }
 
+.text-justify{
+  text-align: justify;
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
