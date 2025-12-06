@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
     var placa_vehiculo = req.body.placa_vehiculo || null
     var color_vehiculo = req.body.color_vehiculo || null
     var kilometraje_vehiculo = req.body.kilometraje_vehiculo || null
-    var fecha_shaken = req.body.fecha_shaken || null
+    var fecha_shaken = req.body.fecha_shaken && req.body.fecha_shaken.trim() !== '' ? req.body.fecha_shaken : null
     var detalles = req.body.detalles || null
     var subtotal = req.body.subtotal || 0
     var iva = req.body.iva || 0
@@ -127,8 +127,13 @@ router.put('/:id', async (req, res) => {
             return responser.error({ res, message: 'Status no válido', status: 400 })
           }
         }
+        // Handle date fields - convert empty strings to null
+        var value = req.body[f]
+        if (f === 'fecha_shaken' && value && value.trim() === '') {
+          value = null
+        }
         updates.push(f + ' = ?')
-        params.push(req.body[f])
+        params.push(value)
       }
     }
 

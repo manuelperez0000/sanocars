@@ -89,8 +89,7 @@ const useServicios = () => {
         if (typeof formData.detalles === 'string') {
             try {
                 formData.detalles = JSON.parse(formData.detalles)
-            } catch (e) {
-                void e
+            } catch {
                 formData.detalles = []
             }
         }
@@ -99,10 +98,24 @@ const useServicios = () => {
         if (typeof formData.fotos === 'string') {
             try {
                 formData.fotos = JSON.parse(formData.fotos)
-            } catch (e) {
-                void e
+            } catch {
                 formData.fotos = []
             }
+        }
+
+        // Format fecha_shaken for date input (YYYY-MM-DD format)
+        if (formData.fecha_shaken) {
+            try {
+                const date = new Date(formData.fecha_shaken)
+                if (!isNaN(date.getTime())) {
+                    formData.fecha_shaken = date.toISOString().split('T')[0]
+                }
+            } catch {
+                // If parsing fails, set to empty string
+                formData.fecha_shaken = ''
+            }
+        } else {
+            formData.fecha_shaken = ''
         }
 
         // Ensure arrays exist

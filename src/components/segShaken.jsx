@@ -112,6 +112,9 @@ const SegShaken = () => {
   const [reports, setReports] = useState([])
   const [errorReports, setErrorReports] = useState(null)
   const [loadingReports, setLoadingReports] = useState(false)
+  const [services, setServices] = useState([])
+  const [errorServices, setErrorServices] = useState(null)
+  const [loadingServices, setLoadingServices] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
 
@@ -119,6 +122,7 @@ const SegShaken = () => {
     fetch()
     fetchInspections()
     fetchReports()
+    fetchServices()
   }, [])
 
   async function fetch() {
@@ -208,6 +212,34 @@ const SegShaken = () => {
     }
   }
 
+  async function fetchServices() {
+    setLoadingServices(true)
+    setErrorServices(null)
+    try {
+      const resp = await request.get(apiurl + '/servicios')
+      var list = []
+      if (resp && resp.data && resp.data.body) list = resp.data.body
+      else if (resp && resp.data) list = resp.data
+
+      // sort by fecha_shaken ascending; nulls last
+      list = (list || []).sort((a, b) => {
+        var da = a && a.fecha_shaken ? new Date(a.fecha_shaken) : null
+        var db = b && b.fecha_shaken ? new Date(b.fecha_shaken) : null
+        if (!da && !db) return 0
+        if (!da) return 1
+        if (!db) return -1
+        return da - db
+      })
+
+      setServices(list)
+    } catch (err) {
+      console.error('SegShaken fetchServices error', err)
+      setErrorServices(err.message || 'Error cargando servicios')
+    } finally {
+      setLoadingServices(false)
+    }
+  }
+
   const handleViewClick = (item) => {
     setSelectedItem(item)
     setShowModal(true)
@@ -291,6 +323,25 @@ const SegShaken = () => {
             fechaKey="vehiculo_fecha_shaken"
             keyField="id"
             emptyMessage="No hay informes disponibles"
+            onViewClick={handleViewClick}
+          />
+        )}
+      </section>
+
+      <section>
+        <h5>Servicios de Vehículos (Shaken)</h5>
+        {loadingServices && <div>Cargando servicios...</div>}
+        {errorServices && <div className="alert alert-danger">{errorServices}</div>}
+
+        {!loadingServices && !errorServices && (
+          <ShakenTable
+            data={services}
+            marcaKey="marca_vehiculo"
+            modeloKey="modelo_vehiculo"
+            anioKey="anio_vehiculo"
+            fechaKey="fecha_shaken"
+            keyField="id"
+            emptyMessage="No hay servicios disponibles"
             onViewClick={handleViewClick}
           />
         )}
