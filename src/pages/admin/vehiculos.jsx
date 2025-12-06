@@ -75,6 +75,7 @@ const Vehiculos = () => {
                         <h2 className="mb-0">Gestión de Vehículos</h2>
                         <div>
                             <button className="btn btn-info me-2" onClick={() => navigate('/admin/alquilados') }>Vehículos en alquiler</button>
+                            <button className="btn btn-info me-2" onClick={() => navigate('/admin/vendidos') }>Vehículos en vendidos</button>
                             <button className="btn btn-primary" onClick={openNew}>Nuevo vehículo</button>
                         </div>
                     </div>
@@ -94,7 +95,7 @@ const Vehiculos = () => {
                                             <button type="button" className={`btn btn-sm ${filter === 'En alquiler' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('En alquiler')}>En alquiler</button>
                                             <button type="button" className={`btn btn-sm ${filter === 'vendido' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('vendido')}>Vendidos</button>
                                             <button type="button" className={`btn btn-sm ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('all')}>Todos</button>
-                                            <button type="button" className={`btn btn-sm ${filter === 'eliminado' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('eliminado')}>Eliminados</button>
+                                            {/* <button type="button" className={`btn btn-sm ${filter === 'eliminado' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setFilter('eliminado')}>Eliminados</button> */}
                                         </div>
                                     </div>
                                     <div className="table-responsive">

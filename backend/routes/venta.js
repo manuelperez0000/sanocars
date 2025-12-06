@@ -8,8 +8,21 @@ var responser = require('../network/responser.js')
 // GET /api/v1/venta - Get all sales
 router.get('/', async (req, res) => {
   try {
-    
-    var [rows] = await db.query('SELECT * FROM venta ORDER BY id DESC')
+
+    var [rows] = await db.query(`
+      SELECT
+        v.*,
+        veh.marca as vehiculo_marca,
+        veh.modelo as vehiculo_modelo,
+        veh.anio as vehiculo_anio,
+        veh.color as vehiculo_color,
+        veh.numero_placa as vehiculo_placa,
+        veh.imagen1 as vehiculo_imagen1,
+        veh.imagen2 as vehiculo_imagen2
+      FROM venta v
+      LEFT JOIN vehiculos_venta veh ON v.vehiculo_id = veh.id
+      ORDER BY v.id DESC
+    `)
     responser.success({ res, body: rows })
   } catch (error) {
     console.error('Error fetching sales:', error)

@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
                 try {
                     const placeholders = ventaVehiculoIds.map(() => '?').join(',')
                     const [vehicleRows] = await db.execute(
-                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE id IN (${placeholders})`,
+                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE status != "eliminado" id IN (${placeholders})`,
                         ventaVehiculoIds
                     )
                     vehicleData = vehicleRows.reduce((acc, vehicle) => {
