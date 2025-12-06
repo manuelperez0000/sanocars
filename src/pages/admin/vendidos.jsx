@@ -3,6 +3,7 @@ import useVentas from '../../hooks/useVentas'
 import { FaEye, FaTrash } from 'react-icons/fa'
 import { topurl } from '../../utils/globals'
 import useVehicles from '../../hooks/useVehicles'
+
 const Vendidos = () => {
     const { getArrayImages } = useVehicles()
     const { ventas, loading, error, deleteVenta } = useVentas()
@@ -256,12 +257,39 @@ const Vendidos = () => {
                                                     <div className="col-md-6">
                                                         <p><strong>Monto Inicial:</strong> {formatCurrency(selectedVenta.monto_inicial)}</p>
                                                         <p><strong>Tasa Interés:</strong> {selectedVenta.tasa_interes}%</p>
+                                                        <p><strong>Número de Cuotas:</strong> {selectedVenta.numero_cuotas}</p>
                                                     </div>
                                                     <div className="col-md-6">
+                                                        <p><strong>Frecuencia de Cuotas:</strong> {selectedVenta.frecuencia_cuotas}</p>
                                                         <p><strong>Total con Intereses:</strong> {formatCurrency(selectedVenta.total_con_intereses)}</p>
-                                                        <p><strong>Datos Pago:</strong> {selectedVenta.datos_pago || 'N/A'}</p>
                                                     </div>
                                                 </div>
+                                                {/* Additional Payment Data */}
+                                                {selectedVenta.datos_pago && (
+                                                    <div className="mt-3">
+                                                        <h6>Datos Adicionales de Pago:</h6>
+                                                        {(() => {
+                                                            try {
+                                                                const datosPago = JSON.parse(selectedVenta.datos_pago);
+                                                                return (
+                                                                    <div className="row">
+                                                                        <div className="col-md-6">
+                                                                            <p><strong>Tipo de Pago:</strong> {datosPago.tipo_pago || 'N/A'}</p>
+                                                                            <p><strong>Número de Cuotas:</strong> {datosPago.numero_cuotas || 'N/A'}</p>
+                                                                        </div>
+                                                                        <div className="col-md-6">
+                                                                            <p><strong>Frecuencia:</strong> {datosPago.frecuencia_cuotas || 'N/A'}</p>
+                                                                            <p><strong>Monto Inicial:</strong> {datosPago.monto_inicial ? formatCurrency(datosPago.monto_inicial) : 'N/A'}</p>
+                                                                            <p><strong>Tasa de Interés:</strong> {datosPago.tasa_interes ? `${datosPago.tasa_interes}%` : 'N/A'}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            } catch {
+                                                                return <p className="text-muted">Datos de pago no disponibles</p>;
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )}
