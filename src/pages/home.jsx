@@ -215,7 +215,7 @@ const Home = () => {
                         style={{ border: 0 }}
                         allowFullScreen=""
                         loading="lazy"
-                        title="Mapa de ubicación de SanoCars en Fuji, Shizuoka"
+                        title="Mapa de ubicación de SanoCars en Shizuoka, Ide, Numazu Japón"
                     ></iframe>
                 </div>
             </section>

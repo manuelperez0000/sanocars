@@ -81,7 +81,7 @@ const useConfiguracion = () => {
     }
  
     function getCompanyAddress() {
-        return 'Fuji, Shizuoka, Japón'
+        return 'Shizuoka, Ide, Numazu Japón'
     }
 
     const [editingItem, setEditingItem] = useState(null);
