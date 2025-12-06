@@ -252,6 +252,7 @@ const Clientes = () => {
                                         <div className="card-header">
                                             <h6>Imágenes del Vehículo</h6>
                                         </div>
+                                        {console.log(selectedCliente.vehiculo_imagenes)}
                                         <div className="card-body">
                                             {selectedCliente.vehiculo_imagenes && selectedCliente.vehiculo_imagenes.length > 0 ? (
                                                 <div className="row">

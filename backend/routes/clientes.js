@@ -32,6 +32,8 @@ router.get('/', async (req, res) => {
         // Normalize and combine data
         const normalizedClientes = []
 
+        console.log("servicios: ", results.servicios)
+
         // Process ventas with vehicle data
         if (results.ventas) {
             // Get vehicle data for all ventas that have vehiculo_id
@@ -44,7 +46,7 @@ router.get('/', async (req, res) => {
                 try {
                     const placeholders = ventaVehiculoIds.map(() => '?').join(',')
                     const [vehicleRows] = await db.execute(
-                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE status != "eliminado" id IN (${placeholders})`,
+                        `SELECT id, marca, modelo, anio, color, numero_placa, imagen1, imagen2 FROM vehiculos_venta WHERE status != "eliminado" AND id IN (${placeholders})`,
                         ventaVehiculoIds
                     )
                     vehicleData = vehicleRows.reduce((acc, vehicle) => {
@@ -56,8 +58,10 @@ router.get('/', async (req, res) => {
                 }
             }
 
+            console.log(results.ventas)
+
             results.ventas.forEach(venta => {
-                if (venta.cliente_nombre) {
+                
                     const vehicle = venta.vehiculo_id ? vehicleData[venta.vehiculo_id] : null
                     normalizedClientes.push({
                         id: `venta_${venta.id}`,
@@ -73,7 +77,7 @@ router.get('/', async (req, res) => {
                         vehiculo_imagenes: vehicle?.imagen1,
                         tabla_origen: 'venta'
                     })
-                }
+                
             })
         }
 
@@ -167,28 +171,31 @@ router.get('/', async (req, res) => {
             })
         }
 
-
-
+        function eliminarCorchetes(texto) {
+            return texto
+                .split('[').join('')   // elimina todos los [
+                .split(']').join('')   // elimina todos los ]
+                .split('"').join('');
+        }
 
         // Process servicios
         if (results.servicios) {
             results.servicios.forEach(servicio => {
-                if (servicio.cliente_nombre) {
-                    normalizedClientes.push({
-                        id: `servicio_${servicio.id}`,
-                        nombre: servicio.cliente_nombre,
-                        apellido: servicio.cliente_apellido || '',
-                        email: servicio.cliente_email || '',
-                        telefono: servicio.cliente_telefono || '',
-                        vehiculo_marca: servicio.vehiculo_marca || '',
-                        vehiculo_modelo: servicio.vehiculo_modelo || '',
-                        vehiculo_anio: servicio.vehiculo_anio || '',
-                        vehiculo_color: servicio.vehiculo_color || '',
-                        vehiculo_placa: servicio.vehiculo_placa || '',
-                        tabla_origen: 'servicios',
-                        datos_completos: servicio
-                    })
-                }
+                normalizedClientes.push({
+                    id: `servicio_${servicio.id}`,
+                    nombre: servicio.nombre_cliente,
+                    apellido: '',
+                    email: servicio.email_cliente || '',
+                    telefono: servicio.telefono_cliente || '',
+                    vehiculo_marca: servicio.marca_vehiculo || '',
+                    vehiculo_modelo: servicio.modelo_vehiculo || '',
+                    vehiculo_anio: servicio.anio_vehiculo || '',
+                    vehiculo_color: servicio.color_vehiculo || '',
+                    vehiculo_placa: servicio.placa_vehiculo || '',
+                    tabla_origen: 'servicios',
+                    vehiculo_imagenes: eliminarCorchetes(servicio.fotos)
+                })
+
             })
         }
 

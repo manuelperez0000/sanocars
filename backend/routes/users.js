@@ -8,7 +8,7 @@ var responser = require("../network/responser.js")
 router.get('/', async (req, res) => {
   try {
 
-    var [body] = await db.query('SELECT * FROM users ORDER BY id DESC')
+    var [body] = await db.query('SELECT * FROM users WHERE soft_delete != 0 ORDER BY id DESC')
 
     responser.success({ res, body })
 
