@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useFacturas from '../../hooks/useFacturas'
-import useConfiguracion from '../../hooks/useConfiguracion'
 import { formatCurrency } from '../../utils/globals'
+import HeaderFactura from '../../components/HeaderFactura'
 const Factura = () => {
-    const { getPhones, getEmails } = useConfiguracion()
 
     const { id } = useParams()
     const { facturas, loading, error } = useFacturas()
@@ -16,10 +15,6 @@ const Factura = () => {
             setFactura(foundFactura)
         }
     }, [facturas, id])
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-VE')
-    }
 
     const printStyles = `
 @media print {
@@ -106,23 +101,8 @@ const Factura = () => {
 
                     <div className="invoice-container card shadow p-5">
                         {/* Invoice Header */}
-                        <div className="mb-4">
-                            <div className="card-header">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <h4>Factura #{factura.id}</h4>
-                                        <p className="mb-1"> {formatDate(factura.fecha_creacion)}</p>
-                                    </div>
-                                    <div className="col-md-6 text-end">
-                                        <h5>SANOCARS</h5>
-                                        <p className="mb-1"> <b>Dirección:</b> Numazu Shizuoka, Japón </p>
-                                        <p className="mb-1"> <b>Teléfono:</b> {getPhones()?.length > 0 ? getPhones()[0].texto : 'N/A'}</p>
-                                        <p className="mb-1"> <b>Email:</b> {getEmails()?.length > 0 ? getEmails()[0].texto : 'N/A'}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        
+                        <HeaderFactura id={factura.id} />
                         {/* Client Information */}
                         <div className="mb-2">
                             <div className="border-bottom pb-1 mb-1">

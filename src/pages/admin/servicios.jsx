@@ -1,12 +1,10 @@
 
 import useServicios from '../../hooks/useServicios'
 import { formatCurrency, topurl } from '../../utils/globals'
-import useConfiguracion from '../../hooks/useConfiguracion'
 import ClientInformation from '../../components/ClientInformation'
+import { headerFactura } from '../../assets/facturaTemplate'
 
 const Servicios = () => {
-
-    const { getEmails, getPhones } = useConfiguracion()
 
     const {
         loading,
@@ -124,29 +122,31 @@ const Servicios = () => {
                         width: 100%;
                         border-collapse: collapse;
                         margin-bottom: 0px;
+                        border: 1px solid #093e61ff;
                     }
                     th, td {
-                        border: 1px solid #bbb;
-                        padding: 3px 5px;
-                        text-align: left;
+                        border: 1px solid #093e61ff;
+                        padding: 3px 4px;
                         font-size: 12px;
                     }
-                    th {
-                        background-color: #ffffffff;
+                     th{
+                        background-color: #6fe2ff85;
                         font-weight: bold;
-                        color: #2c3e50;
+                        color: #192b3dff;
+                        
                     }
+                        
                     .text-right {
                         text-align: right;
                     }
                     .totals-section {
                         display: flex;
                         justify-content: flex-end;
-                        margin-bottom: 0px;
+                        margin-top: 10px;
                     }
                     .totals-box {
-                        border: 1px solid #ddd;
-                        padding: 20px;
+                        border: 1px solid #333;
+                        padding: 10px;
                         background-color: #f8f9fa;
                         min-width: 250px;
                     }
@@ -157,16 +157,15 @@ const Servicios = () => {
                         font-size: 14px;
                     }
                     .totals-row.total {
-                        border-top: 2px solid #333;
+                        border-top: 1px solid #333;
                         padding-top: 10px;
                         font-weight: bold;
                         font-size: 16px;
                         color: #2c3e50;
                     }
                     .notes-section {
-                        margin-top: 30px;
-                        padding-top: 20px;
-                        border-top: 1px solid #ddd;
+                        margin-top: 10px;
+                        padding-top: 10px;
                     }
                     .notes-section h4 {
                         margin: 0 0 10px 0;
@@ -195,24 +194,16 @@ const Servicios = () => {
                         body { margin: 0; }
                         .no-print { display: none; }
                     }
+
+                    .japones{
+                        color:gray;
+                        font-size:12px;
+                        line-height:14px;
+                    }
                 </style>
             </head>
             <body>
-                <div class="invoice-header">
-                    <div class="flex-between">
-                        <div class="text-left">
-                            <h2>Factura de Servicio</h2>
-                            <p>Servicio #${servicio.id}</p>
-                            <div>${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <h1>SANOCARS</h1>
-                            Dirección: Numazu Shizuoka, Japón <br>
-                            Teléfono: ${getPhones()[0]?.texto || '080 9117 1993'}<br>
-                            Email: ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}
-                        </div>
-                    </div>
-                </div>
+                ${headerFactura({ id: servicio.id })}
                 <div class="invoice-info">
                     <div class="info-section">
                         <h4>Información del Cliente</h4>
@@ -246,6 +237,7 @@ const Servicios = () => {
                     <table>
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
@@ -253,8 +245,9 @@ const Servicios = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            ${detalles && detalles.length > 0 ? detalles.map(detail => `
+                            ${detalles && detalles.length > 0 ? detalles.map((detail, index) => `
                                 <tr>
+                                    <td>${index + 1}</td>
                                     <td>${detail.descripcion || ''}</td>
                                     <td class="text-right">${detail.cantidad || 0}</td>
                                     <td class="text-right">¥ ${parseInt(detail.precio_unitario || 0)}</td>

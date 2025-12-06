@@ -4,6 +4,7 @@ import { apiurl, formatCurrency, topurl } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
+import { headerFactura } from '../assets/facturaTemplate';
 
 const useVehicles = () => {
     const [vehicles, setVehicles] = useState([])
@@ -532,6 +533,12 @@ const useVehicles = () => {
                         align-items: center;
                         flex-direction: column;
                     }
+                    .flex-between{
+                        display:flex;
+                        justify-content:space-between;
+                        width:100%;
+                        padding:15px;
+                    }
                     .footer {
                         margin-top: 40px;
                         text-align: center;
@@ -547,18 +554,8 @@ const useVehicles = () => {
                 </style>
             </head>
             <body>
-                <div class="invoice-header">
-                    <div>
-                        <h3 class="invoice-title">Venta de vehiculo</h3>
-                        <p class="invoice-subtitle">Vehículo: ${vehicle.marca} ${vehicle.modelo}</p>
-                    </div>
-                    <div  style="text-align:end">
-                        <h2>SANOCARS</h2>
-                        <p><strong>Dirección:</strong> Numazu Shizuoka, Japón</p>
-                        <p><strong>Teléfono:</strong> 08091171993</p>
-                        <p><strong>Email:</strong> sanocars@hotmail.com</p>
-                    </div>
-                </div>
+            ${headerFactura({id:vehicle.id,titulo:`Venta  ${vehicle.marca} ${vehicle.modelo}`})}
+                
 
                 <div class="invoice-info">
                     <div class="info-section">
@@ -690,11 +687,6 @@ const useVehicles = () => {
                     </div>
                 </div>
                 ` : ''}
-
-                <div class="footer">
-                    <p>Gracias por su compra. Venta realizada por Sanocars Taller.</p>
-                    <p>Fecha de emisión: ${new Date().toLocaleDateString('es-VE')} ${new Date().toLocaleTimeString('es-VE')}</p>
-                </div>
             </body>
             </html>
         `

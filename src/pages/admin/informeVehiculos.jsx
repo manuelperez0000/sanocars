@@ -3,10 +3,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
 import { topurl } from '../../utils/globals'
-import useConfiguracion from '../../hooks/useConfiguracion'
 import carrito from '../../assets/carrito.png'
+import { headerFactura } from '../../assets/facturaTemplate'
 const InformeVehiculos = () => {
-    const { getPhones, getEmails } = useConfiguracion()
     const navigate = useNavigate()
     const { informes, loading, error, deleteInforme,loadCar } = useInformeVehiculos()
     const [selectedInforme, setSelectedInforme] = useState(null)
@@ -78,6 +77,7 @@ const InformeVehiculos = () => {
                     .invoice-header {
                         display: flex;
                         justify-content: space-between;
+                        width:100vw;
                     }
 
                     .company-info {
@@ -251,6 +251,12 @@ const InformeVehiculos = () => {
                         border-top: 1px solid #e0e0e0;
                         padding-top: 15px;
                     }
+                    .flex-between{
+                        display:flex;
+                        justify-content:space-between;
+                        width:100%;
+                        padding:15px;
+                    }
 
                     @media print {
                         body {
@@ -275,23 +281,7 @@ const InformeVehiculos = () => {
             <body>
                 <div class="invoice-container">
                     <!-- Invoice Header -->
-                    <div class="invoice-header">
-                        <div>
-                            <h2>Informe de Inspección de Vehículos</h2>
-                            <div>
-                                <div>${new Date().toLocaleDateString('es-VE')} - ${new Date().toLocaleTimeString('es-VE')}</div>
-                                <div>ID: #${reportData.id}</div>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <h1>SANOCARS</h1>
-                            Dirección: Numazu Shizuoka, Japón <br>
-                            Teléfono: ${getPhones()[0]?.texto || '080 9117 1993'}<br>
-                            Email: ${getEmails()[0]?.texto || 'sanocars@hotmail.com'}
-                        </div>
-                    </div>
-
-
+                    ${headerFactura({id:reportData.id,titulo:"Informe de Inspección de Vehículos"})}
                     <!-- Client Information -->
                     <div class="">
                         <div class="section-header">Información del Cliente</div>

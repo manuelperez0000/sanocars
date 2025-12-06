@@ -1,10 +1,10 @@
 
 
 import useInspeccionVehicular from '../../hooks/useInspeccionVehicular'
-import useConfiguracion from '../../hooks/useConfiguracion'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import carrito from '../../assets/carrito.png'
+import { headerFactura } from '../../assets/facturaTemplate'
 
 const InspeccionVehicular = () => {
     const {
@@ -43,15 +43,7 @@ const InspeccionVehicular = () => {
         handleChange({ target: { name: 'cliente_direccion', value: newData.clientAddress } })
     }
 
-    const { getPhones, getEmails, getCompanyName, getCompanyAddress } = useConfiguracion()
-
     const printInspection = async (inspeccion) => {
-
-
-        const companyName = getCompanyName().length > 0 ? getCompanyName()[0].texto : 'SANOCARS'
-        const companyAddress = getCompanyAddress().length > 0 ? getCompanyAddress()[0].texto : 'Dirección no configurada'
-        const phone = getPhones().length > 0 ? getPhones()[0].texto : 'Teléfono no configurado'
-        const email = getEmails().length > 0 ? getEmails()[0].texto : 'Email no configurado'
 
         const printWindow = window.open('', '_blank')
         printWindow.document.write(`
@@ -279,27 +271,23 @@ const InspeccionVehicular = () => {
                         margin: 0.5in;
                         size: A4;
                     }
+                    .japones{
+                        color:gray;
+                        font-size:12px;
+                        line-height:14px;
+                    }
+                    .flex-between{
+                        display:flex;
+                        justify-content:space-between;
+                        width:100%;
+                        padding:15px;
+                    }
                 </style>
             </head>
                 <body>
                     <div class="invoice-container">
                         <!-- Invoice Header -->
-                        <div class="invoice-header">
-                            <div>
-                                <h2>Inspección de Vehículos</h2>
-                                <div>
-                                    <div>${new Date().toLocaleDateString('es-VE')} - ${new Date().toLocaleTimeString('es-VE')}</div>
-                                    <div>ID: #${inspeccion.id}</div>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <h1>${companyName}</h1>
-                                Dirección: ${companyAddress} <br>
-                                Teléfono: ${phone}<br>
-                                Email: ${email}
-                            </div>
-                        </div>
-
+                        ${headerFactura({ id: inspeccion.id, titulo: "Inspección de Vehículos" })}
                         <!-- Client Information -->
                         <div class="">
                             <div class="section-header">Información del Cliente</div>
