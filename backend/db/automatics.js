@@ -388,6 +388,8 @@ async function automatics(conn) {
         total DECIMAL(10,2) DEFAULT 0.00,
         fecha_servicio DATE NOT NULL,
         notas TEXT,
+        tipo_pago ENUM('contado', 'cuotas') DEFAULT 'contado',
+        cronograma_pagos JSON DEFAULT NULL,
         fotos JSON,
         status ENUM('Pendiente', 'En Progreso', 'Completado', 'Cancelado') DEFAULT 'Pendiente',
         fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -417,6 +419,20 @@ async function automatics(conn) {
     console.log("Columna 'fecha_shaken' agregada a tabla 'servicios' si no existía.");
   } catch (error) {
     console.log("Columna 'fecha_shaken' ya existe o error al agregar:", error.message);
+  }
+
+  try {
+    await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS tipo_pago ENUM('contado', 'cuotas') DEFAULT NULL`);
+    console.log("Columna 'tipo_pago' agregada a tabla 'servicios' si no existía.");
+  } catch (error) {
+    console.log("Columna 'tipo_pago' ya existe o error al agregar:", error.message);
+  }
+
+  try {
+    await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS cronograma_pagos JSON DEFAULT NULL`);
+    console.log("Columna 'cronograma_pagos' agregada a tabla 'servicios' si no existía.");
+  } catch (error) {
+    console.log("Columna 'cronograma_pagos' ya existe o error al agregar:", error.message);
   }
 
   var venta = `
