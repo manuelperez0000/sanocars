@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, formatCurrency, topurl } from '../utils/globals'
+import { apiurl, dateFormater, formatCurrency, topurl } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
@@ -57,11 +57,6 @@ const useVehicles = () => {
         }
         setForm(newForm)
         setModalOpen(true)
-    }
-
-    const dateFormater = (date) => {
-        const fecha_ingreso = new Date(date);
-        return fecha_ingreso.toISOString().split("T")[0];
     }
 
     function openEdit(v) {
@@ -901,8 +896,7 @@ const useVehicles = () => {
         handleRentalChange,
         handleSaveRental,
         getImages,
-        getArrayImages,
-        dateFormater
+        getArrayImages
     }
 }
 

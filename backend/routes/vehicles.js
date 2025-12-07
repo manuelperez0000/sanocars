@@ -33,10 +33,10 @@ router.post('/', async (req, res) => {
     var color = req.body.color || null
     var tipo_vehiculo = req.body.tipo_vehiculo || null
     var tamano_motor = req.body.tamano_motor || null
-    var numero_chasis = req.body.numero_chasis || null
-    var transmission = req.body.transmission || null
-    var passengers = req.body.passengers || null
-    var ac = req.body.ac || null
+    var numero_chasis = req.body.numero_chasis || 'n/a'
+    var transmission = req.body.transmission || 'n/a'
+    var passengers = req.body.passengers || 0
+    var ac = req.body.ac || true
     var observaciones = req.body.observaciones || null
     var trabajos_realizar = req.body.trabajos_realizar || null
     var cambio_aceite = req.body.cambio_aceite || null
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
     var garantia = req.body.garantia || null
     var imagen1 = req.body.imagen1 || null
     var imagen2 = req.body.imagen2 || null
-    var precio = req.body.precio || null
+    var precio = req.body.precio || 0
     var status = req.body.status || 'En Venta'
 
     // Validate status

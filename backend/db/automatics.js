@@ -41,18 +41,18 @@ async function automatics(conn) {
   var vehiculosVenta = `
       CREATE TABLE IF NOT EXISTS vehiculos_venta (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  fecha_ingreso date NOT NULL,
+  fecha_ingreso date ,
   fecha_shaken date DEFAULT NULL,
-  origen varchar(255) NOT NULL,
-  marca varchar(255) NOT NULL,
-  modelo varchar(255) NOT NULL,
-  numero_placa varchar(255) NOT NULL,
-  anio varchar(255) NOT NULL,
-  kilometraje varchar(255) NOT NULL,
-  color varchar(255) NOT NULL,
-  tipo_vehiculo varchar(255) NOT NULL,
-  tamano_motor varchar(255) NOT NULL,
-  numero_chasis varchar(255) NOT NULL,
+  origen varchar(255) ,
+  marca varchar(255) ,
+  modelo varchar(255) ,
+  numero_placa varchar(255) ,
+  anio varchar(255) ,
+  kilometraje varchar(255) ,
+  color varchar(255) ,
+  tipo_vehiculo varchar(255) ,
+  tamano_motor varchar(255) ,
+  numero_chasis varchar(255) ,
   observaciones varchar(255) DEFAULT NULL,
   trabajos_realizar varchar(255) DEFAULT NULL,
   cambio_aceite date DEFAULT NULL,
@@ -62,10 +62,10 @@ async function automatics(conn) {
   imagen1 varchar(500) DEFAULT NULL,
   imagen2 varchar(500) DEFAULT NULL,
   status varchar(255) NOT NULL,
-  precio decimal(10,2) NOT NULL,
-  transmission varchar(255) NOT NULL,
-  passengers int NOT NULL,
-  ac boolean NOT NULL
+  precio decimal(10,2),
+  transmission varchar(255),
+  passengers int,
+  ac boolean 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `;
   await conn.query(vehiculosVenta);
@@ -436,10 +436,10 @@ async function automatics(conn) {
   }
 
   try {
-    await conn.query(`ALTER TABLE servicios ADD COLUMN IF NOT EXISTS fecha_pagos DATE DEFAULT NULL`);
-    console.log("Columna 'fecha_pagos' agregada a tabla 'servicios' si no existía.");
+    await conn.query(`ALTER TABLE servicios MODIFY COLUMN fecha_pagos VARCHAR(255) DEFAULT NULL`);
+    console.log("Columna 'fecha_pagos' modificada a VARCHAR en tabla 'servicios'.");
   } catch (error) {
-    console.log("Columna 'fecha_pagos' ya existe o error al agregar:", error.message);
+    console.log("Error al modificar columna 'fecha_pagos' en servicios:", error.message);
   }
 
   var venta = `
@@ -461,7 +461,7 @@ async function automatics(conn) {
         monto_inicial DECIMAL(10,2) DEFAULT 0.00,
         tasa_interes DECIMAL(5,2) DEFAULT 0.00,
         total_con_intereses DECIMAL(10,2) NOT NULL,
-        fecha_inicial DATE NULL,
+        fecha_inicial VARCHAR(100) NULL,
         siguientes_pagos JSON,
         datos_pago JSON,
         fecha_venta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -494,10 +494,10 @@ async function automatics(conn) {
 
   // Add missing columns to existing venta table
   try {
-    await conn.query(`ALTER TABLE venta ADD COLUMN IF NOT EXISTS fecha_inicial DATE NULL`);
-    console.log("Columna 'fecha_inicial' agregada a tabla 'venta' si no existía.");
+    await conn.query(`ALTER TABLE venta MODIFY COLUMN fecha_inicial VARCHAR(100) NULL`);
+    console.log("Columna 'fecha_inicial' modificada a VARCHAR(100) en tabla 'venta'.");
   } catch (error) {
-    console.log("Columna 'fecha_inicial' ya existe o error al agregar:", error.message);
+    console.log("Error al modificar columna 'fecha_inicial' en venta:", error.message);
   }
 
   try {

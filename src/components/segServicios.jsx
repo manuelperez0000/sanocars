@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl } from '../utils/globals'
+import { apiurl, dateFormater } from '../utils/globals'
 import { formatCurrency } from '../utils/globals'
 
 const SegServicios = () => {
@@ -113,8 +113,8 @@ const SegServicios = () => {
       }
     }
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    /* const today = new Date() */
+    /* today.setHours(0, 0, 0, 0) */
 
     // Find unpaid installments and sort by date
     const unpaidInstallments = cronograma
@@ -125,7 +125,8 @@ const SegServicios = () => {
 
     // Return the next upcoming payment
     const nextPayment = unpaidInstallments[0]
-    return `${new Date(nextPayment.fecha_pago).toLocaleDateString('es-ES')}`
+    return dateFormater(nextPayment.fecha_pago)
+
   }
 
   function getCuotasVencidas(servicio) {
@@ -225,7 +226,7 @@ const SegServicios = () => {
                             <td>{s.nombre_cliente}</td>
                             <td>{s.telefono_cliente}</td>
                             <td>{s.marca_vehiculo} {s.modelo_vehiculo} {s.anio_vehiculo} ({s.placa_vehiculo}) </td>
-                            
+
                             <td>
                               <span className={`badge ${getCuotasPendientes(s) > 0 ? 'bg-warning' : 'bg-success'}`}>
                                 {getCuotasPendientes(s)}
@@ -277,7 +278,7 @@ const SegServicios = () => {
                   <button type="button" className="btn-close" aria-label="Close" onClick={closeModal}></button>
                 </div>
                 <div className="modal-body">
-                  <div className="mb-3"> 
+                  <div className="mb-3">
                     <strong>Vehículo:</strong> {selectedServicio.marca_vehiculo} {selectedServicio.modelo_vehiculo} {selectedServicio.anio_vehiculo} - ({selectedServicio.placa_vehiculo})
                   </div>
                   <div className="mb-3">

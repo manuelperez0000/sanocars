@@ -326,7 +326,7 @@ const Servicios = () => {
                                                         <td>{s.id}</td>
                                                         <td>{s.nombre_cliente}</td>
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
-                                                        <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
+                                                        <td>{s.fecha_shaken ? new Date(s.fecha_shaken + 'T00:00:00').toLocaleDateString('es-VE') : '-'}</td>
                                                         <td>
                                                             <span className={`badge ${s.tipo_pago === 'cuotas' ? 'bg-info' : 'bg-secondary'}`}>
                                                                 {s.tipo_pago === 'cuotas' ? 'Cuotas' : s.tipo_pago === 'contado' ? 'Contado' : 'N/A'}
@@ -561,7 +561,7 @@ const Servicios = () => {
                                                             {form.cronograma_pagos.map((cuota, index) => (
                                                                 <tr key={index}>
                                                                     <td>{cuota.numero_cuota}</td>
-                                                                    <td>{new Date(cuota.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                                                    <td>{new Date(cuota.fecha_pago + 'T00:00:00').toLocaleDateString('es-VE')}</td>
                                                                     <td>{formatCurrency(cuota.monto)}</td>
                                                                     <td>
                                                                         <span className={`badge ${cuota.pagado ? 'bg-success' : 'bg-warning'}`}>

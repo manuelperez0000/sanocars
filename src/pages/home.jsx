@@ -57,42 +57,41 @@ const Home = () => {
         <div>
             <Header />
             <main className="container my-5">
-
-                <div className="mb-4">
-                    <div className="d-flex align-items-center">
-                        <div className="flex-grow-1 mb-3">
-                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en venta</h2>
-                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en venta"} /> */}
+                {vehiclesForSale.length > 0 && <>
+                    <div className="mb-4">
+                        <div className="d-flex align-items-center">
+                            <div className="flex-grow-1 mb-3">
+                                <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en venta</h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <VehicleList vehicles={vehiclesForSale} />
-
-                <hr className='mb-5' />
-
-                <div className="mb-4">
-                    <div className="d-flex align-items-center">
-                        <div className="flex-grow-1 mb-3">
-
-                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en alquiler</h2>
-                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
+                    <VehicleList vehicles={vehiclesForSale} />
+                    <hr className='mb-5' />
+                </>}
+                {vehiclesForRent.length > 0 && <>
+                    <div className="mb-4">
+                        <div className="d-flex align-items-center">
+                            <div className="flex-grow-1 mb-3">
+                                <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos en alquiler</h2>
+                                {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <VehicleList vehicles={vehiclesForRent} />
+                    <VehicleList vehicles={vehiclesForRent} />
+                    <hr className='mb-5' />
+                </>}
+                {vehiclesForRent.length > 0 && <>
+                    <div className="mb-4">
+                        <div className="d-flex align-items-center">
+                            <div className="flex-grow-1 mb-3">
 
-                <hr className='mb-5' />
-
-                <div className="mb-4">
-                    <div className="d-flex align-items-center">
-                        <div className="flex-grow-1 mb-3">
-
-                            <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos vendidos</h2>
-                            {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
+                                <h2 className="mb-0 gray title-underline" style={{ position: 'relative' }}>Vehiculos vendidos</h2>
+                                {/* <FilterBar sortOption={sortOption} onChange={setSortOption} tittle={"Vehiculos en alquiler"} /> */}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <VehicleList vehicles={vehiclesSold} />
+                    <VehicleList vehicles={vehiclesSold} />
+                </>}
 
             </main>
 

@@ -1,5 +1,5 @@
 import useVehicles from '../../hooks/useVehicles'
-import { formatBigNumber, formatCurrency, topurl } from '../../utils/globals'
+import { dateFormater, formatBigNumber, formatCurrency, topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import { useNavigate } from 'react-router-dom'
 import objVehicles from '../../utils/objVehicles.json'
@@ -40,8 +40,7 @@ const Vehiculos = () => {
         closeRentalModal,
         handleRentalChange,
         handleSaveRental,
-        getImages,
-        dateFormater
+        getImages
     } = useVehicles()
 
     // Get models for selected brand
@@ -190,15 +189,15 @@ const Vehiculos = () => {
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Año</label>
-                                            <input name="anio" value={form.anio || ''} onChange={handleChange} className="form-control" />
+                                            <input required name="anio" value={form.anio || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Kilometraje</label>
-                                            <input name="kilometraje" value={form.kilometraje || ''} onChange={handleChange} className="form-control" />
+                                            <input required name="kilometraje" value={form.kilometraje || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Color</label>
-                                            <input name="color" value={form.color || ''} onChange={handleChange} className="form-control" />
+                                            <input required name="color" value={form.color || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Precio</label>
@@ -206,7 +205,7 @@ const Vehiculos = () => {
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Número de placa</label>
-                                            <input name="numero_placa" value={form.numero_placa || ''} onChange={handleChange} className="form-control" />
+                                            <input required name="numero_placa" value={form.numero_placa || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Número de chasis</label>
@@ -214,11 +213,11 @@ const Vehiculos = () => {
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Origen</label>
-                                            <input name="origen" value={form.origen || ''} onChange={handleChange} className="form-control" />
+                                            <input name="origen" required value={form.origen || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Tipo</label>
-                                            <input name="tipo_vehiculo" value={form.tipo_vehiculo || ''} onChange={handleChange} className="form-control" />
+                                            <input required name="tipo_vehiculo" value={form.tipo_vehiculo || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Status</label>
@@ -266,8 +265,8 @@ const Vehiculos = () => {
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
-                                            <label className="form-label">Tamaño motor</label>
-                                            <input name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
+                                            <label  className="form-label">Tamaño motor</label>
+                                            <input required name="tamano_motor" value={form.tamano_motor || ''} onChange={handleChange} className="form-control" />
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Transmisión</label>
@@ -556,7 +555,7 @@ const Vehiculos = () => {
                                                                     {salesForm.siguientes_pagos.map((pago, index) => (
                                                                         <tr key={index}>
                                                                             <td className="ps-0">{pago.numero_cuota}</td>
-                                                                            <td>{new Date(pago.fecha_pago).toLocaleDateString('es-VE')}</td>
+                                                                            <td>{dateFormater(pago.fecha_pago)}</td>
                                                                             <td className="text-end pe-0">{formatCurrency(pago.monto)}</td>
                                                                         </tr>
                                                                     ))}

@@ -118,33 +118,18 @@ const useServicios = () => {
             }
         }
 
-        // Format fecha_shaken for date input (YYYY-MM-DD format)
-        if (formData.fecha_shaken) {
-            try {
-                const date = new Date(formData.fecha_shaken)
-                if (!isNaN(date.getTime())) {
-                    formData.fecha_shaken = date.toISOString().split('T')[0]
-                }
-            } catch {
-                // If parsing fails, set to empty string
-                formData.fecha_shaken = ''
-            }
-        } else {
+        // Set numero_cuotas based on cronograma_pagos length when editing
+        if (Array.isArray(formData.cronograma_pagos) && formData.cronograma_pagos.length > 0) {
+            formData.numero_cuotas = formData.cronograma_pagos.length
+        }
+
+        // Keep fecha_shaken as string (already in YYYY-MM-DD format from database)
+        if (!formData.fecha_shaken) {
             formData.fecha_shaken = ''
         }
 
-        // Format fecha_pagos for date input (YYYY-MM-DD format)
-        if (formData.fecha_pagos) {
-            try {
-                const date = new Date(formData.fecha_pagos)
-                if (!isNaN(date.getTime())) {
-                    formData.fecha_pagos = date.toISOString().split('T')[0]
-                }
-            } catch {
-                // If parsing fails, set to empty string
-                formData.fecha_pagos = ''
-            }
-        } else {
+        // Keep fecha_pagos as string (already in YYYY-MM-DD format from database)
+        if (!formData.fecha_pagos) {
             formData.fecha_pagos = ''
         }
 
@@ -192,10 +177,11 @@ const useServicios = () => {
         const schedule = []
 
         for (let i = 0; i < numeroCuotas; i++) {
-            // Create date for each installment by adding months to the start date
+            // Calculate the payment date by adding months to avoid timezone issues
+            // Create a date in the local timezone to avoid UTC conversion
             const paymentDate = new Date(startYear, startMonth + i, startDay)
 
-            // Format date as YYYY-MM-DD consistently
+            // Format date as YYYY-MM-DD consistently, ensuring we get the correct local date
             const formattedYear = paymentDate.getFullYear()
             const formattedMonth = String(paymentDate.getMonth() + 1).padStart(2, '0')
             const formattedDay = String(paymentDate.getDate()).padStart(2, '0')
