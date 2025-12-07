@@ -72,7 +72,7 @@ const Header = ({ onSearch }) => {
                     </div>
                 </div>
                 <div className="row my-5">
-                    <div className="col-12 text-center">
+                    <div className="col-12 text-center pt-4">
                         <h1 className="text-header-h1 momo">Encuentra el vehículo de tus sueños</h1>
                         <div className="lead">Te acompañamos en mantenimiento reparación de tu vehiculo.
                         </div>

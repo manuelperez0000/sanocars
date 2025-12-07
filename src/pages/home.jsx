@@ -65,7 +65,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <VehicleList vehicles={vehiclesForSale} />
+                    <VehicleList vehicles={vehiclesForSale} scroll={true} />
                     <hr className='mb-5' />
                 </>}
                 {vehiclesForRent.length > 0 && <>
@@ -77,7 +77,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <VehicleList vehicles={vehiclesForRent} />
+                    <VehicleList vehicles={vehiclesForRent} scroll={true} />
                     <hr className='mb-5' />
                 </>}
                 {vehiclesForRent.length > 0 && <>
@@ -90,7 +90,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <VehicleList vehicles={vehiclesSold} />
+                    <VehicleList vehicles={vehiclesSold} scroll={true} />
                 </>}
 
             </main>

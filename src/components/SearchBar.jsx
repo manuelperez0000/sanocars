@@ -27,9 +27,9 @@ export default function SearchBar() {
   }
 
   return (
-    <div className='bg-search card p-4'>
+    <div className='card p-4 bg-search mt-5'>
 
-      <h4 className='gray'>Buscar un vehiculo</h4>
+      <h4>Buscar un vehiculo</h4>
       <form className="row gy-2 gx-2 align-items-center" onSubmit={handleSearch}>
         <div className="col-sm-5">
           <select className="form-select form-select-lg" value={marca ? JSON.stringify(marca) : ''} onChange={e => { setMarca(e.target.value ? JSON.parse(e.target.value) : ''); setModelo('') }}>
