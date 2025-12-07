@@ -67,6 +67,12 @@ const useServicios = () => {
             iva: 10,
             total: 0,
 
+            // Payment information
+            tipo_pago: '',
+            numero_cuotas: 1,
+            fecha_pagos: '',
+            cronograma_pagos: null,
+
             // Additional
             fecha_servicio: new Date().toISOString().split('T')[0],
             notas: '',
@@ -103,6 +109,15 @@ const useServicios = () => {
             }
         }
 
+        // Parse cronograma_pagos if it's a string
+        if (typeof formData.cronograma_pagos === 'string') {
+            try {
+                formData.cronograma_pagos = JSON.parse(formData.cronograma_pagos)
+            } catch {
+                formData.cronograma_pagos = null
+            }
+        }
+
         // Format fecha_shaken for date input (YYYY-MM-DD format)
         if (formData.fecha_shaken) {
             try {
@@ -118,6 +133,21 @@ const useServicios = () => {
             formData.fecha_shaken = ''
         }
 
+        // Format fecha_pagos for date input (YYYY-MM-DD format)
+        if (formData.fecha_pagos) {
+            try {
+                const date = new Date(formData.fecha_pagos)
+                if (!isNaN(date.getTime())) {
+                    formData.fecha_pagos = date.toISOString().split('T')[0]
+                }
+            } catch {
+                // If parsing fails, set to empty string
+                formData.fecha_pagos = ''
+            }
+        } else {
+            formData.fecha_pagos = ''
+        }
+
         // Ensure arrays exist
         if (!Array.isArray(formData.detalles)) formData.detalles = []
         if (!Array.isArray(formData.fotos)) formData.fotos = []
@@ -128,7 +158,64 @@ const useServicios = () => {
 
     function handleChange(e) {
         const { name, value } = e.target
-        setForm(prev => ({ ...prev, [name]: value }))
+        setForm(prev => {
+            const updatedForm = { ...prev, [name]: value }
+
+            // Calculate payment schedule if payment-related fields change
+            if (['tipo_pago', 'numero_cuotas', 'fecha_pagos'].includes(name)) {
+                updatedForm.cronograma_pagos = calculatePaymentSchedule(updatedForm)
+            }
+
+            return updatedForm
+        })
+    }
+
+    function calculatePaymentSchedule(formData) {
+        if (formData.tipo_pago !== 'cuotas' || !formData.numero_cuotas || !formData.fecha_pagos || !formData.total) {
+            return null
+        }
+
+        const numeroCuotas = parseInt(formData.numero_cuotas)
+        const totalAmount = parseFloat(formData.total)
+
+        // Parse date components directly from the string to avoid timezone issues
+        const [year, month, day] = formData.fecha_pagos.split('-').map(Number)
+        const startYear = year
+        const startMonth = month - 1 // JavaScript months are 0-based
+        const startDay = day
+
+        if (numeroCuotas <= 0 || totalAmount <= 0 || !startYear || startMonth < 0 || !startDay) {
+            return null
+        }
+
+        const installmentAmount = Math.ceil(totalAmount / numeroCuotas) // Round up to avoid fractions
+        const schedule = []
+
+        for (let i = 0; i < numeroCuotas; i++) {
+            // Create date for each installment by adding months to the start date
+            const paymentDate = new Date(startYear, startMonth + i, startDay)
+
+            // Format date as YYYY-MM-DD consistently
+            const formattedYear = paymentDate.getFullYear()
+            const formattedMonth = String(paymentDate.getMonth() + 1).padStart(2, '0')
+            const formattedDay = String(paymentDate.getDate()).padStart(2, '0')
+            const formattedDate = `${formattedYear}-${formattedMonth}-${formattedDay}`
+
+            schedule.push({
+                numero_cuota: i + 1,
+                fecha_pago: formattedDate,
+                monto: installmentAmount,
+                pagado: false
+            })
+        }
+
+        // Adjust the last installment to account for rounding
+        const totalCalculated = schedule.reduce((sum, cuota) => sum + cuota.monto, 0)
+        if (totalCalculated !== totalAmount) {
+            schedule[schedule.length - 1].monto = installmentAmount - (totalCalculated - totalAmount)
+        }
+
+        return schedule
     }
 
     // Service details modal functions
@@ -190,12 +277,19 @@ const useServicios = () => {
             const iva = subtotal * (ivaPercentage / 100) // Use custom IVA percentage
             const total = subtotal + iva
 
-            return {
+            const updatedForm = {
                 ...prev,
                 subtotal: subtotal,
                 iva: iva,
                 total: total
             }
+
+            // Recalculate payment schedule if totals changed and payment type is installments
+            if (prev.tipo_pago === 'cuotas') {
+                updatedForm.cronograma_pagos = calculatePaymentSchedule(updatedForm)
+            }
+
+            return updatedForm
         })
     }
 
@@ -277,7 +371,8 @@ const useServicios = () => {
             const dataToSend = {
                 ...form,
                 detalles: JSON.stringify(form.detalles),
-                fotos: JSON.stringify(form.fotos)
+                fotos: JSON.stringify(form.fotos),
+                cronograma_pagos: form.cronograma_pagos ? JSON.stringify(form.cronograma_pagos) : null
             }
 
             if (editing && editing.id) {

@@ -55,6 +55,9 @@ router.post('/', async (req, res) => {
     var subtotal = req.body.subtotal || 0
     var iva = req.body.iva || 0
     var total = req.body.total || 0
+    var tipo_pago = req.body.tipo_pago || null
+    var cronograma_pagos = req.body.cronograma_pagos || null
+    var fecha_pagos = req.body.fecha_pagos && req.body.fecha_pagos.trim() !== '' ? req.body.fecha_pagos : null
     var fecha_servicio = req.body.fecha_servicio || null
     var notas = req.body.notas || null
     var fotos = req.body.fotos || null
@@ -76,14 +79,14 @@ router.post('/', async (req, res) => {
       nombre_cliente, telefono_cliente, email_cliente, direccion_cliente,
       marca_vehiculo, modelo_vehiculo, anio_vehiculo, placa_vehiculo,
       color_vehiculo, kilometraje_vehiculo, fecha_shaken, detalles, subtotal, iva, total,
-      fecha_servicio, notas, fotos, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      tipo_pago, cronograma_pagos, fecha_pagos, fecha_servicio, notas, fotos, status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
     var params = [
       nombre_cliente, telefono_cliente, email_cliente, direccion_cliente,
       marca_vehiculo, modelo_vehiculo, anio_vehiculo, placa_vehiculo,
       color_vehiculo, kilometraje_vehiculo, fecha_shaken, detalles, subtotal, iva, total,
-      fecha_servicio, notas, fotos, status
+      tipo_pago, cronograma_pagos, fecha_pagos, fecha_servicio, notas, fotos, status
     ]
 
     var [result] = await db.query(insertQuery, params)
@@ -112,7 +115,7 @@ router.put('/:id', async (req, res) => {
       'nombre_cliente', 'telefono_cliente', 'email_cliente', 'direccion_cliente',
       'marca_vehiculo', 'modelo_vehiculo', 'anio_vehiculo', 'placa_vehiculo',
       'color_vehiculo', 'kilometraje_vehiculo', 'fecha_shaken', 'detalles', 'subtotal', 'iva', 'total',
-      'fecha_servicio', 'notas', 'fotos', 'status'
+      'tipo_pago', 'cronograma_pagos', 'fecha_pagos', 'fecha_servicio', 'notas', 'fotos', 'status'
     ]
 
     var updates = []
@@ -129,7 +132,7 @@ router.put('/:id', async (req, res) => {
         }
         // Handle date fields - convert empty strings to null
         var value = req.body[f]
-        if (f === 'fecha_shaken' && value && value.trim() === '') {
+        if ((f === 'fecha_shaken' || f === 'fecha_pagos') && value && value.trim() === '') {
           value = null
         }
         updates.push(f + ' = ?')

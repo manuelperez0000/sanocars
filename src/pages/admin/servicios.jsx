@@ -313,7 +313,7 @@ const Servicios = () => {
                                                 <th>Cliente</th>
                                                 <th>Vehículo</th>
                                                 <th>Fecha Shaken</th>
-                                                <th>Fecha</th>
+                                                <th>Tipo de Pago</th>
                                                 <th>Total</th>
                                                 <th>Status</th>
                                                 <th>Acciones</th>
@@ -327,7 +327,11 @@ const Servicios = () => {
                                                         <td>{s.nombre_cliente}</td>
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
                                                         <td>{s.fecha_shaken ? new Date(s.fecha_shaken).toLocaleDateString() : '-'}</td>
-                                                        <td>{new Date(s.fecha_servicio).toLocaleDateString()}</td>
+                                                        <td>
+                                                            <span className={`badge ${s.tipo_pago === 'cuotas' ? 'bg-info' : 'bg-secondary'}`}>
+                                                                {s.tipo_pago === 'cuotas' ? 'Cuotas' : s.tipo_pago === 'contado' ? 'Contado' : 'N/A'}
+                                                            </span>
+                                                        </td>
                                                         <td>{formatCurrency(s.total || 0)}</td>
                                                         <td>
                                                             <span className={`badge ${s.status === 'Completado' ? 'bg-success' : s.status === 'En Progreso' ? 'bg-warning' : 'bg-secondary'}`}>
@@ -497,6 +501,80 @@ const Servicios = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    {/* Payment Information Section */}
+                                    <div className="mb-4">
+                                        <h6 className="text-primary mb-3">Información de Pago</h6>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Tipo de Pago</label>
+                                                <select name="tipo_pago" value={form.tipo_pago || ''} onChange={handleChange} className="form-control" disabled={editing && form.tipo_pago === 'cuotas'}>
+                                                    <option value="">Seleccionar tipo de pago</option>
+                                                    <option value="contado">Contado</option>
+                                                    <option value="cuotas">Cuotas</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {form.tipo_pago === 'cuotas' && (
+                                            <div className="row">
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Número de Cuotas</label>
+                                                    <input
+                                                        type="number"
+                                                        name="numero_cuotas"
+                                                        value={form.numero_cuotas || 1}
+                                                        onChange={handleChange}
+                                                        className="form-control"
+                                                        min="1"
+                                                        max="24"
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <label className="form-label">Fecha Inicial de Pago</label>
+                                                    <input
+                                                        type="date"
+                                                        name="fecha_pagos"
+                                                        value={form.fecha_pagos || ''}
+                                                        onChange={handleChange}
+                                                        className="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {form.cronograma_pagos && form.cronograma_pagos.length > 0 && (
+                                            <div className="mt-3">
+                                                <h6 className="text-secondary mb-2">Cronograma de Pagos</h6>
+                                                <div className="table-responsive">
+                                                    <table className="table table-sm table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Cuota</th>
+                                                                <th>Fecha de Pago</th>
+                                                                <th>Monto</th>
+                                                                <th>Estado</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {form.cronograma_pagos.map((cuota, index) => (
+                                                                <tr key={index}>
+                                                                    <td>{cuota.numero_cuota}</td>
+                                                                    <td>{new Date(cuota.fecha_pago).toLocaleDateString('es-ES')}</td>
+                                                                    <td>{formatCurrency(cuota.monto)}</td>
+                                                                    <td>
+                                                                        <span className={`badge ${cuota.pagado ? 'bg-success' : 'bg-warning'}`}>
+                                                                            {cuota.pagado ? 'Pagado' : 'Pendiente'}
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Additional Info */}

@@ -1,11 +1,12 @@
 
 
 import React, { useState } from 'react';
-import { FaCar, FaShoppingCart, FaTools, FaKey } from 'react-icons/fa';
+import { FaCar, FaShoppingCart, FaTools, FaKey, FaClock, FaCaretDown, FaCreditCard } from 'react-icons/fa';
 import SegVentas from '../../components/segVentas';
 import SegAlquileres from '../../components/segAlquileres';
 import SegShaken from '../../components/segShaken';
 import useSeguimiento from '../../hooks/useSeguimiento';
+import SegServicios from '../../components/segServicios';
 
 const Seguimiento = () => {
   const [activeTab, setActiveTab] = useState('venta-vehiculo');
@@ -20,12 +21,17 @@ const Seguimiento = () => {
     {
       id: 'pagos-alquiler',
       title: 'Pagos de alquiler',
-      icon: <FaKey className="me-2" />
+      icon: <FaClock className="me-2" />
     },
     {
       id: 'shaken',
       title: 'Shaken',
       icon: <FaKey className="me-2" />
+    },
+    {
+      id: 'servicios',
+      title: 'Pagos de servicios',
+      icon: <FaCreditCard className="me-2" />
     }
   ];
  
@@ -37,6 +43,8 @@ const Seguimiento = () => {
         return <SegAlquileres />;
       case 'shaken':
         return <SegShaken />;
+      case 'servicios':
+        return <SegServicios />;
       default:
         return <SegVentas vehicles={vehicles} loading={loading} error={error} />;
     }
