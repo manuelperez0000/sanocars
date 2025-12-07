@@ -123,8 +123,25 @@ const useServicios = () => {
             formData.numero_cuotas = formData.cronograma_pagos.length
         }
 
-        // Keep fecha_shaken as string (already in YYYY-MM-DD format from database)
-        if (!formData.fecha_shaken) {
+        // Format fecha_shaken for HTML date input (YYYY-MM-DD format)
+        if (formData.fecha_shaken) {
+            try {
+                // If it's already a valid date string in YYYY-MM-DD format, keep it
+                if (typeof formData.fecha_shaken === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(formData.fecha_shaken)) {
+                    // Keep as is
+                } else {
+                    // Try to parse and format the date
+                    const date = new Date(formData.fecha_shaken)
+                    if (!isNaN(date.getTime())) {
+                        formData.fecha_shaken = date.toISOString().split('T')[0]
+                    } else {
+                        formData.fecha_shaken = ''
+                    }
+                }
+            } catch {
+                formData.fecha_shaken = ''
+            }
+        } else {
             formData.fecha_shaken = ''
         }
 

@@ -11,6 +11,120 @@ const ViewModal = ({ show, onHide, item }) => {
   const renderField = (key, value) => {
     if (value === null || value === undefined || value === '') return null
 
+    // Special handling for detalles field
+    if (key === 'detalles') {
+      let detallesArray = []
+      try {
+        if (typeof value === 'string') {
+          detallesArray = JSON.parse(value)
+        } else if (Array.isArray(value)) {
+          detallesArray = value
+        }
+      } catch (error) {
+        console.error('Error parsing detalles:', error)
+        return (
+          <div key={key} className="mb-2">
+            <strong>Detalles:</strong> Error al parsear los detalles
+          </div>
+        )
+      }
+
+      if (!Array.isArray(detallesArray) || detallesArray.length === 0) {
+        return (
+          <div key={key} className="mb-2">
+            <strong>Detalles:</strong> No hay detalles disponibles
+          </div>
+        )
+      }
+
+      return (
+        <div key={key} className="mb-3">
+          <strong>Detalles:</strong>
+          <div className="table-responsive mt-2">
+            <table className="table table-sm table-bordered">
+              <thead>
+                <tr>
+                  <th>Descripción</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unitario</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detallesArray.map((detalle, index) => (
+                  <tr key={index}>
+                    <td>{detalle.descripcion || '-'}</td>
+                    <td className="text-center">{detalle.cantidad || 0}</td>
+                    <td className="text-end">¥{detalle.precio_unitario || 0}</td>
+                    <td className="text-end">¥{detalle.total || 0}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )
+    }
+
+    // Special handling for cronograma_pagos field
+    if (key === 'cronograma_pagos') {
+      let pagosArray = []
+      try {
+        if (typeof value === 'string') {
+          pagosArray = JSON.parse(value)
+        } else if (Array.isArray(value)) {
+          pagosArray = value
+        }
+      } catch (error) {
+        console.error('Error parsing cronograma_pagos:', error)
+        return (
+          <div key={key} className="mb-2">
+            <strong>Cronograma de Pagos:</strong> Error al parsear el cronograma
+          </div>
+        )
+      }
+
+      if (!Array.isArray(pagosArray) || pagosArray.length === 0) {
+        return (
+          <div key={key} className="mb-2">
+            <strong>Cronograma de Pagos:</strong> No hay pagos programados
+          </div>
+        )
+      }
+
+      return (
+        <div key={key} className="mb-3">
+          <strong>Cronograma de Pagos:</strong>
+          <div className="table-responsive mt-2">
+            <table className="table table-sm table-bordered">
+              <thead>
+                <tr>
+                  <th>Cuota</th>
+                  <th>Fecha de Pago</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pagosArray.map((pago, index) => (
+                  <tr key={index}>
+                    <td className="text-center">{pago.numero_cuota || (index + 1)}</td>
+                    <td>{pago.fecha_pago ? new Date(pago.fecha_pago + 'T00:00:00').toLocaleDateString('es-ES') : '-'}</td>
+                    <td className="text-end">¥{Math.ceil(pago.monto || 0)}</td>
+                    <td>
+                      <span className={`badge ${pago.pagado ? 'bg-success' : 'bg-warning'}`}>
+                        {pago.pagado ? 'Pagado' : 'Pendiente'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )
+    }
+
     let displayValue = value
     if (key.includes('fecha') && value) {
       displayValue = new Date(value).toLocaleDateString()
