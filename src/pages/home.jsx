@@ -80,7 +80,7 @@ const Home = () => {
                     <VehicleList vehicles={vehiclesForRent} scroll={true} />
                     <hr className='mb-5' />
                 </>}
-                {vehiclesForRent.length > 0 && <>
+                {vehiclesSold.length > 0 && <>
                     <div className="mb-4">
                         <div className="d-flex align-items-center">
                             <div className="flex-grow-1 mb-3">
