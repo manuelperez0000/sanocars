@@ -1,6 +1,6 @@
 
 import useServicios from '../../hooks/useServicios'
-import { formatCurrency, topurl } from '../../utils/globals'
+import { dateFormater, formatCurrency, topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import { headerFactura } from '../../assets/facturaTemplate'
 
@@ -326,7 +326,7 @@ const Servicios = () => {
                                                         <td>{s.id}</td>
                                                         <td>{s.nombre_cliente}</td>
                                                         <td>{s.marca_vehiculo} {s.modelo_vehiculo} ({s.placa_vehiculo})</td>
-                                                        <td>{s.fecha_shaken ? new Date(s.fecha_shaken + 'T00:00:00').toLocaleDateString('es-VE') : '-'}</td>
+                                                        <td>{dateFormater(s.fecha_shaken)}</td>
                                                         <td>
                                                             <span className={`badge ${s.tipo_pago === 'cuotas' ? 'bg-info' : 'bg-secondary'}`}>
                                                                 {s.tipo_pago === 'cuotas' ? 'Cuotas' : s.tipo_pago === 'contado' ? 'Contado' : 'N/A'}
