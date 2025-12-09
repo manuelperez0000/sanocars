@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useFacturas from '../../hooks/useFacturas'
 import { formatCurrency } from '../../utils/globals'
-import HeaderFactura from '../../components/HeaderFactura'
+import HeaderFactura2 from '../../components/HeaderFactura2'
 const Factura = () => {
 
     const { id } = useParams()
@@ -102,7 +102,7 @@ const Factura = () => {
                     <div className="invoice-container card shadow p-5">
                         {/* Invoice Header */}
                         
-                        <HeaderFactura id={factura.id} />
+                        <HeaderFactura2 id={factura.id} />
                         {/* Client Information */}
                         <div className="mb-2">
                             <div className="border-bottom pb-1 mb-1">

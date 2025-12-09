@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import useInformeVehiculos from '../../hooks/useInformeVehiculos'
 import { topurl } from '../../utils/globals'
 import carrito from '../../assets/carrito.png'
-import { headerFactura } from '../../assets/facturaTemplate'
+import { headerFactura2 } from '../../assets/facturaTemplate'
+import useConfiguracion from '../../hooks/useConfiguracion'
+
 const InformeVehiculos = () => {
+    const { getEmails } = useConfiguracion()
     const navigate = useNavigate()
-    const { informes, loading, error, deleteInforme,loadCar } = useInformeVehiculos()
+    const { informes, loading, error, deleteInforme, loadCar } = useInformeVehiculos()
     const [selectedInforme, setSelectedInforme] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
 
@@ -281,7 +284,7 @@ const InformeVehiculos = () => {
             <body>
                 <div class="invoice-container">
                     <!-- Invoice Header -->
-                    ${headerFactura({id:reportData.id,titulo:"Informe de Inspección de Vehículos"})}
+                    ${headerFactura2({ id: reportData.id, titulo: "Informe de Inspección de Vehículos", email: getEmails()[0] || 'sanocars@hotmail.com' })}
                     <!-- Client Information -->
                     <div class="">
                         <div class="section-header">Información del Cliente</div>

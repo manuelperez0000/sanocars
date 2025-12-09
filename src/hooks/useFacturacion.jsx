@@ -106,22 +106,23 @@ const useFacturacion = () => {
             if (!existingUser && invoiceData.clientName.trim() && invoiceData.clientEmail.trim()) {
                 // Register new user
                 const userPayload = {
-                    name: invoiceData.clientName.trim(),
+                    name: invoiceData?.clientName?.trim(),
                     lastname: 'N/A',
                     email: invoiceData.clientEmail.trim(),
                     password: 's6d54f6s5d4f6s5d4f654s4df654', // Default password for new users
-                    mobile_no: invoiceData.clientPhone.trim() || '',
-                    address: invoiceData.clientAddress.trim() || '',
+                    mobile_no: invoiceData?.clientPhone?.trim() || '',
+                    address: invoiceData?.clientAddress?.trim() || '',
                     nationality: 'Japon',
                     role: 'customer'
                 }
+
 
                 await handleCreate(userPayload)
             }
 
             // Navigate to invoice after everything is done
             const id = savedInvoice.id
-            navigate(`/admin/factura/${id}`)
+            if (id) navigate(`/admin/factura/${id}`)
         } catch (error) {
             console.error('Error registering user or generating invoice:', error)
             alert('Error al procesar la solicitud: ' + error.message)
@@ -135,15 +136,15 @@ const useFacturacion = () => {
     const generateInvoice = async () => {
         try {
             // Validation
-            if (!invoiceData.clientName.trim()) {
+            if (!invoiceData?.clientName?.trim()) {
                 const error = new Error('Agregue el nombre del cliente')
-                alert(error.message)
+               /*  return alert(error.message) */
                 throw error
             }
 
             if (selectedItems.length === 0) {
                 const error = new Error('Debe agregar al menos un producto a la factura')
-                alert(error.message)
+                /* alert(error.message) */
                 throw error
             }
 
@@ -152,12 +153,12 @@ const useFacturacion = () => {
             // Prepare invoice data for database
             const invoiceDataForDB = {
                 tipo: 'producto',
-                cliente_nombre: invoiceData.clientName.trim(),
+                cliente_nombre: invoiceData?.clientName?.trim(),
                 cliente_apellido: "n/a",
                 cliente_genero: "n/a",
-                cliente_email: invoiceData.clientEmail.trim() || null,
-                cliente_telefono: invoiceData.clientPhone.trim() || null,
-                cliente_direccion: invoiceData.clientAddress.trim() || null,
+                cliente_email: invoiceData?.clientEmail?.trim() || null,
+                cliente_telefono: invoiceData?.clientPhone?.trim() || null,
+                cliente_direccion: invoiceData?.clientAddress?.trim() || null,
                 items: selectedItems,
                 total: total,
                 datos_pago: null,

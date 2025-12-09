@@ -3,9 +3,11 @@ import useServicios from '../../hooks/useServicios'
 import { dateFormater, formatCurrency, topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import { headerFactura } from '../../assets/facturaTemplate'
+import useConfiguracion from '../../hooks/useConfiguracion'
 
 const Servicios = () => {
 
+    const { getEmails } = useConfiguracion()
     const {
         loading,
         error,
@@ -203,7 +205,7 @@ const Servicios = () => {
                 </style>
             </head>
             <body>
-                ${headerFactura({ id: servicio.id })}
+                ${headerFactura({ id: servicio.id, titulo: "Factura de Servicio", email: getEmails[0] || 'sanocars@hotmail.com' })}
                 <div class="invoice-info">
                     <div class="info-section">
                         <h4>Información del Cliente</h4>

@@ -44,3 +44,9 @@ export const dateFormater = (date)=>{
     })}`;
 
 }
+
+
+
+export const email = ()=>{
+  return `sanocars@hotmail.com`
+}

@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import request from '../utils/request'
 import { apiurl, dateFormater, formatCurrency, topurl } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
-import { headerFactura } from '../assets/facturaTemplate';
+import { headerFactura2 } from '../assets/facturaTemplate';
+import useConfiguracion from './useConfiguracion';
 
 const useVehicles = () => {
+
+    const { getEmails } = useConfiguracion()
     const [vehicles, setVehicles] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -549,7 +552,7 @@ const useVehicles = () => {
                 </style>
             </head>
             <body>
-            ${headerFactura({id:vehicle.id,titulo:`Venta  ${vehicle.marca} ${vehicle.modelo}`})}
+            ${headerFactura2({ id: vehicle.id, titulo: `Venta  ${vehicle.marca} ${vehicle.modelo}`, email: getEmails()[0] || 'sanocars@hotmail.com' })}
                 
 
                 <div class="invoice-info">

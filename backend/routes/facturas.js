@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */ 
+/* eslint-disable no-undef */
 var db = require('../db/dbConection.js')
 
 var express = require('express')
@@ -8,7 +8,7 @@ var responser = require('../network/responser.js')
 // GET /api/v1/facturas - Get all invoices
 router.get('/', async (req, res) => {
   try {
-    
+
     var [rows] = await db.query('SELECT * FROM facturas ORDER BY id DESC')
     responser.success({ res, body: rows })
   } catch (error) {
@@ -20,7 +20,9 @@ router.get('/', async (req, res) => {
 // POST /api/v1/facturas - Create a new invoice
 router.post('/', async (req, res) => {
   try {
-    
+
+    /*   return responser.success({ res, message: "success", status: 200 }) */
+
     if (!db) return responser.error({ res, message: 'Database not connected', status: 500 })
 
     var tipo = req.body.tipo || null
@@ -28,7 +30,7 @@ router.post('/', async (req, res) => {
     var cliente_apellido = req.body.cliente_apellido || null
     var cliente_genero = req.body.cliente_genero || null
     var cliente_email = req.body.cliente_email || null
-    var cliente_telefono = req.body.cliente_telefono || null
+    var cliente_telefono = req.body.cliente_telefono || '---'
     var cliente_direccion = req.body.cliente_direccion || null
     var items = req.body.items || null
     var total = req.body.total || 0
@@ -36,9 +38,38 @@ router.post('/', async (req, res) => {
     var cuotas = req.body.cuotas || null
 
     // Basic required fields
-    if (!tipo || !cliente_nombre || !items || total === null) {
-      return responser.error({ res, message: 'Tipo, nombre del cliente, items y total son requeridos', status: 400 })
+    if (!tipo) {
+      return responser.error({
+        res,
+        message: 'El campo "tipo" es requerido',
+        status: 400
+      });
     }
+
+    if (!cliente_nombre) {
+      return responser.error({
+        res,
+        message: 'El nombre del cliente es requerido',
+        status: 400
+      });
+    }
+
+    if (!items) {
+      return responser.error({
+        res,
+        message: 'Los items son requeridos',
+        status: 400
+      });
+    }
+
+    if (!total) {
+      return responser.error({
+        res,
+        message: 'El total es requerido',
+        status: 400
+      });
+    }
+
 
     var insertQuery = 'INSERT INTO facturas (tipo, cliente_nombre, cliente_apellido, cliente_genero, cliente_email, cliente_telefono, cliente_direccion, items, total, datos_pago, cuotas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     var params = [tipo, cliente_nombre, cliente_apellido, cliente_genero, cliente_email, cliente_telefono, cliente_direccion, JSON.stringify(items), total, JSON.stringify(datos_pago), JSON.stringify(cuotas)]
@@ -61,7 +92,7 @@ router.post('/', async (req, res) => {
 // GET /api/v1/facturas/:id - Get invoice by id
 router.get('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
     var [rows] = await db.query('SELECT * FROM facturas WHERE id = ? LIMIT 1', [id])
     if (!rows || rows.length === 0) {
@@ -84,7 +115,7 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/facturas/:id - Update invoice
 router.put('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
 
     // Allowed fields to update
@@ -136,7 +167,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/v1/facturas/:id - Delete invoice
 router.delete('/:id', async (req, res) => {
   try {
-    
+
     var { id } = req.params
 
     var [result] = await db.query('DELETE FROM facturas WHERE id = ?', [id])

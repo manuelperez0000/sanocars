@@ -6,6 +6,8 @@ const useConfiguracion = () => {
     const [configuraciones, setConfiguraciones] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [editingItem, setEditingItem] = useState(null);
+    const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
 
     useEffect(() => {
         fetchConfiguraciones()
@@ -73,19 +75,19 @@ const useConfiguracion = () => {
     }
 
     function getEmails() {
-        return configuraciones.filter(config => config.tipo === 'email')
+        const x = configuraciones.filter(config => config.tipo === 'email')
+            .map((y) => y.texto)
+        console.log(x)
+        return x
     }
 
     function getCompanyName() {
         return configuraciones.filter(config => config.tipo === 'company_name')
     }
- 
+
     function getCompanyAddress() {
         return 'Shizuoka, Ide, Numazu Japón'
     }
-
-    const [editingItem, setEditingItem] = useState(null);
-    const [editForm, setEditForm] = useState({ texto: '', whatsapp: false });
 
     // --- Agregar nuevo item ---
     const agregarHorario = async () => {

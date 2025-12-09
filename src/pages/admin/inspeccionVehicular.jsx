@@ -4,9 +4,11 @@ import useInspeccionVehicular from '../../hooks/useInspeccionVehicular'
 import { topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import carrito from '../../assets/carrito.png'
-import { headerFactura } from '../../assets/facturaTemplate'
+import { headerFactura2 } from '../../assets/facturaTemplate'
+import useConfiguracion from '../../hooks/useConfiguracion'
 
 const InspeccionVehicular = () => {
+    const { getEmails } = useConfiguracion()
     const {
         loading,
         error,
@@ -287,7 +289,7 @@ const InspeccionVehicular = () => {
                 <body>
                     <div class="invoice-container">
                         <!-- Invoice Header -->
-                        ${headerFactura({ id: inspeccion.id, titulo: "Inspección de Vehículos" })}
+                        ${headerFactura2({ id: inspeccion.id, titulo: "Inspección de Vehículos", email: getEmails()[0] || 'sanocars@hotmail.com' })}
                         <!-- Client Information -->
                         <div class="">
                             <div class="section-header">Información del Cliente</div>

@@ -280,7 +280,7 @@ const FinancingDetail = () => {
                                         <h5>SANOCARS</h5>
                                         <p className="mb-1">Dirección: Numazu Shizuoka, Japón</p>
                                         <p className="mb-1">Teléfono: {getPhones()?.length > 0 ? getPhones()[0].texto : 'N/A'}</p>
-                                        <p className="mb-1">Email: {getEmails()?.length > 0 ? getEmails()[0].texto : 'N/A'}</p>
+                                        <p className="mb-1">Email: {getEmails()?.length > 0 ? getEmails()[0] : 'N/A'}</p>
                                     </div>
                                 </div>
                             </div>
