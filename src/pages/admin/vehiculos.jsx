@@ -66,6 +66,8 @@ const Vehiculos = () => {
         }
     }
 
+
+
     return (
         <div className="container-fluid py-4">
             <div className="row">
@@ -570,7 +572,6 @@ const Vehiculos = () => {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={closeSalesModal}>Cancelar</button>
-                                    {/* <button type="submit" className="btn btn-success me-2">Guardar Venta</button> */}
                                     <button type="button" className="btn btn-primary" onClick={() => { handleSaveSale({ preventDefault: () => {} }); }}>Guardar e Imprimir</button>
                                 </div>
                             </form>

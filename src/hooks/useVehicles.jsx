@@ -417,8 +417,8 @@ const useVehicles = () => {
         }
     }
 
-    function printSaleInvoice(saleData) {
-        const vehicle = selectedVehicle
+    function printSaleInvoice(saleData, vehicleOverride = null) {
+        const vehicle = vehicleOverride || selectedVehicle
         const printWindow = window.open('', '_blank')
         const invoiceHTML = `
             <!DOCTYPE html>
@@ -428,12 +428,24 @@ const useVehicles = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Factura de Venta - ${vehicle.marca} ${vehicle.modelo}</title>
                 <style>
+                    h4{
+                     margin-bottom:3px;
+                     padding:0px;
+                     font-size:16px;
+                        line-heght:12px;
+                    }
+                      p{
+                    margin:0px;
+                    padding:0px;
+                    line-height: 12px;
+                    }
                     body {
                         font-family: 'Arial', sans-serif;
                         margin: 0;
                         padding: 20px;
                         color: #333;
                         line-height: 1.4;
+                        font-size:12px;
                     }
                     .invoice-header {
                         display:flex;
@@ -494,21 +506,22 @@ const useVehicles = () => {
                         padding: 5px;
                     }
                     .payment-details {
-                        margin-bottom: 30px;
+                        margin-bottom: 0px;
+                       
                     }
                     .payment-details h4 {
-                        margin: 0 0 15px 0;
+                        margin:0px;
                         color: #2c3e50;
-                        font-size: 16px;
+                        font-size: 12px;
                     }
                     .totals-section {
                         display: flex;
                         justify-content: flex-end;
-                        margin-bottom: 30px;
+                        margin-bottom: 10px;
                     }
                     .totals-box {
                         border: 1px solid #ddd;
-                        padding: 20px;
+                        padding: 15px;
                         background-color: #f8f9fa;
                         min-width: 250px;
                     }
@@ -549,6 +562,7 @@ const useVehicles = () => {
                         body { margin: 0; }
                         .no-print { display: none; }
                     }
+                   
                 </style>
             </head>
             <body>
@@ -600,26 +614,20 @@ const useVehicles = () => {
                     </div>
                 </div>
 
+                ${saleData.tipo_pago === 'cuotas' && `
                 <div class="payment-details">
                     <h4>Detalles del Pago</h4>
                     <div class="details-grid">
                         <div class="detail-item"><strong>Precio de Venta:</strong> ${formatCurrency(saleData.precio_venta)}</div>
-                        ${saleData.tipo_pago === 'cuotas' ? `
                         <div class="detail-item"><strong>Monto Inicial:</strong> ${parseInt(saleData.monto_inicial || 0)}</div>
                         <div class="detail-item"><strong>Financiamiento:</strong> ${(parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0))}</div>
                         <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
                         <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
                         <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
                         <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-VE') : 'N/A'}</div>
-                        ` : `
-                        <div class="detail-item"></div>
-                        <div class="detail-item"></div>
-                        <div class="detail-item"></div>
-                        <div class="detail-item"></div>
-                        <div class="detail-item"></div>
+                        </div>
+                        </div>
                         `}
-                    </div>
-                </div>
 
                 ${saleData.tipo_pago === 'cuotas' && saleData.siguientes_pagos ? `
                 <div class="payment-schedule">
@@ -898,6 +906,7 @@ const useVehicles = () => {
         closeRentalModal,
         handleRentalChange,
         handleSaveRental,
+        printSaleInvoice,
         getImages,
         getArrayImages
     }

@@ -5,7 +5,7 @@ import { topurl } from '../../utils/globals'
 import useVehicles from '../../hooks/useVehicles'
 
 const Vendidos = () => {
-    const { getArrayImages } = useVehicles()
+    const { getArrayImages, printSaleInvoice } = useVehicles()
     const { ventas, loading, error, deleteVenta } = useVentas()
     const [selectedVenta, setSelectedVenta] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
@@ -34,6 +34,28 @@ const Vendidos = () => {
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A'
         return new Date(dateString).toLocaleDateString('es-VE')
+    }
+
+    // Handle print sale details
+    const handlePrint = (venta) => {
+        // Create vehicle object from sale data
+        const vehicle = {
+            id: venta.vehiculo_id,
+            marca: venta.vehiculo_marca,
+            modelo: venta.vehiculo_modelo,
+            anio: venta.vehiculo_anio,
+            color: venta.vehiculo_color,
+            numero_placa: venta.vehiculo_placa,
+            kilometraje: venta.vehiculo_kilometraje,
+            tipo_vehiculo: venta.vehiculo_tipo,
+            tamano_motor: venta.vehiculo_tamano_motor,
+            numero_chasis: venta.vehiculo_numero_chasis,
+            observaciones: venta.vehiculo_observaciones,
+            imagen1: venta.vehiculo_imagen1
+        }
+
+        // Call the printSaleInvoice function with sale data and vehicle
+        printSaleInvoice(venta, vehicle)
     }
 
     if (loading) {
@@ -122,6 +144,13 @@ const Vendidos = () => {
                                                                 title="Ver detalles"
                                                             >
                                                                 <FaEye />
+                                                            </button>
+                                                            <button
+                                                                className="btn btn-sm btn-secondary"
+                                                                onClick={() => handlePrint(venta)}
+                                                                title="Imprimir"
+                                                            >
+                                                                🖨️
                                                             </button>
                                                             <button
                                                                 className="btn btn-sm btn-danger"
