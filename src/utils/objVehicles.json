@@ -3,107 +3,314 @@
     {
       "name": "Toyota",
       "models": [
-        "Corolla", "Camry", "Hilux", "RAV4", "Land Cruiser", "Prius",
-        "PRIUS ZW30", "PRIUS ZW50", "PRIUS ZW51",
-        "VOXY ZRR80", "VOXY ZRR70",
-        "AQUA", "BB", "ESTIMA", "CHR", "CROWN", "HIACE", "ALPHAR", "NOAH", "HARRIER", "GR YARIS"
+        "Corolla",
+        "Camry",
+        "Hilux",
+        "RAV4",
+        "Land Cruiser",
+        "Prius",
+        "PRIUS ZW30",
+        "PRIUS ZW50",
+        "PRIUS ZW51",
+        "VOXY ZRR80",
+        "VOXY ZRR70",
+        "VOXY HYBRID",
+        "AQUA",
+        "BB",
+        "ESTIMA",
+        "CHR",
+        "CROWN",
+        "HIACE",
+        "ALPHAR",
+        "NOAH",
+        "HARRIER",
+        "GR YARIS"
       ]
     },
     {
       "name": "Volkswagen",
-      "models": ["Golf", "Passat", "Tiguan", "Polo", "Touareg", "ID.4"]
+      "models": [
+        "Golf",
+        "Passat",
+        "Tiguan",
+        "Polo",
+        "Touareg",
+        "ID.4"
+      ]
     },
     {
       "name": "Mercedes-Benz",
-      "models": ["C-Class", "E-Class", "S-Class", "GLC", "GLE", "EQC"]
+      "models": [
+        "C-Class",
+        "E-Class",
+        "S-Class",
+        "GLC",
+        "GLE",
+        "EQC"
+      ]
     },
     {
       "name": "BMW",
-      "models": ["3 Series", "5 Series", "7 Series", "X5", "X3", "i4"]
+      "models": [
+        "3 Series",
+        "5 Series",
+        "7 Series",
+        "X5",
+        "X3",
+        "i4"
+      ]
     },
     {
       "name": "Honda",
       "models": [
-        "Civic", "Accord", "CR-V", "HR-V", "Pilot", "Fit",
-        "N-BOX", "N- BOX CUSTOM", "N-ONE", "VAMOS", "VEZEL", "SPADA",
-        "FIT HYBRID", "FREED", "FREED HYBRID"
+        "Civic",
+        "Accord",
+        "CR-V",
+        "HR-V",
+        "Pilot",
+        "Fit",
+        "N-BOX",
+        "N- BOX CUSTOM",
+        "N-ONE",
+        "VAMOS",
+        "VEZEL",
+        "SPADA",
+        "FIT HYBRID",
+        "FREED",
+        "FREED HYBRID"
       ]
     },
     {
       "name": "Ford",
-      "models": ["Fiesta", "Focus", "Mustang", "F-150", "Explorer", "Bronco"]
+      "models": [
+        "Fiesta",
+        "Focus",
+        "Mustang",
+        "F-150",
+        "Explorer",
+        "Bronco"
+      ]
     },
     {
       "name": "Chevrolet",
-      "models": ["Spark", "Malibu", "Camaro", "Silverado", "Tahoe", "Trailblazer"]
+      "models": [
+        "Spark",
+        "Malibu",
+        "Camaro",
+        "Silverado",
+        "Tahoe",
+        "Trailblazer"
+      ]
     },
     {
       "name": "Nissan",
       "models": [
-        "Altima", "Sentra", "Maxima", "Rogue", "Pathfinder", "GT-R",
-        "NOTE", "SERENA", "MOCO", "ROOX", "ROOX DAYZ", "DAYZ", "CLÍPER",
-        "MURANO", "JUKE", "XTRAIL", "XTRAIL HYBRID", "FUGA", "NV100", "NV350"
+        "Altima",
+        "Sentra",
+        "SERENA HYBRID",
+        "Maxima",
+        "Rogue",
+        "Pathfinder",
+        "GT-R",
+        "NOTE",
+        "SERENA",
+        "MOCO",
+        "ROOX",
+        "ROOX DAYZ",
+        "DAYZ",
+        "CLÍPER",
+        "MURANO",
+        "JUKE",
+        "XTRAIL",
+        "XTRAIL HYBRID",
+        "FUGA",
+        "NV100",
+        "NV350"
       ]
     },
     {
       "name": "Hyundai",
-      "models": ["Elantra", "Sonata", "Tucson", "Santa Fe", "Kona", "Ioniq 5"]
+      "models": [
+        "Elantra",
+        "Sonata",
+        "Tucson",
+        "Santa Fe",
+        "Kona",
+        "Ioniq 5"
+      ]
     },
     {
       "name": "Kia",
-      "models": ["Rio", "Sportage", "Sorento", "Seltos", "Telluride", "EV6"]
+      "models": [
+        "Rio",
+        "Sportage",
+        "Sorento",
+        "Seltos",
+        "Telluride",
+        "EV6"
+      ]
     },
     {
       "name": "Audi",
-      "models": ["A3", "A4", "A6", "Q5", "Q7", "e-tron"]
+      "models": [
+        "A3",
+        "A4",
+        "A6",
+        "Q5",
+        "Q7",
+        "e-tron"
+      ]
     },
     {
       "name": "Tesla",
-      "models": ["Model S", "Model 3", "Model X", "Model Y", "Cybertruck"]
+      "models": [
+        "Model S",
+        "Model 3",
+        "Model X",
+        "Model Y",
+        "Cybertruck"
+      ]
     },
     {
       "name": "Jaguar",
-      "models": ["XE", "XF", "F-Type", "E-Pace", "F-Pace", "I-Pace"]
+      "models": [
+        "XE",
+        "XF",
+        "F-Type",
+        "E-Pace",
+        "F-Pace",
+        "I-Pace"
+      ]
     },
     {
       "name": "Mazda",
       "models": [
-        "Mazda3", "Mazda6", "CX-5", "CX-30", "MX-5 Miata",
-        "CX5", "CX8", "CX30", "CX3", "RX8", "RX7", "MAZDA2", "DEMIO"
+        "Mazda3",
+        "Mazda6",
+        "CX-5",
+        "CX-30",
+        "MX-5 Miata",
+        "CX5",
+        "CX8",
+        "CX30",
+        "CX3",
+        "RX8",
+        "RX7",
+        "MAZDA2",
+        "DEMIO"
       ]
     },
     {
       "name": "Subaru",
-      "models": ["Impreza", "Legacy", "Outback", "Forester", "WRX"]
+      "models": [
+        "Impreza",
+        "Legacy",
+        "Outback",
+        "Forester",
+        "WRX"
+      ]
     },
     {
       "name": "Peugeot",
-      "models": ["208", "308", "508", "2008", "3008", "5008"]
+      "models": [
+        "208",
+        "308",
+        "508",
+        "2008",
+        "3008",
+        "5008"
+      ]
     },
     {
       "name": "Renault",
-      "models": ["Clio", "Megane", "Captur", "Kadjar", "Duster", "Koleos"]
+      "models": [
+        "Clio",
+        "Megane",
+        "Captur",
+        "Kadjar",
+        "Duster",
+        "Koleos"
+      ]
     },
     {
       "name": "Volvo",
-      "models": ["XC40", "XC60", "XC90", "S60", "V60", "EX30"]
+      "models": [
+        "XC40",
+        "XC60",
+        "XC90",
+        "S60",
+        "V60",
+        "EX30"
+      ]
     },
     {
       "name": "Jeep",
-      "models": ["Wrangler", "Cherokee", "Grand Cherokee", "Compass", "Renegade", "Gladiator"]
+      "models": [
+        "Wrangler",
+        "Cherokee",
+        "Grand Cherokee",
+        "Compass",
+        "Renegade",
+        "Gladiator"
+      ]
     },
     {
       "name": "Suzuki",
       "models": [
-        "Swift", "Vitara", "Jimny", "Baleno", "S-Cross", "Celerio",
-        "EVERY", "ALTO", "JIMMY", "SWIFT", "PALETTE", "WAGON R"
+        "Swift",
+        "Vitara",
+        "Jimny",
+        "Baleno",
+        "S-Cross",
+        "Celerio",
+        "EVERY",
+        "ALTO",
+        "JIMMY",
+        "SWIFT",
+        "PALETTE",
+        "WAGON R"
       ]
     },
     {
       "name": "Daihatsu",
       "models": [
-        "HIJET CARGO", "HIJET TRUCK", "MOVE", "TANTO", "WAKE", "MIRA",
-        "COCOA", "GINO", "ATRAI", "ESSE"
+        "HIJET CARGO",
+        "HIJET TRUCK",
+        "MOVE",
+        "TANTO",
+        "WAKE",
+        "MIRA",
+        "COCOA",
+        "GINO",
+        "ATRAI",
+        "ESSE"
+      ]
+    },
+    {
+      "name": "Mitsubishi",
+      "models": [
+        "EK SPACE",
+        "TOWN BOX",
+        "Outlander",
+        "Outlander PHEV",
+        "Eclipse Cross",
+        "Eclipse Cross PHEV",
+        "ASX",
+        "RVR",
+        "Outlander Sport",
+        "Delica D:5",
+        "Delica D:2",
+        "Delica Mini",
+        "eK Wagon",
+        "eK X",
+        "eK X EV",
+        "Minicab EV",
+        "Mirage",
+        "Space Star",
+        "Mirage G4",
+        "Attrage",
+        "Triton",
+        "L200"
       ]
     }
   ]
