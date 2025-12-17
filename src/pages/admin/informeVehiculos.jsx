@@ -392,7 +392,7 @@ const InformeVehiculos = () => {
                                     <div class="text-area">${reportData.vehiculo_observacion_general || 'N/A'}</div>
                                 </div>
                                 <div class="info-item" style="height:200px">
-                                    <div class="info-label">Trabajos de Pintura</div>
+                                    <div class="info-label">Trabajos a realizar</div>
                                     <div class="text-area">${reportData.vehiculo_trabajos_realizar || 'N/A'}</div>
                                 </div>
                             </div>
@@ -636,7 +636,7 @@ const InformeVehiculos = () => {
                                                     <p>{selectedInforme.vehiculo_observacion_general || 'N/A'}</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p><strong>Trabajos de Pintura:</strong></p>
+                                                    <p><strong>Trabajos a realizar:</strong></p>
                                                     <p>{selectedInforme.vehiculo_trabajos_realizar || 'N/A'}</p>
                                                 </div>
                                             </div>
