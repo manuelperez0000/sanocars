@@ -229,7 +229,8 @@ export const useBrandModels = () => {
             try {
                 setLoading(true);
                 await modelsService.update(modelos[editingModelo].id, {
-                    name: editModeloText.trim()
+                    name: editModeloText.trim(),
+                    brand_id: modelos[editingModelo].brand_id
                 });
                 await reloadBrandsAndModels();
                 setEditingModelo(null);

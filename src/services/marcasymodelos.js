@@ -188,7 +188,7 @@ export const modelsService = {
 
   // Update model
   update: async (id, modelData) => {
-    try {
+    try { 
       const url = `${API_BASE_URL}/models/${id}`;
       logApiCall('PUT', url, modelData);
       const response = await fetch(url, {
