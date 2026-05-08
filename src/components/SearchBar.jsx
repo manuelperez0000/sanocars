@@ -1,29 +1,46 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import objVehicles from '../utils/objVehicles.json'
-import useHome from '../hooks/useHome'
+import { useSearchVehicles } from '../hooks/useSearchVehicles'
 
 export default function SearchBar() {
-  const { allVehicles } = useHome()
+  const { vehicles, loading, error, availableBrands, getAvailableModels } = useSearchVehicles()
   const [marca, setMarca] = useState('')
   const [modelo, setModelo] = useState('')
   const navigate = useNavigate()
 
-  // Get unique brands from allVehicles
-  const availableBrands = objVehicles.vehicles.filter(vehicle =>
-    allVehicles.some(v => v.marca === vehicle.name)
-  )
-
-  // Get unique models for the selected brand from allVehicles
-  const availableModels = marca ? marca.models.filter(model =>
-    allVehicles.some(v => v.marca === marca.name && v.modelo === model)
-  ) : []
+  // Get unique models for selected brand
+  const availableModels = marca ? getAvailableModels(marca) : []
 
   const handleSearch = (e) => {
     e.preventDefault()
     if (marca && modelo) {
       navigate(`/search?marca=${encodeURIComponent(marca.name)}&modelo=${encodeURIComponent(modelo)}`)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className='card p-4 bg-search mt-5'>
+        <h4>Buscar un vehiculo</h4>
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p className="mt-2">Cargando marcas y modelos...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='card p-4 bg-search mt-5'>
+        <h4>Buscar un vehiculo</h4>
+        <div className="alert alert-danger">
+          Error al cargar los datos: {error}
+        </div>
+      </div>
+    )
   }
 
   return (

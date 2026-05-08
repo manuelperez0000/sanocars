@@ -545,6 +545,81 @@ async function automatics(conn) {
     `;
   await conn.query(pagosAlquileres);
   console.log("Tabla 'pagos_alquileres' asegurada.");
+
+  // Create carBrands table
+  var carBrands = `
+    CREATE TABLE IF NOT EXISTS carBrands (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL UNIQUE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `;
+  await conn.query(carBrands);
+  console.log("Tabla 'carBrands' asegurada.");
+
+  // Create carModels table
+  var carModels = `
+    CREATE TABLE IF NOT EXISTS carModels (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      brand_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (brand_id) REFERENCES carBrands(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_model_brand (name, brand_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `;
+  await conn.query(carModels);
+  console.log("Tabla 'carModels' asegurada.");
+
+  // Import default data from pbjVehicles.json
+  const fs = require('fs');
+  const path = require('path');
+  
+  try {
+    const pbjVehiclesPath = path.join(__dirname, 'pbjVehicles.json');
+    const pbjVehiclesData = JSON.parse(fs.readFileSync(pbjVehiclesPath, 'utf8'));
+    
+    // Insert brands and models
+    for (const vehicle of pbjVehiclesData.vehicles) {
+      // Check if brand already exists
+      const [existingBrand] = await conn.query('SELECT id FROM carBrands WHERE name = ?', [vehicle.name]);
+      let brandId;
+      
+      if (existingBrand.length === 0) {
+        // Insert new brand
+        const [brandResult] = await conn.query('INSERT INTO carBrands (name) VALUES (?)', [vehicle.name]);
+        brandId = brandResult.insertId;
+        console.log(`Marca '${vehicle.name}' insertada con ID: ${brandId}`);
+      } else {
+        brandId = existingBrand[0].id;
+        console.log(`Marca '${vehicle.name}' ya existe con ID: ${brandId}`);
+      }
+      
+      // Insert models for this brand
+      for (const modelName of vehicle.models) {
+        const [existingModel] = await conn.query(
+          'SELECT id FROM carModels WHERE name = ? AND brand_id = ?', 
+          [modelName, brandId]
+        );
+        
+        if (existingModel.length === 0) {
+          await conn.query(
+            'INSERT INTO carModels (name, brand_id) VALUES (?, ?)', 
+            [modelName, brandId]
+          );
+          console.log(`Modelo '${modelName}' insertado para marca '${vehicle.name}'`);
+        } else {
+          console.log(`Modelo '${modelName}' ya existe para marca '${vehicle.name}'`);
+        }
+      }
+    }
+    
+    console.log("Datos de vehículos importados exitosamente desde pbjVehicles.json");
+  } catch (error) {
+    console.log("Error al importar datos desde pbjVehicles.json:", error.message);
+  }
 }
 
 

@@ -1,11 +1,12 @@
 import useVehicles from '../../hooks/useVehicles'
+import { useAdminVehicles } from '../../hooks/useAdminVehicles'
 import { dateFormater, formatBigNumber, formatCurrency, topurl } from '../../utils/globals'
 import ClientInformation from '../../components/ClientInformation'
 import { useNavigate } from 'react-router-dom'
-import objVehicles from '../../utils/objVehicles.json'
 
 const Vehiculos = () => {
     const navigate = useNavigate()
+    const { vehicles, loading: vehiclesLoading, error: vehiclesError, getModelsForBrand, getAllBrands } = useAdminVehicles()
     const {
         loading,
         error,
@@ -43,12 +44,6 @@ const Vehiculos = () => {
         getImages
     } = useVehicles()
 
-    // Get models for selected brand
-    const getModelsForBrand = (brand) => {
-        const vehicle = objVehicles.vehicles.find(v => v.name === brand)
-        return vehicle ? vehicle.models : []
-    }
-
     // Handle marca change - clear modelo if not in new brand's models
     const handleMarcaChange = (e) => {
         const newMarca = e.target.value
@@ -82,6 +77,7 @@ const Vehiculos = () => {
                     </div>
 
                     {error && <div className="alert alert-danger">{error}</div>}
+                    {vehiclesError && <div className="alert alert-danger">Error cargando marcas y modelos: {vehiclesError}</div>}
 
                     <div className="card">
                         <div className="card-body p-0">
@@ -173,11 +169,15 @@ const Vehiculos = () => {
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
                                             <label className="form-label">Marca</label>
-                                            <select name="marca" value={form.marca || ''} onChange={handleMarcaChange} className="form-control" required>
+                                            <select name="marca" value={form.marca || ''} onChange={handleMarcaChange} className="form-control" required disabled={vehiclesLoading}>
                                                 <option value="">Seleccionar marca</option>
-                                                {objVehicles.vehicles.map(vehicle => (
-                                                    <option key={vehicle.name} value={vehicle.name}>{vehicle.name}</option>
-                                                ))}
+                                                {vehiclesLoading ? (
+                                                    <option>Cargando marcas...</option>
+                                                ) : (
+                                                    getAllBrands().map(vehicle => (
+                                                        <option key={vehicle.name} value={vehicle.name}>{vehicle.name}</option>
+                                                    ))
+                                                )}
                                             </select>
                                         </div>
                                         <div className="col-md-6 mb-3">

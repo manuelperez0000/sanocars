@@ -32,10 +32,31 @@ const useClientes = () => {
         }
     }
 
+    const deleteCliente = async (id) => {
+        try {
+            setLoading(true)
+            setError(null)
+
+            const response = await request.delete(apiurl + '/clientes/' + id)
+
+            if (response.data && response.data.success) {
+                // Remove from local state
+                setClientes(prev => prev.filter(cliente => cliente.id !== id))
+            } else {
+                throw new Error(response.data?.message || 'Error al eliminar el cliente')
+            }
+        } catch (err) {
+            throw new Error(err?.response?.data?.message || err.message || 'Error al eliminar el cliente')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return {
         clientes,
         loading,
         error,
+        deleteCliente,
         refetch: fetchClientes
     }
 }

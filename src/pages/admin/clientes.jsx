@@ -3,15 +3,40 @@ import useClientes from '../../hooks/useClientes'
 import { topurl } from '../../utils/globals'
 import useVehicles from '../../hooks/useVehicles'
 const Clientes = () => {
-    const { clientes, loading, error } = useClientes()
+    const { clientes, loading, error, deleteCliente } = useClientes()
     const [selectedCliente, setSelectedCliente] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+    const [clienteToDelete, setClienteToDelete] = useState(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [originFilter, setOriginFilter] = useState('')
 
     const handleViewDetails = (cliente) => {
         setSelectedCliente(cliente)
         setModalOpen(true)
+    }
+
+    const handleDeleteCliente = (cliente) => {
+        setClienteToDelete(cliente)
+        setDeleteModalOpen(true)
+    }
+
+    const confirmDeleteCliente = async () => {
+        if (clienteToDelete) {
+            try {
+                await deleteCliente(clienteToDelete.id)
+                setDeleteModalOpen(false)
+                setClienteToDelete(null)
+            } catch (error) {
+                console.error('Error deleting cliente:', error)
+                alert('Error al eliminar el cliente: ' + error.message)
+            }
+        }
+    }
+
+    const cancelDeleteCliente = () => {
+        setDeleteModalOpen(false)
+        setClienteToDelete(null)
     }
 
     const { getArrayImages } = useVehicles()
@@ -170,12 +195,20 @@ const Clientes = () => {
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <button
-                                                                className="btn btn-sm btn-primary"
-                                                                onClick={() => handleViewDetails(cliente)}
-                                                            >
-                                                                Ver Detalles
-                                                            </button>
+                                                            <div className="btn-group" role="group">
+                                                                <button
+                                                                    className="btn btn-sm btn-primary"
+                                                                    onClick={() => handleViewDetails(cliente)}
+                                                                >
+                                                                    Ver Detalles
+                                                                </button>
+                                                                <button
+                                                                    className="btn btn-sm btn-danger"
+                                                                    onClick={() => handleDeleteCliente(cliente)}
+                                                                >
+                                                                    Eliminar
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))
@@ -275,6 +308,35 @@ const Clientes = () => {
                                 </div>
                                 <div className="modal-footer">
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteModalOpen && clienteToDelete && (
+                <>
+                    <div className="modal-backdrop show" style={{ position: 'fixed', inset: 0, zIndex: 1040 }}></div>
+                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Confirmar Eliminación</h5>
+                                    <button type="button" className="btn-close" onClick={cancelDeleteCliente}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <p>¿Está seguro que desea eliminar al cliente <strong>{clienteToDelete.nombre} {clienteToDelete.apellido || ''}</strong>?</p>
+                                    <p className="text-danger">Esta acción no se puede deshacer.</p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={cancelDeleteCliente}>
+                                        Cancelar
+                                    </button>
+                                    <button type="button" className="btn btn-danger" onClick={confirmDeleteCliente}>
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </div>

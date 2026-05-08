@@ -1,6 +1,7 @@
 import { FaClock, FaPhone, FaWhatsapp, FaEnvelope, FaEdit, FaTrash, FaBuilding, FaMapMarkerAlt } from "react-icons/fa";
 import useConfiguracion from "../../hooks/useConfiguracion";
 import CategoriasServicio from "./categoriasServicio";
+import MarcasYModelos from "../../components/MarcasYModelos";
 
 const Configuracion = () => {
   const {
@@ -61,6 +62,9 @@ const Configuracion = () => {
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Configuración de la Página</h2>
+
+      {/* marcas y modelos */}
+      <MarcasYModelos />
 
       {/* Horarios */}
       <div className="card mb-4 shadow-sm">

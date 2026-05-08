@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useVentas from '../../hooks/useVentas'
 import { FaEye, FaTrash } from 'react-icons/fa'
-import { topurl } from '../../utils/globals'
+import { formatCurrency, topurl } from '../../utils/globals'
 import useVehicles from '../../hooks/useVehicles'
 
 const Vendidos = () => {
@@ -22,13 +22,6 @@ const Vendidos = () => {
                 alert('Error al eliminar la venta: ' + result.error)
             }
         }
-    }
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('es-VE', {
-            style: 'currency',
-            currency: 'VES'
-        }).format(amount)
     }
 
     const formatDate = (dateString) => {

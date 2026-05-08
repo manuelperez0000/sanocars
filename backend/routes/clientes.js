@@ -226,4 +226,50 @@ router.get('/', async (req, res) => {
     }
 })
 
+// DELETE /api/v1/clientes/:id - Delete a client from any table
+router.delete('/:id', async (req, res) => {
+    try {
+        const clientId = req.params.id
+        
+        // Extract table and original ID from the client ID
+        let tableName, originalId
+        if (clientId.startsWith('venta_')) {
+            tableName = 'venta'
+            originalId = clientId.replace('venta_', '')
+        } else if (clientId.startsWith('alquiler_')) {
+            tableName = 'alquileres'
+            originalId = clientId.replace('alquiler_', '')
+        } else if (clientId.startsWith('inspeccion_')) {
+            tableName = 'inspeccion_vehicular'
+            originalId = clientId.replace('inspeccion_', '')
+        } else if (clientId.startsWith('financiamiento_')) {
+            tableName = 'financing'
+            originalId = clientId.replace('financiamiento_', '')
+        } else if (clientId.startsWith('servicio_')) {
+            tableName = 'servicios'
+            originalId = clientId.replace('servicio_', '')
+        } else {
+            return res.status(400).json({
+                success: false,
+                error: 'ID de cliente no válido'
+            })
+        }
+
+        // Delete from the appropriate table
+        await db.execute(`DELETE FROM ${tableName} WHERE id = ?`, [originalId])
+
+        res.json({
+            success: true,
+            message: 'Cliente eliminado exitosamente'
+        })
+    } catch (error) {
+        console.error('Error deleting client:', error)
+        res.status(500).json({
+            success: false,
+            error: 'Error al eliminar el cliente',
+            message: error.message
+        })
+    }
+})
+
 module.exports = router
