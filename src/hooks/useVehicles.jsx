@@ -662,7 +662,7 @@ const useVehicles = () => {
                                         <tr>
                                             <td style="border: 1px solid #ddd; padding: 8px;">${pago.numero_cuota}</td>
                                             <td style="border: 1px solid #ddd; padding: 8px;">${new Date(pago.fecha_pago).toLocaleDateString('es-VE')}</td>
-                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${pago.monto}</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${formatCurrency(pago.monto)}</td>
                                         </tr>
                                     `).join('') : '';
                     } catch {
