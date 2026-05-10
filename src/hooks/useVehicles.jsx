@@ -344,38 +344,50 @@ const useVehicles = () => {
 
             let total_con_intereses = precio_venta
             let siguientes_pagos = []
+            let monto_a_financiar = 0
 
             if (prev.tipo_pago === 'cuotas') {
                 // Calculate financed amount, then add interest on financed amount to sale price
                 const monto_financiado = precio_venta - monto_inicial
                 const interes_total = monto_financiado * (tasa_interes / 100)
+                monto_a_financiar = monto_financiado + interes_total
                 total_con_intereses = precio_venta + interes_total
 
                 // Calculate payment schedule
-                const monto_cuota = total_con_intereses / numero_cuotas
+                const monto_cuota = (monto_financiado + interes_total) / numero_cuotas
                 let currentDate = new Date(fecha_inicial)
 
                 for (let i = 1; i <= numero_cuotas; i++) {
-                    // Calculate next payment date based on frequency
-                    if (frecuencia_cuotas === 'semanal') {
-                        currentDate.setDate(currentDate.getDate() + 7)
-                    } else if (frecuencia_cuotas === 'quincenal') {
-                        currentDate.setDate(currentDate.getDate() + 15)
-                    } else if (frecuencia_cuotas === 'mensual') {
-                        currentDate.setMonth(currentDate.getMonth() + 1)
-                    }
+                    // For first payment, use the initial date
+                    if (i === 1) {
+                        siguientes_pagos.push({
+                            numero_cuota: i,
+                            fecha_pago: fecha_inicial,
+                            monto: monto_cuota
+                        })
+                    } else {
+                        // Calculate next payment date based on frequency
+                        if (frecuencia_cuotas === 'semanal') {
+                            currentDate.setDate(currentDate.getDate() + 7)
+                        } else if (frecuencia_cuotas === 'quincenal') {
+                            currentDate.setDate(currentDate.getDate() + 15)
+                        } else if (frecuencia_cuotas === 'mensual') {
+                            currentDate.setMonth(currentDate.getMonth() + 1)
+                        }
 
-                    siguientes_pagos.push({
-                        numero_cuota: i,
-                        fecha_pago: currentDate.toISOString().split('T')[0],
-                        monto: monto_cuota
-                    })
+                        siguientes_pagos.push({
+                            numero_cuota: i,
+                            fecha_pago: currentDate.toISOString().split('T')[0],
+                            monto: monto_cuota
+                        })
+                    }
                 }
             }
 
             return {
                 ...prev,
                 total_con_intereses: total_con_intereses,
+                monto_a_financiar: monto_a_financiar,
                 siguientes_pagos: siguientes_pagos
             }
         })

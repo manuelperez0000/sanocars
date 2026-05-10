@@ -538,6 +538,12 @@ const Vehiculos = () => {
                                                         <strong>Total a Pagar:</strong>
                                                         <span className="text-primary">{formatCurrency(salesForm.total_con_intereses || 0)}</span>
                                                     </div>
+                                                    {salesForm.tipo_pago === 'cuotas' && (
+                                                        <div className="d-flex justify-content-between">
+                                                            <strong>Monto a Financiar:</strong>
+                                                            <span className="text-info">{formatCurrency(salesForm.monto_a_financiar || 0)}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                             {salesForm.tipo_pago === 'cuotas' && salesForm.siguientes_pagos && salesForm.siguientes_pagos.length > 0 && (
