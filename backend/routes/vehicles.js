@@ -97,8 +97,8 @@ router.get('/:id', async (req, res) => {
 // PUT /api/v1/vehicles/:id - Update vehicle
 router.put('/:id', async (req, res) => {
   try {
-    var { id } = req.params
-
+    var { id, cambio_aceite } = req.params
+    console.log("cambio_aceite: ", cambio_aceite)
     // Allowed fields to update
     var fields = [
       'fecha_ingreso', 'fecha_shaken', 'origen', 'marca', 'modelo', 'numero_placa', 'anio', 'kilometraje', 'color', 'tipo_vehiculo', 'tamano_motor', 'numero_chasis', 'transmission', 'passengers', 'ac', 'observaciones', 'trabajos_realizar', 'cambio_aceite', 'mantenimiento_general', 'inspeccion_vehicular', 'garantia', 'imagen1', 'imagen2', 'precio', 'status'

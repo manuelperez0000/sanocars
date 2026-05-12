@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, dateFormater, formatCurrency, topurl } from '../utils/globals'
+import { apiurl, dateFormater, formatCurrency, topurl, formatDateForInput } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
@@ -82,10 +82,12 @@ const useVehicles = () => {
         formData.imagenes = imagenes
 
         // Ensure dates are in YYYY-MM-DD format for HTML date inputs
-        const fecha_ingreso = dateFormater(formData.fecha_ingreso)
+        const fecha_ingreso = formatDateForInput(formData.fecha_ingreso)
         formData.fecha_ingreso = fecha_ingreso
-        const fecha_shaken = dateFormater(formData.fecha_shaken)
+        const fecha_shaken = formatDateForInput(formData.fecha_shaken)
         formData.fecha_shaken = fecha_shaken
+        const cambio_aceite = formatDateForInput(formData.cambio_aceite)
+        formData.cambio_aceite = cambio_aceite
 
         setForm(formData)
         setModalOpen(true)
@@ -179,6 +181,8 @@ const useVehicles = () => {
                 imagen1,
                 imagen2
             }
+
+            console.log('dataToSend', dataToSend)
 
             if (editing && editing.id) {
 
