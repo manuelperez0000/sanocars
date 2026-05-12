@@ -383,6 +383,44 @@ const Vehiculos = () => {
                                     <button type="button" className="btn-close" aria-label="Close" onClick={closeSalesModal}></button>
                                 </div>
                                 <div className="modal-body">
+                                    {/* Vehicle Information Section */}
+                                    <div className="card mb-4">
+                                        <div className="card-header bg-light">
+                                            <h6 className="mb-0 text-primary">Información del Vehículo</h6>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Marca:</strong> {selectedVehicle?.marca || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Modelo:</strong> {selectedVehicle?.modelo || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Fecha de Ingreso:</strong> {dateFormater(selectedVehicle?.fecha_ingreso) || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Fecha de Shaken:</strong> {dateFormater(selectedVehicle?.fecha_shaken) || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Número de Placa:</strong> {selectedVehicle?.numero_placa || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Tamaño del Motor:</strong> {selectedVehicle?.tamano_motor || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Trabajos a Realizar:</strong> {selectedVehicle?.trabajos_realizar || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Kilometraje:</strong> {formatBigNumber(selectedVehicle?.kilometraje) || 'N/A'}
+                                                </div>
+                                                <div className="col-md-6 mb-3">
+                                                    <strong>Passengers:</strong> {selectedVehicle?.passengers || 'N/A'}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Client Data Section */}
                                     <ClientInformation
                                         invoiceData={{
