@@ -713,6 +713,10 @@ const useVehicles = () => {
                             <span>-${formatCurrency(saleData.monto_inicial || 0)}</span>
                         </div>
                         <div class="totals-row">
+                            <span>Monto Financiado:</span>
+                            <span>${formatCurrency((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)))}</span>
+                        </div>
+                        <div class="totals-row">
                             <span>Más Intereses:</span>
                             <span>+${formatCurrency((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100))}</span>
                         </div>
