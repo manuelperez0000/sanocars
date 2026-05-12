@@ -1,18 +1,60 @@
 import { useState } from 'react'
 import useVentas from '../../hooks/useVentas'
 import { FaEye, FaTrash } from 'react-icons/fa'
-import { formatCurrency, topurl } from '../../utils/globals'
+import { formatCurrency, topurl, apiurl } from '../../utils/globals'
 import useVehicles from '../../hooks/useVehicles'
+import request from '../../utils/request'
 
 const Vendidos = () => {
     const { getArrayImages, printSaleInvoice } = useVehicles()
     const { ventas, loading, error, deleteVenta } = useVentas()
     const [selectedVenta, setSelectedVenta] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
+    const [editingWarranty, setEditingWarranty] = useState(false)
+    const [warrantyText, setWarrantyText] = useState('')
 
     const handleViewDetails = (venta) => {
         setSelectedVenta(venta)
         setModalOpen(true)
+        setEditingWarranty(false)
+        setWarrantyText(venta.informacion_garantia || '')
+    }
+
+    const handleEditWarranty = () => {
+        setEditingWarranty(true)
+        setWarrantyText(selectedVenta.informacion_garantia || '')
+    }
+
+    const handleSaveWarranty = async () => {
+        try {
+            // Hacer la llamada al backend usando el endpoint PUT existente
+            const response = await request.put(`${apiurl}/venta/${selectedVenta.id}`, {
+                informacion_garantia: warrantyText
+            })
+
+            console.log('Response from warranty update:', response)
+            
+            // El backend usa responser.success que devuelve directamente los datos
+            if (response.data || response.message) {
+                // Actualizar el estado local con la nueva información
+                setSelectedVenta(prev => ({
+                    ...prev,
+                    informacion_garantia: warrantyText
+                }))
+                setEditingWarranty(false)
+                alert('Garantía actualizada exitosamente')
+            } else {
+                throw new Error('Error al actualizar la garantía')
+            }
+        } catch (error) {
+            console.error('Error updating warranty:', error)
+            alert('Error al actualizar la garantía: ' + (error?.response?.data?.message || error.message))
+        }
+    }
+
+    const handleCancelEditWarranty = () => {
+        setEditingWarranty(false)
+        setWarrantyText(selectedVenta.informacion_garantia || '')
     }
 
     const handleDelete = async (id) => {
@@ -317,16 +359,48 @@ const Vendidos = () => {
                                     )}
 
                                     {/* Warranty Information */}
-                                    {selectedVenta.informacion_garantia && (
-                                        <div className="card">
-                                            <div className="card-header">
-                                                <h6>Información de Garantía</h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <p>{selectedVenta.informacion_garantia}</p>
-                                            </div>
+                                    <div className="card">
+                                        <div className="card-header d-flex justify-content-between align-items-center">
+                                            <h6>Información de Garantía</h6>
+                                            {!editingWarranty && (
+                                                <button 
+                                                    className="btn btn-sm btn-outline-primary" 
+                                                    onClick={handleEditWarranty}
+                                                >
+                                                    Editar
+                                                </button>
+                                            )}
                                         </div>
-                                    )}
+                                        <div className="card-body">
+                                            {editingWarranty ? (
+                                                <div>
+                                                    <textarea
+                                                        className="form-control mb-3"
+                                                        rows="4"
+                                                        value={warrantyText}
+                                                        onChange={(e) => setWarrantyText(e.target.value)}
+                                                        placeholder="Ingrese la información de garantía..."
+                                                    />
+                                                    <div className="d-flex gap-2">
+                                                        <button 
+                                                            className="btn btn-sm btn-primary" 
+                                                            onClick={handleSaveWarranty}
+                                                        >
+                                                            Guardar
+                                                        </button>
+                                                        <button 
+                                                            className="btn btn-sm btn-secondary" 
+                                                            onClick={handleCancelEditWarranty}
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <p>{selectedVenta.informacion_garantia || 'No hay información de garantía disponible'}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setModalOpen(false)}>

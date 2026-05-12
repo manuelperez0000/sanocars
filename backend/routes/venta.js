@@ -144,9 +144,9 @@ router.post('/', async (req, res) => {
 // PUT /api/v1/venta/:id - Update sale
 router.put('/:id', async (req, res) => {
   try {
-    
-    var { id } = req.params
 
+    var { id } = req.params
+    
     // Allowed fields to update
     var fields = [
       'tipo', 'vehiculo_id', 'producto_id', 'cliente_nombre', 'cliente_apellido',
