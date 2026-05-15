@@ -284,6 +284,28 @@ const Vendidos = () => {
                                                     <div className="col-md-6">
                                                         <p><strong>Placa:</strong> {selectedVenta.vehiculo_placa || 'N/A'}</p>
                                                         <p><strong>ID Vehículo:</strong> {selectedVenta.vehiculo_id}</p>
+                                                        <p><strong>Kilometraje:</strong> {selectedVenta.vehiculo_kilometraje || 'N/A'}</p>
+                                                        <p><strong>Fecha Cambio de Aceite:</strong> {formatDate(selectedVenta.vehiculo_cambio_aceite)}</p>
+                                                    </div>
+                                                    <div className="col-12">
+                                                        <div className="row">
+                                                            <div className="col-12 col-md-6 mb-3">
+                                                                <div className="card h-100">
+                                                                    <div className="card-body">
+                                                                        <h6 className="card-title">Trabajos a Realizar</h6>
+                                                                        <p className="card-text mb-0">{selectedVenta.vehiculo_trabajos_realizar || 'N/A'}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-md-6 mb-3">
+                                                                <div className="card h-100">
+                                                                    <div className="card-body">
+                                                                        <h6 className="card-title">Mantenimiento General</h6>
+                                                                        <p className="card-text mb-0">{selectedVenta.vehiculo_mantenimiento_general || 'N/A'}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 {/* Vehicle Images */}

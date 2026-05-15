@@ -17,6 +17,10 @@ router.get('/', async (req, res) => {
         veh.anio as vehiculo_anio,
         veh.color as vehiculo_color,
         veh.numero_placa as vehiculo_placa,
+        veh.kilometraje as vehiculo_kilometraje,
+        veh.trabajos_realizar as vehiculo_trabajos_realizar,
+        veh.cambio_aceite as vehiculo_cambio_aceite,
+        veh.mantenimiento_general as vehiculo_mantenimiento_general,
         veh.imagen1 as vehiculo_imagen1,
         veh.imagen2 as vehiculo_imagen2
       FROM venta v
