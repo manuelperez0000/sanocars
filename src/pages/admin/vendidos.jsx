@@ -33,7 +33,7 @@ const Vendidos = () => {
             })
 
             console.log('Response from warranty update:', response)
-            
+
             // El backend usa responser.success que devuelve directamente los datos
             if (response.data || response.message) {
                 // Actualizar el estado local con la nueva información
@@ -142,6 +142,7 @@ const Vendidos = () => {
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
+                                                <th>Modelo</th>
                                                 <th>Tipo</th>
                                                 <th>Precio Venta</th>
                                                 <th>Tipo Pago</th>
@@ -158,6 +159,11 @@ const Vendidos = () => {
                                                         {venta.cliente_email && (
                                                             <div className="small text-muted">{venta.cliente_email}</div>
                                                         )}
+                                                    </td>
+                                                    <td>
+                                                        <strong>
+                                                            {venta.vehiculo_marca} <br />{venta.vehiculo_modelo}
+                                                        </strong>
                                                     </td>
                                                     <td>
                                                         <span className={`badge ${venta.tipo === 'vehiculo' ? 'bg-primary' : 'bg-secondary'}`}>
@@ -385,8 +391,8 @@ const Vendidos = () => {
                                         <div className="card-header d-flex justify-content-between align-items-center">
                                             <h6>Información de Garantía</h6>
                                             {!editingWarranty && (
-                                                <button 
-                                                    className="btn btn-sm btn-outline-primary" 
+                                                <button
+                                                    className="btn btn-sm btn-outline-primary"
                                                     onClick={handleEditWarranty}
                                                 >
                                                     Editar
@@ -404,14 +410,14 @@ const Vendidos = () => {
                                                         placeholder="Ingrese la información de garantía..."
                                                     />
                                                     <div className="d-flex gap-2">
-                                                        <button 
-                                                            className="btn btn-sm btn-primary" 
+                                                        <button
+                                                            className="btn btn-sm btn-primary"
                                                             onClick={handleSaveWarranty}
                                                         >
                                                             Guardar
                                                         </button>
-                                                        <button 
-                                                            className="btn btn-sm btn-secondary" 
+                                                        <button
+                                                            className="btn btn-sm btn-secondary"
                                                             onClick={handleCancelEditWarranty}
                                                         >
                                                             Cancelar

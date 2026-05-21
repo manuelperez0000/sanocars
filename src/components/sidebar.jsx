@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { FaTachometerAlt, FaUsers, FaMoneyBillWave, FaCar, FaTools, FaImages, FaSignOutAlt, FaCog } from 'react-icons/fa'
 import useLogin from '../hooks/useLogin'
 import useServices from '../hooks/useServices'
-
+import { version } from '../utils/globals'
 
 const Sidebar = () => {
     
@@ -28,7 +28,8 @@ const Sidebar = () => {
     ]
 
     return <aside className="dashboard-sidebar">
-        <h5 className="text-white mb-3 px-3 pt-3">Admin Panel</h5>
+        <h5 className="text-white mb-0 px-3 pt-3">Admin Panel</h5>
+        <span className='text-success px-3'>{version}</span>
         <hr className='text-light' />
         {menuItems.map((item) => {
             const IconComponent = item.icon

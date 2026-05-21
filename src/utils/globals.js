@@ -60,3 +60,5 @@ export const formatDateForInput = (date) => {
 export const email = ()=>{
   return `sanocars@hotmail.com`
 }
+
+export const version = 'v.1.0.1'
