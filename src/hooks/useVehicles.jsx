@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import request from '../utils/request'
-import { apiurl, dateFormater, formatCurrency, topurl, formatDateForInput } from '../utils/globals'
+import { apiurl, formatCurrency, topurl, formatDateForInput } from '../utils/globals'
 import { getEmptyForm } from '../utils/getEmptyForm'
 import imageCompression from 'browser-image-compression';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
