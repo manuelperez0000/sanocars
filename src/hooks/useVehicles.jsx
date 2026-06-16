@@ -632,7 +632,7 @@ const useVehicles = () => {
                         ${saleData.tipo_pago === 'cuotas' ? `
                         <p><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</p>
                         <p><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</p>
-                        <p><strong>Monto Inicial:</strong> $${parseInt(saleData.monto_inicial || 0)}</p>
+                        <p><strong>Monto Inicial:</strong> ¥ ${parseInt(saleData.monto_inicial || 0)}</p>
                         <p><strong>Tasa de Interés:</strong> ${saleData.tasa_interes}%</p>
                         ` : ''}
                     </div>
@@ -658,9 +658,9 @@ const useVehicles = () => {
                     <h4>Detalles del Pago</h4>
                     <div class="details-grid">
                         <div class="detail-item"><strong>Precio de Venta:</strong> ${formatCurrency(saleData.precio_venta)}</div>
-                        <div class="detail-item"><strong>Monto Inicial:</strong> ${parseInt(saleData.monto_inicial || 0)}</div>
-                        <div class="detail-item"><strong>Financiamiento:</strong> ${(parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0))}</div>
-                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥${((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
+                        <div class="detail-item"><strong>Monto Inicial:</strong>¥ ${parseInt(saleData.monto_inicial || 0)}</div>
+                        <div class="detail-item"><strong>Financiamiento:</strong>¥ ${(parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0))}</div>
+                        <div class="detail-item"><strong>Intereses (${saleData.tasa_interes}%):</strong> ¥ ${((parseInt(saleData.precio_venta || 0) - parseInt(saleData.monto_inicial || 0)) * (parseInt(saleData.tasa_interes || 0) / 100)).toFixed(0)}</div>
                         <div class="detail-item"><strong>Número de Cuotas:</strong> ${saleData.numero_cuotas}</div>
                         <div class="detail-item"><strong>Frecuencia:</strong> ${saleData.frecuencia_cuotas}</div>
                         <div class="detail-item"><strong>Fecha Inicial:</strong> ${saleData.fecha_inicial ? new Date(saleData.fecha_inicial).toLocaleDateString('es-VE') : 'N/A'}</div>
