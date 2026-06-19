@@ -3,6 +3,7 @@ import request from '../utils/request'
 import { apiurl } from '../utils/globals'
 
 const useClientes = () => {
+    
     const [clientes, setClientes] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)

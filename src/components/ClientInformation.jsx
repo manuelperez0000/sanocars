@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import request from "../utils/request"
 import { apiurl } from "../utils/globals"
+import useClientes from "../hooks/useClientes"
 
 const ClientInformation = ({
     invoiceData,
     setInvoiceData
 }) => {
-
-    const [clientType, setClientType] = useState()
+ 
+    const [clientType, setClientType] = useState('nuevo')
     const [users, setUsers] = useState([])
     const [userSearch, setUserSearch] = useState('')
-    const [filteredUsers, setFilteredUsers] = useState([])
-    const [showUserDropdown, setShowUserDropdown] = useState(false)
+    const [filteredClients, setFilteredClients] = useState([])
+    const [showClientDropdown, setShowClientDropdown] = useState(false)
+    const { clientes } = useClientes()
 
     // Fetch users on component mount
     useEffect(() => {
@@ -29,21 +31,54 @@ const ClientInformation = ({
         fetchUsers()
     }, [])
 
-    // Filter users based on search
+    const mergedClients = useMemo(() => {
+        const normalizedUsers = users.map(user => ({
+            id: `user_${user.id}`,
+            name: user.name || `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Cliente',
+            email: user.email || '',
+            phone: user.mobile_no || user.telefono || '',
+            address: user.address || user.direccion || '',
+            origin: 'usuario'
+        }))
+
+        const normalizedClientes = (clientes || []).map(cliente => ({
+            id: `cliente_${cliente.id}`,
+            name: cliente.nombre || `${cliente.nombre} ${cliente.apellido || ''}`.trim() || 'Cliente',
+            email: cliente.email || '',
+            phone: cliente.telefono || cliente.telefono_cliente || cliente.cliente_telefono || '',
+            address: cliente.direccion || cliente.direccion_cliente || cliente.cliente_direccion || '',
+            origin: cliente.tabla_origen || 'cliente'
+        }))
+
+        const combined = [...normalizedUsers, ...normalizedClientes]
+
+        const uniqueByKey = new Map()
+        combined.forEach(item => {
+            const dedupeKey = `${item.email || item.phone || item.name}`.toLowerCase()
+            if (!uniqueByKey.has(dedupeKey)) {
+                uniqueByKey.set(dedupeKey, item)
+            }
+        })
+
+        return Array.from(uniqueByKey.values())
+    }, [users, clientes])
+
+    // Filter clients based on search
     useEffect(() => {
-        if (users && userSearch.trim()) {
-            const filtered = users.filter(user =>
-                user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
-                user.email?.toLowerCase().includes(userSearch.toLowerCase()) ||
-                user.mobile_no?.includes(userSearch)
+        if (mergedClients.length > 0 && userSearch.trim()) {
+            const query = userSearch.toLowerCase()
+            const filtered = mergedClients.filter(client =>
+                client.name?.toLowerCase().includes(query) ||
+                client.email?.toLowerCase().includes(query) ||
+                client.phone?.toLowerCase().includes(query)
             )
-            setFilteredUsers(filtered)
-            setShowUserDropdown(filtered.length > 0)
+            setFilteredClients(filtered)
+            setShowClientDropdown(filtered.length > 0)
         } else {
-            setFilteredUsers([])
-            setShowUserDropdown(false)
+            setFilteredClients([])
+            setShowClientDropdown(false)
         }
-    }, [users, userSearch])
+    }, [mergedClients, userSearch])
 
     const handleUserSearch = (value) => {
         setUserSearch(value)
@@ -54,11 +89,11 @@ const ClientInformation = ({
             ...invoiceData,
             clientName: user.name || '',
             clientEmail: user.email || '',
-            clientPhone: user.mobile_no || '',
+            clientPhone: user.phone || '',
             clientAddress: user.address || ''
         })
         setUserSearch('')
-        setShowUserDropdown(false)
+        setShowClientDropdown(false)
     }
 
     return (
@@ -91,17 +126,17 @@ const ClientInformation = ({
                             value={userSearch}
                             onChange={(e) => handleUserSearch(e.target.value)}
                         />
-                        {showUserDropdown && filteredUsers.length > 0 && (
+                        {showClientDropdown && filteredClients.length > 0 && (
                             <div className="mt-2 border rounded p-2" style={{ maxHeight: '150px', overflowY: 'auto' }}>
-                                {filteredUsers.map(user => (
+                                {filteredClients.map(client => (
                                     <div
-                                        key={user.id}
-                                        className="p-2 border-bottom cursor-pointer"
-                                        onClick={() => selectUser(user)}
+                                        key={client.id}
+                                        className="p-2 border-bottom"
+                                        onClick={() => selectUser(client)}
                                         style={{ cursor: 'pointer' }}
                                     >
-                                        <div><strong>{user.name}</strong></div>
-                                        <div className="small text-muted">{user.email} - {user.mobile_no}</div>
+                                        <div><strong>{client.name}</strong></div>
+                                        <div className="small text-muted">{client.email} - {client.phone}</div>
                                     </div>
                                 ))}
                             </div>
