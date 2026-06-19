@@ -279,7 +279,7 @@ h1 {
 }
 
 .bg-japon {
-  background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 255, 0)), url("https://sanocarstaller.com/uploads/newImages/financiamiento.webp");
+  background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 255, 0)), url("./financiamiento.webp");
   color: white;
   background-position: center;
   background-repeat: no-repeat;

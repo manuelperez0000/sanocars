@@ -61,4 +61,4 @@ export const email = ()=>{
   return `sanocars@hotmail.com`
 }
 
-export const version = 'v.1.0.2'
+export const version = 'v.1.0.3'
