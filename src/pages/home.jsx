@@ -10,7 +10,7 @@ import { CiPaperplane } from "react-icons/ci";
 import { FaWrench, FaPaintBrush, FaTruck, FaFileAlt, FaCar } from "react-icons/fa";
 import WhatsAppButton from '../components/WhatsAppButton'
 /* import FilterBar from '../components/FilterBar' */
-
+import bg2 from '../assets/financiamiento.webp'
 const Home = () => {
     const { vehiclesForSale, vehiclesForRent, vehiclesSold } = useHome()
     const { visitCount } = useVisits()
@@ -188,7 +188,7 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className='container mt-3 mb-5 rounded bg-japon'>
+            <section style={{backgroundImage: `url(${bg2})`,}} className='container mt-3 mb-5 rounded bg-japon'>
                 <div className='row align-items-center'>
                     <div className='col-lg-8'>
                         <h2 className='mb-4 momo'>Financiamiento</h2>
