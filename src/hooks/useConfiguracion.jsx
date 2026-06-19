@@ -57,6 +57,8 @@ const useConfiguracion = () => {
 
     async function deleteConfiguracion(id) {
         try {
+
+            console.log('Attempting to delete configuration with ID:', id)
             await request.delete(apiurl + '/configuracion/' + id)
             fetchConfiguraciones() // Refresh the list
         } catch (err) {
@@ -75,10 +77,7 @@ const useConfiguracion = () => {
     }
 
     function getEmails() {
-        const x = configuraciones.filter(config => config.tipo === 'email')
-            .map((y) => y.texto)
-        console.log(x)
-        return x
+        return configuraciones.filter(config => config.tipo === 'email')
     }
 
     function getCompanyName() {
@@ -106,7 +105,8 @@ const useConfiguracion = () => {
         }
     };
 
-    const agregarCorreo = async () => {
+    const agregarCorreo = async (e) => {
+        e.preventDefault();
         try {
             await createConfiguracion({ tipo: 'email', texto: '' });
         } catch (error) {

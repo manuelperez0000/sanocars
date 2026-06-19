@@ -10,13 +10,9 @@ const Configuracion = () => {
     getSchedules,
     getPhones,
     getEmails,
-    getCompanyName,
-    getCompanyAddress,
     agregarHorario,
     agregarTelefono,
     agregarCorreo,
-    agregarNombreEmpresa,
-    agregarDireccionEmpresa,
     startEditing,
     cancelEditing,
     saveEditing,
@@ -24,7 +20,6 @@ const Configuracion = () => {
     editingItem,
     editForm,
     setEditForm,
-    createConfiguracion,
   } = useConfiguracion();
 
 
@@ -56,8 +51,6 @@ const Configuracion = () => {
   const schedules = getSchedules();
   const phones = getPhones();
   const emails = getEmails();
-  const companyNames = getCompanyName();
-  const companyAddresses = getCompanyAddress();
 
   return (
     <div className="container mt-4">
